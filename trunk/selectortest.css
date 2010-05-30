@@ -1,0 +1,36 @@
+H1 {font-family: sans-serif;}
+BODY {color: purple;}
+P {color: green;}
+H3 {color: navy;}
+LI {color: green;}
+
+* {text-decoration: overline;}
+*.cl1 {color: purple;}
+.pastoral {color: green;}  /* omitted universal selector should be inferred */
+big {font-size: 133%; color: rgb(60%,60%,40%);}
+
+.cl21, .cl22, .cl23 {color: green;}
+.cl24, %cl25 {color: red;}
+
+/*.cl31 :first-line strong {color: red;}
+/*.cl32em {color: red;}
+/*.cl32+.cl33 {color: green;}
+/*.cl33  +  .cl34 {color: green;} */
+
+H1 EM {color: blue;}
+P STRONG {color: maroon;}
+DIV * P {color: green;}
+LI * STRONG {color: green;}
+
+BODY > P {color: green;}
+BODY>P.cl41 {font-family: sans-serif;}
+DIV OL > LI STRONG {color: green;}
+
+P.cl50 {color: green;}
+P.give.liberty {color: blue; border: 2px solid red; background: white;}
+
+#one {color: green;}
+#61 {color: red;}
+#id61 {color: green;}
+P#id62 {color: blue;}
+P#id63 {color: purple;}
