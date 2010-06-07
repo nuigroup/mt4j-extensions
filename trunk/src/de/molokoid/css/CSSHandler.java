@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.mt4j.util.MTColor;
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.DocumentHandler;
 import org.w3c.css.sac.InputSource;
@@ -11,6 +12,7 @@ import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 
+import de.molokoid.data.BorderStyle;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.Selector;
 import de.molokoid.data.SelectorType;
@@ -86,12 +88,225 @@ public class CSSHandler implements DocumentHandler{
 	}
 
 	@Override
-	public void property(String arg0, LexicalUnit arg1, boolean arg2)
+	public void property(String name, LexicalUnit value, boolean important)
 			throws CSSException {
-		// TODO Auto-generated method stub
-		
+		try {
+		logger.debug(name + " | " + value.getLexicalUnitType());
+		parseValue(name, value);
+		} catch (Exception e){
+			//logger.debug("Exception: " + value.getStringValue());
+			logger.debug(name + " | " + value.getLexicalUnitType());
+			e.printStackTrace();
+			
+		}
 	}
-
+	
+	private void parseValue(String name, LexicalUnit value) {
+		try {
+			cssproperties prop = cssproperties.UNKNOWN;
+			try {
+				prop  = cssproperties.valueOf(name.replace(" ", "").replace("-", "").toUpperCase());
+			} catch (IllegalArgumentException iae) {
+				
+			}
+		switch (prop) {
+		case COLOR:
+			MTColor color = handleColor(value);
+			logger.debug("Color: " + color.toColorString());
+			for (CSSStyle sty: activeStyles) sty.setColor(color);
+			
+			break;
+		case BACKGROUNDCOLOR:
+			color = handleColor(value);
+			logger.debug("Background Color: " + color.toColorString());
+			for (CSSStyle sty: activeStyles) sty.setBackgroundColor(color);
+			
+			break;
+			
+		case WIDTH:
+			LexicalUnit parameter = value;
+			for (CSSStyle sty: activeStyles) sty.setWidth(parseMeasuringUnit(parameter));
+			logger.debug("Width: " + parseMeasuringUnit(parameter));
+			break;
+		case HEIGHT:
+			parameter = value;
+			for (CSSStyle sty: activeStyles) sty.setHeight(parseMeasuringUnit(parameter));
+			logger.debug("Height: " + parseMeasuringUnit(parameter));
+			break;
+		case BORDER:
+			
+			break;
+		case BORDERWIDTH:
+			parameter = value;
+			for (CSSStyle sty: activeStyles) sty.setBorderWidth(parseMeasuringUnit(parameter));
+			logger.debug("Border Width: " + parseMeasuringUnit(parameter));
+			break;
+		case BORDERCOLOR:
+			color = handleColor(value);
+			logger.debug("Border Color: " + color.toColorString());
+			for (CSSStyle sty: activeStyles) sty.setBorderColor(color);
+			
+			break;
+		case BORDERSTYLE:
+			BorderStyle style = parseBorderStyle(value);
+			for (CSSStyle sty: activeStyles) sty.setBorderStyle(style);
+			logger.debug("BorderStyle: " + style);
+			break;
+		case PADDING:
+			parameter = value;
+			for (CSSStyle sty: activeStyles) sty.setPaddingWidth(parseMeasuringUnit(parameter));
+			logger.debug("Padding: " + parseMeasuringUnit(parameter));
+			break;
+		case FONTSIZE:
+			parameter = value;
+			for (CSSStyle sty: activeStyles) sty.setFontSize((int) parseMeasuringUnit(parameter));
+			logger.debug("Font Size: " + parseMeasuringUnit(parameter));
+			break;
+		case VISIBILITY:
+			boolean visible; 
+			visible = parseBoolean(value);
+			for (CSSStyle sty: activeStyles) sty.setVisibility(visible);
+			logger.debug("VISIBILITY: " + visible);
+			break;
+			
+		}}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private MTColor handleColor(LexicalUnit value){
+		switch (value.getLexicalUnitType()) {
+		case LexicalUnit.SAC_RGBCOLOR:
+				try {
+					logger.debug("Color by RGB: " + value.getFunctionName());
+					//logger.debug("Color by RGB: " + value.getParameters());
+					LexicalUnit parameters = value.getParameters();
+					float red = parseMeasuringUnit(parameters);
+					parameters = parameters.getNextLexicalUnit().getNextLexicalUnit();
+					float green = parseMeasuringUnit(parameters);
+					parameters = parameters.getNextLexicalUnit().getNextLexicalUnit();
+					float blue = parseMeasuringUnit(parameters);
+					//logger.debug("Color: " + red + "," + green + "," + blue);
+					return new MTColor(red, green, blue, 255);
+					
+				} catch (Exception e) {e.printStackTrace();};
+			break;
+		case LexicalUnit.SAC_IDENT:
+				logger.debug("Color by Identifier: " + value.getStringValue());
+				if (value.getStringValue().equalsIgnoreCase("black")) return new MTColor(0,0,0,255);
+				if (value.getStringValue().equalsIgnoreCase("white")) return new MTColor(255,255,255,255);
+				if (value.getStringValue().equalsIgnoreCase("silver")) return new MTColor(192,192,192,255);
+				if (value.getStringValue().equalsIgnoreCase("gray")) return new MTColor(128,128,128,255);
+				if (value.getStringValue().equalsIgnoreCase("maroon")) return new MTColor(128,0,0,255);
+				if (value.getStringValue().equalsIgnoreCase("red")) return new MTColor(255,0,0,255);
+				if (value.getStringValue().equalsIgnoreCase("purple")) return new MTColor(128,0,128,255);
+				if (value.getStringValue().equalsIgnoreCase("fuchsia")) return new MTColor(255,0,255,255);
+				if (value.getStringValue().equalsIgnoreCase("green")) return new MTColor(0,128,0,255);
+				if (value.getStringValue().equalsIgnoreCase("lime")) return new MTColor(0,255,0,255);
+				if (value.getStringValue().equalsIgnoreCase("olive")) return new MTColor(128,128,0,255);
+				if (value.getStringValue().equalsIgnoreCase("yellow")) return new MTColor(255,255,0,255);
+				if (value.getStringValue().equalsIgnoreCase("navy")) return new MTColor(0,0,128,255);
+				if (value.getStringValue().equalsIgnoreCase("blue")) return new MTColor(0,0,255,255);
+				if (value.getStringValue().equalsIgnoreCase("teal")) return new MTColor(0,0,128,255);
+				if (value.getStringValue().equalsIgnoreCase("aqua")) return new MTColor(0,255,255,255);
+				
+				
+				
+				
+				
+			break;
+		}
+		
+		return new MTColor(0,0,0,0);
+	}
+	
+	private boolean parseBoolean(LexicalUnit value) {
+		try {
+			return Boolean.parseBoolean(value.getStringValue());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return false;
+	}
+	
+	private BorderStyle parseBorderStyle(LexicalUnit value) {
+		LexicalUnit parameter = value;
+		if (parameter.getLexicalUnitType() == LexicalUnit.SAC_IDENT) {
+			if (parameter.getStringValue().equalsIgnoreCase("dashed")) return BorderStyle.DASHED;
+			if (parameter.getStringValue().equalsIgnoreCase("dotted")) return BorderStyle.DOTTED;
+			if (parameter.getStringValue().equalsIgnoreCase("none")) return BorderStyle.NONE;
+			if (parameter.getStringValue().equalsIgnoreCase("hidden")) return BorderStyle.HIDDEN;
+		}
+		
+		return BorderStyle.SOLID;
+	}
+	
+	private float parseNumber(LexicalUnit component) {
+		if (component.getLexicalUnitType() == LexicalUnit.SAC_INTEGER) {
+			return (float) component.getIntegerValue();
+		}
+		if (component.getLexicalUnitType() == LexicalUnit.SAC_REAL) {
+			return (float) component.getFloatValue();
+		}
+		if (component.getLexicalUnitType() == LexicalUnit.SAC_PERCENTAGE) {
+			return (float) component.getFloatValue();
+		}
+		
+		return 0;
+	}
+	
+	private float parseMeasuringUnit(LexicalUnit value) {
+		float dpi = 100f;
+		
+		//TODO: Font Sizes
+		float emtopx = 16f/72f * dpi;
+		//float extopx;
+		float inchtopx = dpi;
+		float centtopx = (10f/254f) * dpi;
+		float mmtopx = (1f/254f) * dpi;
+		float pointtopx = (1f/72f) * dpi;
+		float picatopx = (12f/72f) * dpi;
+		float rv;
+		try {
+		switch (value.getLexicalUnitType()) {
+		case LexicalUnit.SAC_CENTIMETER:
+			//logger.debug("1 Float: " + value.getFloatValue());
+			return value.getFloatValue() * centtopx;
+		case LexicalUnit.SAC_INCH:
+			//logger.debug("2 Float: " + value.getFloatValue());
+			return value.getFloatValue() * inchtopx;
+		case LexicalUnit.SAC_MILLIMETER:
+			//logger.debug("3 Float: " + value.getFloatValue());
+			return value.getFloatValue() * mmtopx;
+		case LexicalUnit.SAC_POINT:
+			//logger.debug("4 Float: " + value.getFloatValue());
+			return value.getFloatValue() * pointtopx;
+		case LexicalUnit.SAC_PICA:
+			//logger.debug("5 Float: " + value.getFloatValue());
+			return value.getFloatValue() * picatopx;
+		case LexicalUnit.SAC_EM:
+			//logger.debug("6 Float: " + value.getFloatValue());
+			return (value.getFloatValue() * emtopx);
+		case LexicalUnit.SAC_PIXEL:
+			return value.getFloatValue();
+		case LexicalUnit.SAC_INTEGER:
+			return (float) value.getIntegerValue();
+		case LexicalUnit.SAC_REAL:
+		case LexicalUnit.SAC_PERCENTAGE:
+			return (float) value.getFloatValue();
+			
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		logger.debug("Unrecognized Measuring Unit: " + value.getLexicalUnitType());
+		return 0;
+	}
+	
+	
 	@Override
 	public void startDocument(InputSource arg0) throws CSSException {
 		// TODO Auto-generated method stub
@@ -260,6 +475,8 @@ public class CSSHandler implements DocumentHandler{
 		return SelectorType.TYPE;
 	}
 	
-	
+	private enum cssproperties {
+		COLOR, BACKGROUNDCOLOR, BORDERCOLOR, BACKGROUNDIMAGE, BACKGROUNDPOSITION, BACKGROUNDREPEAT, BORDERSTYLE, FONTFAMILY, FONT, FONTSIZE, FONTSTYLE, WIDTH, HEIGHT, BORDERWIDTH, PADDING, VISIBILITY, ZINDEX, BORDER, UNKNOWN 
+	}
 	
 }
