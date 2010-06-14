@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.batik.css.parser.Parser;
+import org.mt4j.MTApplication;
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
 
@@ -18,9 +19,9 @@ public class parserConnector {
 	CSSHandler cssh = null;
 	
 	
-	public parserConnector(String source) {
+	public parserConnector(String source, MTApplication app) {
 		List<CSSStyle> styles= new ArrayList<CSSStyle>();
-		cssh = new CSSHandler(styles);
+		cssh = new CSSHandler(app, styles);
 		
 		pa = new Parser();
 		try {

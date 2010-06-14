@@ -6,6 +6,7 @@ import java.util.List;
 import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.util.MTColor;
 
+
 import processing.core.PImage;
 
 public class CSSStyle {
@@ -27,6 +28,7 @@ public class CSSStyle {
 	//Border
 	BorderStyle borderStyle;
 	IFont font;
+	CSSFont cssfont;
 	
 	//Sizes
 	float width;
@@ -72,7 +74,15 @@ public class CSSStyle {
 
 
 
+	public CSSFont getCssfont() {
+		return cssfont;
+	}
 
+
+
+	public void setCssfont(CSSFont cssfont) {
+		this.cssfont = cssfont;
+	}
 
 	public List<Selector> getSelectors() {
 		return selectors;

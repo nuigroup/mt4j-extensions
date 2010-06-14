@@ -1,4 +1,4 @@
-package de.molokoid.css;
+package de.molokoid.test;
 
 import static org.junit.Assert.*;
 

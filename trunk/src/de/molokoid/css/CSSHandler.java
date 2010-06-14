@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.mt4j.MTApplication;
+import org.mt4j.components.visibleComponents.font.FontManager;
 import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.util.MTColor;
 import org.w3c.css.sac.CSSException;
@@ -13,13 +15,15 @@ import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 
-import de.molokoid.css.CSSFont.fontfamily;
-import de.molokoid.css.CSSFont.fontstyle;
-import de.molokoid.css.CSSFont.fontweight;
 import de.molokoid.data.BorderStyle;
+import de.molokoid.data.CSSFont;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.Selector;
 import de.molokoid.data.SelectorType;
+import de.molokoid.data.fontfamily;
+import de.molokoid.data.fontstyle;
+import de.molokoid.data.fontweight;
+
 
 public class CSSHandler implements DocumentHandler{
 	
@@ -27,10 +31,12 @@ public class CSSHandler implements DocumentHandler{
 	List<CSSStyle> styles = null;
 	List<CSSStyle> activeStyles = new ArrayList<CSSStyle>();
 	CSSFont currentFont = null;
+	MTApplication app = null;
 	
-	public CSSHandler(List<CSSStyle> styles) {
+	public CSSHandler(MTApplication app, List<CSSStyle> styles) {
 		logger = Logger.getLogger("MT4J Extensions");
 		this.styles = styles;
+		this.app = app;
 	}
 	
 	
@@ -70,16 +76,137 @@ public class CSSHandler implements DocumentHandler{
 		for (CSSStyle s: activeStyles) {
 			s.setFont(selectFont(currentFont));
 		}
+		currentFont = null;
 		activeStyles.clear();
 		logger.debug("Clearing activeStyles");
 	}
 
 	private IFont selectFont(CSSFont currentFont2) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+		switch (currentFont2.getFamily()) {
+		case SERIF:
+			switch (currentFont2.getStyle()) {
+			case ITALIC:
+			case OBLIQUE:
+				if (currentFont2.getWeight() == fontweight.BOLD) {
+					return getFont("dejavu/DejaVuSerif-BoldItalic.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.LIGHT) {
+					return getFont("dejavu/DejaVuSerif-Italic.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.NORMAL) {
+					return getFont("dejavu/DejaVuSerif-Italic.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+			
+				break;
+			case NORMAL:
+			default:
+				if (currentFont2.getWeight() == fontweight.BOLD) {
+					return getFont("dejavu/DejaVuSerif-Bold.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.LIGHT) {
+					return getFont("dejavu/DejaVuSerif.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.NORMAL) {
+					return getFont("dejavu/DejaVuSerif.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				break;
+			}
+			break;
+		case MONO:
+			switch (currentFont2.getStyle()) {
+			case ITALIC:
+			case OBLIQUE:
+				if (currentFont2.getWeight() == fontweight.BOLD) {
+					return getFont("dejavu/DejaVuMono-BoldOblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.LIGHT) {
+					return getFont("dejavu/DejaVuMono-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.NORMAL) {
+					return getFont("dejavu/DejaVuMono-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+			
+				break;
+			case NORMAL:
+			default:
+				if (currentFont2.getWeight() == fontweight.BOLD) {
+					return getFont("dejavu/DejaVuMono-Bold.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.LIGHT) {
+					return getFont("dejavu/DejaVuMono.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.NORMAL) {
+					return getFont("dejavu/DejaVuMono.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				break;
+			}
+			break;
+		case CUSTOM:
+			return getFont(currentFont2.getCustomType(), currentFont2.getFontsize(), currentFont2.getColor());
+			
+		case SANS:
+		default:
+			switch (currentFont2.getStyle()) {
+			case ITALIC:
+			case OBLIQUE:
+				if (currentFont2.getWeight() == fontweight.BOLD) {
+					return getFont("dejavu/DejaVuSans-BoldOblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.LIGHT) {
+					return getFont("dejavu/DejaVuSans-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.NORMAL) {
+					return getFont("dejavu/DejaVuSans-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+			
+				break;
+			case NORMAL:
+			default:
+				if (currentFont2.getWeight() == fontweight.BOLD) {
+					return getFont("dejavu/DejaVuSans-Bold.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.LIGHT) {
+					return getFont("dejavu/DejaVuSans-ExtraLight.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				if (currentFont2.getWeight() == fontweight.NORMAL) {
+					return getFont("dejavu/DejaVuSans.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+				}
+				break;
+			}
+			break;
+		
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+		
+		
+		 return FontManager.getInstance().createFont(app,
+				"dejavu/DejaVuSans.ttf", currentFont2.getFontsize(), // Font size
+				currentFont2.getColor(), // Font fill color
+				currentFont2.getColor()); 
 	}
 
-
+	private IFont getFont(String font, int size, MTColor color) {
+		try {
+			IFont returnFont = FontManager.getInstance().createFont(app,
+		
+				font, size, // Font size
+				color, // Font fill color
+				color); 
+			return returnFont;	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return FontManager.getInstance().createFont(app,
+				"dejavu/DejaVuSans.ttf", size, // Font size
+				color, // Font fill color
+				color); 
+	}
+	
 	@Override
 	public void ignorableAtRule(String arg0) throws CSSException {
 		// TODO Auto-generated method stub
@@ -121,7 +248,7 @@ public class CSSHandler implements DocumentHandler{
 				prop  = cssproperties.valueOf(name.replace(" ", "").replace("-", "").toUpperCase());
 				logger.debug(name.replace(" ", "").replace("-", "").toUpperCase() + " -> " + prop);
 			} catch (IllegalArgumentException iae) {
-				iae.printStackTrace();
+				
 			}
 		switch (prop) {
 		case COLOR:
@@ -133,8 +260,9 @@ public class CSSHandler implements DocumentHandler{
 		case BACKGROUNDCOLOR:
 			color = handleColor(value);
 			logger.debug("Background Color: " + color.toColorString());
-			for (CSSStyle sty: activeStyles) sty.setBackgroundColor(color);
-			
+			//for (CSSStyle sty: activeStyles) sty.setBackgroundColor(color);
+			if (currentFont == null) currentFont = new CSSFont(color);
+			else currentFont.setColor(color);
 			break;
 			
 		case WIDTH:
@@ -173,7 +301,9 @@ public class CSSHandler implements DocumentHandler{
 			break;
 		case FONTSIZE:
 			parameter = value;
-			for (CSSStyle sty: activeStyles) sty.setFontSize((int) parseMeasuringUnit(parameter));
+			//for (CSSStyle sty: activeStyles) sty.setFontSize((int) parseMeasuringUnit(parameter));
+			if (currentFont == null) currentFont = new CSSFont((int) parseMeasuringUnit(parameter));
+			else currentFont.setFontsize((int) parseMeasuringUnit(parameter));
 			logger.debug("Font Size: " + parseMeasuringUnit(parameter));
 			break;
 		case VISIBILITY:
