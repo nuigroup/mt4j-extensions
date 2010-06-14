@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.util.MTColor;
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.DocumentHandler;
@@ -12,6 +13,9 @@ import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 
+import de.molokoid.css.CSSFont.fontfamily;
+import de.molokoid.css.CSSFont.fontstyle;
+import de.molokoid.css.CSSFont.fontweight;
 import de.molokoid.data.BorderStyle;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.Selector;
@@ -22,7 +26,7 @@ public class CSSHandler implements DocumentHandler{
 	Logger logger = null;
 	List<CSSStyle> styles = null;
 	List<CSSStyle> activeStyles = new ArrayList<CSSStyle>();
-	
+	CSSFont currentFont = null;
 	
 	public CSSHandler(List<CSSStyle> styles) {
 		logger = Logger.getLogger("MT4J Extensions");
@@ -63,9 +67,18 @@ public class CSSHandler implements DocumentHandler{
 	@Override
 	public void endSelector(SelectorList arg0) throws CSSException {
 		// TODO Auto-generated method stub
+		for (CSSStyle s: activeStyles) {
+			s.setFont(selectFont(currentFont));
+		}
 		activeStyles.clear();
 		logger.debug("Clearing activeStyles");
 	}
+
+	private IFont selectFont(CSSFont currentFont2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	@Override
 	public void ignorableAtRule(String arg0) throws CSSException {
@@ -106,8 +119,9 @@ public class CSSHandler implements DocumentHandler{
 			cssproperties prop = cssproperties.UNKNOWN;
 			try {
 				prop  = cssproperties.valueOf(name.replace(" ", "").replace("-", "").toUpperCase());
+				logger.debug(name.replace(" ", "").replace("-", "").toUpperCase() + " -> " + prop);
 			} catch (IllegalArgumentException iae) {
-				
+				iae.printStackTrace();
 			}
 		switch (prop) {
 		case COLOR:
@@ -169,9 +183,73 @@ public class CSSHandler implements DocumentHandler{
 			logger.debug("VISIBILITY: " + visible);
 			break;
 			
+		case FONTFAMILY:
+			handleFontFamily(value);
+			break;
+		case FONT:
+			logger.debug("Font: " + name.replace(" ", "").replace("-", "").toUpperCase());
+			break;
+		case FONTSTYLE:
+			handleFontStyle(value);
+			break;
+		case FONTWEIGHT:
+			handleFontWeight(value);
+			break;
+		case UNKNOWN:
+		default:
+			logger.debug("Unknown Identifier: " + name.replace(" ", "").replace("-", "").toUpperCase());
+			break;
+		
+			
 		}}
 		catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void handleFontWeight(LexicalUnit value) {
+		logger.debug("Handle Font Weight: " + value.getLexicalUnitType());
+		fontweight weight = fontweight.NORMAL;
+		if (currentFont == null) currentFont = new CSSFont(weight);
+		switch (value.getLexicalUnitType()) {
+		case LexicalUnit.SAC_IDENT:
+		case LexicalUnit.SAC_STRING_VALUE:
+			if (value.getStringValue().toUpperCase().contains("BOLD")) {currentFont.setWeight(fontweight.BOLD); break;}
+			if (value.getStringValue().toUpperCase().contains("LIGHT")) {currentFont.setWeight(fontweight.LIGHT); break;}
+			currentFont.setWeight(fontweight.NORMAL);
+			break;
+		case LexicalUnit.SAC_INTEGER:
+			if (value.getIntegerValue() < 400) {currentFont.setWeight(fontweight.LIGHT); break;}
+			if (value.getIntegerValue() > 600) {currentFont.setWeight(fontweight.BOLD); break;}
+			currentFont.setWeight(fontweight.NORMAL); 
+			break;
+		default: break;
+		}
+		
+	}
+
+
+	private void handleFontFamily(LexicalUnit value) {
+		logger.debug("Handle Font Family: " + value.getLexicalUnitType());
+		fontfamily family = fontfamily.CUSTOM;
+		if (currentFont == null) currentFont = new CSSFont(family);
+		if (value.getLexicalUnitType() == LexicalUnit.SAC_IDENT || value.getLexicalUnitType() == LexicalUnit.SAC_STRING_VALUE) {
+			if (value.getStringValue().toUpperCase().contains(".TTF")) {currentFont.setFamily(fontfamily.CUSTOM); currentFont.setCustomType(value.getStringValue()); return;}
+			if (value.getStringValue().toUpperCase().contains("MONOSPACE")) {currentFont.setFamily(fontfamily.MONO); return;}
+			if (value.getStringValue().toUpperCase().contains("SANS")) {currentFont.setFamily(fontfamily.SANS); return;}
+			if (value.getStringValue().toUpperCase().contains("SERIF")) {currentFont.setFamily(fontfamily.SERIF); return;}
+
+		}
+		
+	}
+	private void handleFontStyle(LexicalUnit value) {
+		
+		logger.debug("Handle Font Style: " + value.getLexicalUnitType());
+		fontstyle style = fontstyle.NORMAL;
+		if (currentFont == null) currentFont = new CSSFont(style);
+		if (value.getLexicalUnitType() == LexicalUnit.SAC_IDENT || value.getLexicalUnitType() == LexicalUnit.SAC_STRING_VALUE) {
+			if (value.getStringValue().toUpperCase().contains("ITALIC")) {currentFont.setStyle(fontstyle.ITALIC); return;}
+			if (value.getStringValue().toUpperCase().contains("OBLIQUE")) {currentFont.setStyle(fontstyle.OBLIQUE); return;}
 		}
 	}
 	
@@ -476,7 +554,7 @@ public class CSSHandler implements DocumentHandler{
 	}
 	
 	private enum cssproperties {
-		COLOR, BACKGROUNDCOLOR, BORDERCOLOR, BACKGROUNDIMAGE, BACKGROUNDPOSITION, BACKGROUNDREPEAT, BORDERSTYLE, FONTFAMILY, FONT, FONTSIZE, FONTSTYLE, WIDTH, HEIGHT, BORDERWIDTH, PADDING, VISIBILITY, ZINDEX, BORDER, UNKNOWN 
+		COLOR, BACKGROUNDCOLOR, BORDERCOLOR, BACKGROUNDIMAGE, BACKGROUNDPOSITION, BACKGROUNDREPEAT, BORDERSTYLE, FONTFAMILY, FONT, FONTSIZE, FONTSTYLE, FONTWEIGHT, WIDTH, HEIGHT, BORDERWIDTH, PADDING, VISIBILITY, ZINDEX, BORDER, UNKNOWN 
 	}
 	
 }
