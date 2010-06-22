@@ -20,6 +20,7 @@ public class parserConnector {
 	
 	
 	public parserConnector(String source, MTApplication app) {
+		
 		List<CSSStyle> styles= new ArrayList<CSSStyle>();
 		cssh = new CSSHandler(app, styles);
 		
@@ -42,6 +43,16 @@ public class parserConnector {
 		}
 		
 		
+	}
+
+
+	public CSSHandler getCssh() {
+		return cssh;
+	}
+
+
+	public void setCssh(CSSHandler cssh) {
+		this.cssh = cssh;
 	}
 	
 	

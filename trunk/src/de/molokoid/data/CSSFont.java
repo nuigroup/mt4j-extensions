@@ -15,7 +15,11 @@ public class CSSFont {
 		super();
 		this.color = color;
 	}
-
+	public CSSFont() {
+		super();
+		this.family = fontfamily.DEFAULT;
+	}
+	
 	public CSSFont(int fontsize) {
 		super();
 		this.fontsize = fontsize;

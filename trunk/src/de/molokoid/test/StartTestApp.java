@@ -9,12 +9,13 @@ public class StartTestApp extends MTApplication{
 		initialize();
 	}
 	
-	public StartTestApp() {
+	public void initApp() {
 		initialize();
 	}
 	
 	@Override
 	public void startUp() {
+		initialize();
 		addScene(new TestApp(this, "Test Scene"));
 		
 	}

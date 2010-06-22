@@ -18,7 +18,7 @@ public class HelloWorldScene extends AbstractScene {
 		//Show touches
 		this.registerGlobalInputProcessor(new CursorTracer(mtApplication, this));
 		
-		IFont fontArial = FontManager.getInstance().createFont(mtApplication, "arial.ttf", 
+		IFont fontArial = FontManager.getInstance().createFont(mtApplication, "dejavu/DejaVuSans.ttf", 
 				50, 	//Font size
 				white,  //Font fill color
 				white);	//Font outline color

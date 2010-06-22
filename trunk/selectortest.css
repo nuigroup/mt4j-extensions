@@ -4,6 +4,23 @@ P {color: green;}
 H3 {color: navy;}
 LI {color: green;}
 
+#fonttest {font-family: Helvetica;}
+#fonttest1 {font-family: Helvetica, Times;}
+#fonttest2 {font-family: Arial.ttf;}
+#fonttest3 {font-family: "Futura.ttf";}
+#fonttest4 {font-style: Italic;}
+#fonttest5 {font-weight: bold;}
+#fonttest6 {font-weight: 900;}
+#fonttest7 {font-weight: 200%;}
+
+#test {width: 725px;}
+#test2 {color: #E0E0E0;}
+#test3 {padding: 5em;}
+#test4 {border-width: 4pc;}
+#test5 {height: 2cm;}
+#test6 {visibility: true;}
+#test7 {border-style: dashed;}
+
 * {text-decoration: overline;}
 *.cl1 {color: purple;}
 .pastoral {color: green;}  /* omitted universal selector should be inferred */

@@ -76,14 +76,18 @@ public class CSSHandler implements DocumentHandler{
 		for (CSSStyle s: activeStyles) {
 			s.setFont(selectFont(currentFont));
 		}
-		currentFont = null;
+		currentFont = new CSSFont();
 		activeStyles.clear();
 		logger.debug("Clearing activeStyles");
 	}
 
 	private IFont selectFont(CSSFont currentFont2) {
+		if (app == null) logger.debug("Application = null");
+		if (currentFont2 == null) logger.debug("currentFont2 = null");
+		if (currentFont2 != null) {
 		try {
 		switch (currentFont2.getFamily()) {
+		
 		case SERIF:
 			switch (currentFont2.getStyle()) {
 			case ITALIC:
@@ -145,6 +149,7 @@ public class CSSHandler implements DocumentHandler{
 		case CUSTOM:
 			return getFont(currentFont2.getCustomType(), currentFont2.getFontsize(), currentFont2.getColor());
 			
+		case DEFAULT:
 		case SANS:
 		default:
 			switch (currentFont2.getStyle()) {
@@ -181,8 +186,13 @@ public class CSSHandler implements DocumentHandler{
 			e.printStackTrace();
 			
 		}
+		}
 		
-		
+		if (app == null) logger.debug("Application = null");
+		if (currentFont2 == null) {
+			logger.debug("currentFont2 == null");
+			currentFont2 = new CSSFont(16);
+		}
 		
 		 return FontManager.getInstance().createFont(app,
 				"dejavu/DejaVuSans.ttf", currentFont2.getFontsize(), // Font size
@@ -196,7 +206,8 @@ public class CSSHandler implements DocumentHandler{
 		
 				font, size, // Font size
 				color, // Font fill color
-				color); 
+				color);
+			if (returnFont == null) throw new Exception();
 			return returnFont;	
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -673,6 +684,10 @@ public class CSSHandler implements DocumentHandler{
 		
 		
 		return newSelector;
+	}
+	
+	public List<CSSStyle> getStyles() {
+		return styles;
 	}
 	
 	private SelectorType determineType (String in) {
