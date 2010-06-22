@@ -1,5 +1,7 @@
 package de.molokoid.data;
 
+import org.apache.log4j.Logger;
+
 public class Selector {
 	String primary = null;
 	SelectorType primaryType = null;
@@ -91,6 +93,7 @@ public class Selector {
 
 	@Override
 	public boolean equals(Object obj) {
+		
 		if (this == obj)
 			return true;
 		if (obj == null)

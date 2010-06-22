@@ -106,9 +106,61 @@ public class CSSFont {
 	
 
 	private void debugOutput() {
-		Logger logger = Logger.getLogger("MT4J Extensions");
+		/*Logger logger = Logger.getLogger("MT4J Extensions");
 		logger.debug("Font Family: " + family + ", Font Style: " + style
 				+ ", Font Weight: " + weight + ", Font Size: " + fontsize
-				+ ", Custom TTF Font: " + customType);
+				+ ", Custom TTF Font: " + customType);*/
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		result = prime * result
+				+ ((customType == null) ? 0 : customType.hashCode());
+		result = prime * result + ((family == null) ? 0 : family.hashCode());
+		result = prime * result + fontsize;
+		result = prime * result + ((style == null) ? 0 : style.hashCode());
+		result = prime * result + ((weight == null) ? 0 : weight.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CSSFont other = (CSSFont) obj;
+		if (color == null) {
+			if (other.color != null)
+				return false;
+		} else if (!color.equals(other.color))
+			return false;
+		if (customType == null) {
+			if (other.customType != null)
+				return false;
+		} else if (!customType.equals(other.customType))
+			return false;
+		if (family == null) {
+			if (other.family != null)
+				return false;
+		} else if (!family.equals(other.family))
+			return false;
+		if (fontsize != other.fontsize)
+			return false;
+		if (style == null) {
+			if (other.style != null)
+				return false;
+		} else if (!style.equals(other.style))
+			return false;
+		if (weight == null) {
+			if (other.weight != null)
+				return false;
+		} else if (!weight.equals(other.weight))
+			return false;
+		return true;
+	}
+	
 }

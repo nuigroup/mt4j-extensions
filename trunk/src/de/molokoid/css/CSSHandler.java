@@ -32,6 +32,7 @@ public class CSSHandler implements DocumentHandler{
 	List<CSSStyle> activeStyles = new ArrayList<CSSStyle>();
 	CSSFont currentFont = null;
 	MTApplication app = null;
+	float defaultFontSize = 16f;
 	
 	public CSSHandler(MTApplication app, List<CSSStyle> styles) {
 		logger = Logger.getLogger("MT4J Extensions");
@@ -78,12 +79,11 @@ public class CSSHandler implements DocumentHandler{
 		}
 		currentFont = new CSSFont();
 		activeStyles.clear();
-		logger.debug("Clearing activeStyles");
+		
 	}
 
 	private IFont selectFont(CSSFont currentFont2) {
-		if (app == null) logger.debug("Application = null");
-		if (currentFont2 == null) logger.debug("currentFont2 = null");
+
 		if (currentFont2 != null) {
 		try {
 		switch (currentFont2.getFamily()) {
@@ -188,9 +188,8 @@ public class CSSHandler implements DocumentHandler{
 		}
 		}
 		
-		if (app == null) logger.debug("Application = null");
+
 		if (currentFont2 == null) {
-			logger.debug("currentFont2 == null");
 			currentFont2 = new CSSFont(16);
 		}
 		
@@ -242,11 +241,8 @@ public class CSSHandler implements DocumentHandler{
 	public void property(String name, LexicalUnit value, boolean important)
 			throws CSSException {
 		try {
-		logger.debug(name + " | " + value.getLexicalUnitType());
 		parseValue(name, value);
 		} catch (Exception e){
-			//logger.debug("Exception: " + value.getStringValue());
-			logger.debug(name + " | " + value.getLexicalUnitType());
 			e.printStackTrace();
 			
 		}
@@ -257,20 +253,17 @@ public class CSSHandler implements DocumentHandler{
 			cssproperties prop = cssproperties.UNKNOWN;
 			try {
 				prop  = cssproperties.valueOf(name.replace(" ", "").replace("-", "").toUpperCase());
-				logger.debug(name.replace(" ", "").replace("-", "").toUpperCase() + " -> " + prop);
 			} catch (IllegalArgumentException iae) {
 				
 			}
 		switch (prop) {
-		case COLOR:
+		case BACKGROUNDCOLOR:
 			MTColor color = handleColor(value);
-			logger.debug("Color: " + color.toColorString());
-			for (CSSStyle sty: activeStyles) sty.setColor(color);
+			for (CSSStyle sty: activeStyles) sty.setBackgroundColor(color);
 			
 			break;
-		case BACKGROUNDCOLOR:
+		case COLOR:
 			color = handleColor(value);
-			logger.debug("Background Color: " + color.toColorString());
 			//for (CSSStyle sty: activeStyles) sty.setBackgroundColor(color);
 			if (currentFont == null) currentFont = new CSSFont(color);
 			else currentFont.setColor(color);
@@ -278,57 +271,55 @@ public class CSSHandler implements DocumentHandler{
 			
 		case WIDTH:
 			LexicalUnit parameter = value;
-			for (CSSStyle sty: activeStyles) sty.setWidth(parseMeasuringUnit(parameter));
-			logger.debug("Width: " + parseMeasuringUnit(parameter));
+			//TODO: Relative Größe
+			for (CSSStyle sty: activeStyles) {
+				sty.setWidth(parseMeasuringUnit(parameter,100));
+				if (parameter.getLexicalUnitType() == LexicalUnit.SAC_PERCENTAGE) sty.setWidthPercentage(true);
+			}
 			break;
 		case HEIGHT:
 			parameter = value;
-			for (CSSStyle sty: activeStyles) sty.setHeight(parseMeasuringUnit(parameter));
-			logger.debug("Height: " + parseMeasuringUnit(parameter));
+			//TODO: Relative Größe
+			for (CSSStyle sty: activeStyles) {
+				sty.setHeight(parseMeasuringUnit(parameter, 100));
+				if (parameter.getLexicalUnitType() == LexicalUnit.SAC_PERCENTAGE) sty.setHeightPercentage(true);
+			}
 			break;
 		case BORDER:
 			
 			break;
 		case BORDERWIDTH:
 			parameter = value;
-			for (CSSStyle sty: activeStyles) sty.setBorderWidth(parseMeasuringUnit(parameter));
-			logger.debug("Border Width: " + parseMeasuringUnit(parameter));
+			for (CSSStyle sty: activeStyles) sty.setBorderWidth(parseMeasuringUnit(parameter,1));
 			break;
 		case BORDERCOLOR:
 			color = handleColor(value);
-			logger.debug("Border Color: " + color.toColorString());
 			for (CSSStyle sty: activeStyles) sty.setBorderColor(color);
 			
 			break;
 		case BORDERSTYLE:
 			BorderStyle style = parseBorderStyle(value);
 			for (CSSStyle sty: activeStyles) sty.setBorderStyle(style);
-			logger.debug("BorderStyle: " + style);
 			break;
 		case PADDING:
 			parameter = value;
-			for (CSSStyle sty: activeStyles) sty.setPaddingWidth(parseMeasuringUnit(parameter));
-			logger.debug("Padding: " + parseMeasuringUnit(parameter));
+			for (CSSStyle sty: activeStyles) sty.setPaddingWidth(parseMeasuringUnit(parameter,1));
 			break;
 		case FONTSIZE:
 			parameter = value;
-			//for (CSSStyle sty: activeStyles) sty.setFontSize((int) parseMeasuringUnit(parameter));
-			if (currentFont == null) currentFont = new CSSFont((int) parseMeasuringUnit(parameter));
-			else currentFont.setFontsize((int) parseMeasuringUnit(parameter));
-			logger.debug("Font Size: " + parseMeasuringUnit(parameter));
+			if (currentFont == null) currentFont = new CSSFont((int) parseMeasuringUnit(parameter,defaultFontSize));
+			else currentFont.setFontsize((int) parseMeasuringUnit(parameter,defaultFontSize));
 			break;
 		case VISIBILITY:
 			boolean visible; 
 			visible = parseBoolean(value);
 			for (CSSStyle sty: activeStyles) sty.setVisibility(visible);
-			logger.debug("VISIBILITY: " + visible);
 			break;
 			
 		case FONTFAMILY:
 			handleFontFamily(value);
 			break;
 		case FONT:
-			logger.debug("Font: " + name.replace(" ", "").replace("-", "").toUpperCase());
 			break;
 		case FONTSTYLE:
 			handleFontStyle(value);
@@ -338,7 +329,7 @@ public class CSSHandler implements DocumentHandler{
 			break;
 		case UNKNOWN:
 		default:
-			logger.debug("Unknown Identifier: " + name.replace(" ", "").replace("-", "").toUpperCase());
+			logger.error("Unknown Identifier: " + name.replace(" ", "").replace("-", "").toUpperCase());
 			break;
 		
 			
@@ -349,7 +340,6 @@ public class CSSHandler implements DocumentHandler{
 	}
 	
 	private void handleFontWeight(LexicalUnit value) {
-		logger.debug("Handle Font Weight: " + value.getLexicalUnitType());
 		fontweight weight = fontweight.NORMAL;
 		if (currentFont == null) currentFont = new CSSFont(weight);
 		switch (value.getLexicalUnitType()) {
@@ -371,7 +361,6 @@ public class CSSHandler implements DocumentHandler{
 
 
 	private void handleFontFamily(LexicalUnit value) {
-		logger.debug("Handle Font Family: " + value.getLexicalUnitType());
 		fontfamily family = fontfamily.CUSTOM;
 		if (currentFont == null) currentFont = new CSSFont(family);
 		if (value.getLexicalUnitType() == LexicalUnit.SAC_IDENT || value.getLexicalUnitType() == LexicalUnit.SAC_STRING_VALUE) {
@@ -385,7 +374,6 @@ public class CSSHandler implements DocumentHandler{
 	}
 	private void handleFontStyle(LexicalUnit value) {
 		
-		logger.debug("Handle Font Style: " + value.getLexicalUnitType());
 		fontstyle style = fontstyle.NORMAL;
 		if (currentFont == null) currentFont = new CSSFont(style);
 		if (value.getLexicalUnitType() == LexicalUnit.SAC_IDENT || value.getLexicalUnitType() == LexicalUnit.SAC_STRING_VALUE) {
@@ -398,21 +386,19 @@ public class CSSHandler implements DocumentHandler{
 		switch (value.getLexicalUnitType()) {
 		case LexicalUnit.SAC_RGBCOLOR:
 				try {
-					logger.debug("Color by RGB: " + value.getFunctionName());
-					//logger.debug("Color by RGB: " + value.getParameters());
+
 					LexicalUnit parameters = value.getParameters();
-					float red = parseMeasuringUnit(parameters);
+					float red = parseMeasuringUnit(parameters, 255);
 					parameters = parameters.getNextLexicalUnit().getNextLexicalUnit();
-					float green = parseMeasuringUnit(parameters);
+					float green = parseMeasuringUnit(parameters, 255);
 					parameters = parameters.getNextLexicalUnit().getNextLexicalUnit();
-					float blue = parseMeasuringUnit(parameters);
-					//logger.debug("Color: " + red + "," + green + "," + blue);
+					float blue = parseMeasuringUnit(parameters, 255);
+
 					return new MTColor(red, green, blue, 255);
 					
 				} catch (Exception e) {e.printStackTrace();};
 			break;
 		case LexicalUnit.SAC_IDENT:
-				logger.debug("Color by Identifier: " + value.getStringValue());
 				if (value.getStringValue().equalsIgnoreCase("black")) return new MTColor(0,0,0,255);
 				if (value.getStringValue().equalsIgnoreCase("white")) return new MTColor(255,255,255,255);
 				if (value.getStringValue().equalsIgnoreCase("silver")) return new MTColor(192,192,192,255);
@@ -477,7 +463,7 @@ public class CSSHandler implements DocumentHandler{
 		return 0;
 	}
 	
-	private float parseMeasuringUnit(LexicalUnit value) {
+	private float parseMeasuringUnit(LexicalUnit value, float referenceValue) {
 		float dpi = 100f;
 		
 		//TODO: Font Sizes
@@ -492,22 +478,16 @@ public class CSSHandler implements DocumentHandler{
 		try {
 		switch (value.getLexicalUnitType()) {
 		case LexicalUnit.SAC_CENTIMETER:
-			//logger.debug("1 Float: " + value.getFloatValue());
 			return value.getFloatValue() * centtopx;
 		case LexicalUnit.SAC_INCH:
-			//logger.debug("2 Float: " + value.getFloatValue());
 			return value.getFloatValue() * inchtopx;
 		case LexicalUnit.SAC_MILLIMETER:
-			//logger.debug("3 Float: " + value.getFloatValue());
 			return value.getFloatValue() * mmtopx;
 		case LexicalUnit.SAC_POINT:
-			//logger.debug("4 Float: " + value.getFloatValue());
 			return value.getFloatValue() * pointtopx;
 		case LexicalUnit.SAC_PICA:
-			//logger.debug("5 Float: " + value.getFloatValue());
 			return value.getFloatValue() * picatopx;
 		case LexicalUnit.SAC_EM:
-			//logger.debug("6 Float: " + value.getFloatValue());
 			return (value.getFloatValue() * emtopx);
 		case LexicalUnit.SAC_PIXEL:
 			return value.getFloatValue();
@@ -515,13 +495,13 @@ public class CSSHandler implements DocumentHandler{
 			return (float) value.getIntegerValue();
 		case LexicalUnit.SAC_REAL:
 		case LexicalUnit.SAC_PERCENTAGE:
-			return (float) value.getFloatValue();
+			return (float) value.getFloatValue() / 100 *  referenceValue;
 			
 		}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		logger.debug("Unrecognized Measuring Unit: " + value.getLexicalUnitType());
+		logger.error("Unrecognized Measuring Unit: " + value.getLexicalUnitType());
 		return 0;
 	}
 	
@@ -564,7 +544,6 @@ public class CSSHandler implements DocumentHandler{
 	}
 	
 	private Selector parseSelector(org.w3c.css.sac.Selector selector) {
-		logger.debug(selector.toString());
 		//Ignoring "F E" combinator
 		//TODO: FE Combinator
 		
@@ -588,9 +567,9 @@ public class CSSHandler implements DocumentHandler{
 		
 		
 		
-		logger.debug("Primary: " + newSelector.getPrimary() + "|" + newSelector.getPrimaryType().toString());
-		if (newSelector.getSecondary() != null) logger.debug("Secondary: " + newSelector.getSecondary() + "|" + newSelector.getSecondaryType().toString());
-		if (newSelector.getChild() != null) logger.debug("Child: " + newSelector.getChild().getPrimary() + "|" + newSelector.getChild().getPrimaryType().toString());
+
+		//if (newSelector.getSecondary() != null) logger.debug("Secondary: " + newSelector.getSecondary() + "|" + newSelector.getSecondaryType().toString());
+		//if (newSelector.getChild() != null) logger.debug("Child: " + newSelector.getChild().getPrimary() + "|" + newSelector.getChild().getPrimaryType().toString());
 		return newSelector;
 	}
 	
@@ -641,13 +620,11 @@ public class CSSHandler implements DocumentHandler{
 		if (containsSharp) {
 			if (firstCharacterSharp) {
 			String[] parts = work.substring(1).split("#",2);
-			logger.debug("Just Split " + work.substring(1)  +  " by '#' into " + parts.length + " Parts");
 			newSelector = new Selector(parts[0].replace(".", "").replace("#", ""), SelectorType.ID);
 			newSelector.setSecondary(parts[1].replace(".", "").replace("#", ""));
 			newSelector.setSecondaryType(SelectorType.ID);
 			} else {
 			String[] parts = work.split("#",2);
-			logger.debug("Just Split " + work  +  " by '#' into " + parts.length + " Parts");
 			newSelector = new Selector(parts[0].replace(".", "").replace("#", ""), determineType(parts[0]));
 			newSelector.setSecondary(parts[1].replace(".", "").replace("#", ""));
 			newSelector.setSecondaryType(SelectorType.ID);
@@ -658,13 +635,11 @@ public class CSSHandler implements DocumentHandler{
 		if (containsDot) {
 			if (firstCharacterDot) {
 				String[] parts = work.substring(1).split(".",2);
-				logger.debug("Just Split " + work.substring(1)  +  " by '.' into " + parts.length + " Parts");
 				newSelector = new Selector(parts[0], SelectorType.CLASS);
 				newSelector.setSecondary(parts[1]);
 				newSelector.setSecondaryType(SelectorType.CLASS);
 			} else {
 				String[] parts = work.split(".",2);
-				logger.debug("Just Split " + work  +  " by '.' into " + parts.length + " Parts");
 				if (parts.length == 0) {
 					for (char c: work.toCharArray()) {
 						logger.debug(c + " = " + (int)c);
