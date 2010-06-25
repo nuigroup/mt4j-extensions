@@ -129,4 +129,19 @@ public class Selector {
 		return true;
 	}
 	
+	@Override
+	public String toString() {
+		String childString = "";
+		if (child != null) childString = " Child: " + child.toString();
+		if (primary != null) {
+			if (secondary != null) {
+				return "Primary Selector: " + primary +
+				" (" + primaryType + "), Secondary Selector: " + secondary + " (" + secondaryType + ")" + childString;
+			} else {
+				return "Primary Selector: " + primary +
+				" (" + primaryType + ")" + childString;
+			}
+		}
+		return "No Selector";
+	}
 }

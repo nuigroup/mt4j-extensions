@@ -1,6 +1,7 @@
 package de.molokoid.css;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -33,6 +34,11 @@ public class CSSHandler implements DocumentHandler{
 	CSSFont currentFont = null;
 	MTApplication app = null;
 	float defaultFontSize = 16f;
+	List<Short> numericalValues = new ArrayList<Short>( Arrays.asList(LexicalUnit.SAC_CENTIMETER,LexicalUnit.SAC_INCH,LexicalUnit.SAC_MILLIMETER,LexicalUnit.SAC_POINT,LexicalUnit.SAC_PICA,LexicalUnit.SAC_EM, LexicalUnit.SAC_PIXEL,LexicalUnit.SAC_INTEGER,LexicalUnit.SAC_REAL,LexicalUnit.SAC_PERCENTAGE));
+	List<Short> stringValues = new ArrayList<Short>( Arrays.asList(LexicalUnit.SAC_IDENT, LexicalUnit.SAC_STRING_VALUE));
+
+	
+	
 	
 	public CSSHandler(MTApplication app, List<CSSStyle> styles) {
 		logger = Logger.getLogger("MT4J Extensions");
@@ -122,26 +128,26 @@ public class CSSHandler implements DocumentHandler{
 			case ITALIC:
 			case OBLIQUE:
 				if (currentFont2.getWeight() == fontweight.BOLD) {
-					return getFont("dejavu/DejaVuMono-BoldOblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+					return getFont("dejavu/DejaVuSansMono-BoldOblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 				if (currentFont2.getWeight() == fontweight.LIGHT) {
-					return getFont("dejavu/DejaVuMono-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+					return getFont("dejavu/DejaVuSansMono-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 				if (currentFont2.getWeight() == fontweight.NORMAL) {
-					return getFont("dejavu/DejaVuMono-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+					return getFont("dejavu/DejaVuSansMono-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 			
 				break;
 			case NORMAL:
 			default:
 				if (currentFont2.getWeight() == fontweight.BOLD) {
-					return getFont("dejavu/DejaVuMono-Bold.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+					return getFont("dejavu/DejaVuSansMono-Bold.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 				if (currentFont2.getWeight() == fontweight.LIGHT) {
-					return getFont("dejavu/DejaVuMono.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+					return getFont("dejavu/DejaVuSansMono.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 				if (currentFont2.getWeight() == fontweight.NORMAL) {
-					return getFont("dejavu/DejaVuMono.ttf", currentFont2.getFontsize(), currentFont2.getColor());
+					return getFont("dejavu/DejaVuSansMono.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 				break;
 			}
@@ -254,7 +260,7 @@ public class CSSHandler implements DocumentHandler{
 			try {
 				prop  = cssproperties.valueOf(name.replace(" ", "").replace("-", "").toUpperCase());
 			} catch (IllegalArgumentException iae) {
-				
+				iae.printStackTrace();
 			}
 		switch (prop) {
 		case BACKGROUNDCOLOR:
@@ -307,8 +313,14 @@ public class CSSHandler implements DocumentHandler{
 			break;
 		case FONTSIZE:
 			parameter = value;
-			if (currentFont == null) currentFont = new CSSFont((int) parseMeasuringUnit(parameter,defaultFontSize));
-			else currentFont.setFontsize((int) parseMeasuringUnit(parameter,defaultFontSize));
+			//Have to convert to pt
+			if (numericalValues.contains(parameter.getLexicalUnitType())) {
+			if (currentFont == null) currentFont = new CSSFont((int) (parseMeasuringUnit(parameter,defaultFontSize) * (72f/100f)));
+			else currentFont.setFontsize((int) (parseMeasuringUnit(parameter,defaultFontSize)* (72f/100f)));
+			} else if (stringValues.contains(parameter.getLexicalUnitType())){
+				if (currentFont == null) currentFont = new CSSFont(handleFontSizeString(parameter));
+				else currentFont.setFontsize(handleFontSizeString(parameter));
+			}
 			break;
 		case VISIBILITY:
 			boolean visible; 
@@ -339,6 +351,18 @@ public class CSSHandler implements DocumentHandler{
 		}
 	}
 	
+	private int handleFontSizeString(LexicalUnit parameter) {
+		
+		if (parameter.getStringValue().toUpperCase().contains("SMALLER")) return 8;
+		if (parameter.getStringValue().toUpperCase().contains("BIGGER")) return 30;
+		
+		if (parameter.getStringValue().toUpperCase().contains("SMALL")) return 12;
+		if (parameter.getStringValue().toUpperCase().contains("BIG")) return 24;
+		
+		return 16;
+	}
+
+
 	private void handleFontWeight(LexicalUnit value) {
 		fontweight weight = fontweight.NORMAL;
 		if (currentFont == null) currentFont = new CSSFont(weight);
@@ -364,11 +388,17 @@ public class CSSHandler implements DocumentHandler{
 		fontfamily family = fontfamily.CUSTOM;
 		if (currentFont == null) currentFont = new CSSFont(family);
 		if (value.getLexicalUnitType() == LexicalUnit.SAC_IDENT || value.getLexicalUnitType() == LexicalUnit.SAC_STRING_VALUE) {
-			if (value.getStringValue().toUpperCase().contains(".TTF")) {currentFont.setFamily(fontfamily.CUSTOM); currentFont.setCustomType(value.getStringValue()); return;}
-			if (value.getStringValue().toUpperCase().contains("MONOSPACE")) {currentFont.setFamily(fontfamily.MONO); return;}
+			
+			if (value.getStringValue().toUpperCase().contains("TTF")) {
+				currentFont.setFamily(fontfamily.CUSTOM); 
+				currentFont.setCustomType(value.getStringValue()); 
+				return;}
+			if (value.getStringValue().toUpperCase().contains("MONO")) {currentFont.setFamily(fontfamily.MONO); return;}
 			if (value.getStringValue().toUpperCase().contains("SANS")) {currentFont.setFamily(fontfamily.SANS); return;}
 			if (value.getStringValue().toUpperCase().contains("SERIF")) {currentFont.setFamily(fontfamily.SERIF); return;}
 
+		} else {
+			logger.debug(value.getLexicalUnitType());
 		}
 		
 	}
@@ -563,13 +593,7 @@ public class CSSHandler implements DocumentHandler{
 			
 			
 		}
-		
-		
-		
-		
-
-		//if (newSelector.getSecondary() != null) logger.debug("Secondary: " + newSelector.getSecondary() + "|" + newSelector.getSecondaryType().toString());
-		//if (newSelector.getChild() != null) logger.debug("Child: " + newSelector.getChild().getPrimary() + "|" + newSelector.getChild().getPrimaryType().toString());
+		logger.debug(newSelector);
 		return newSelector;
 	}
 	

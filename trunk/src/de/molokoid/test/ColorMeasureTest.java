@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
@@ -19,18 +21,14 @@ import de.molokoid.data.CSSStyle;
 import de.molokoid.data.Selector;
 import de.molokoid.data.SelectorType;
 
-public class parserConnectorTest {
+public class ColorMeasureTest extends TestCase {
 	Logger logger = Logger.getLogger("MT4J Extensions");
 	SimpleLayout l = new SimpleLayout();
 	ConsoleAppender ca = new ConsoleAppender(l);
 	
 	Logger fileLogger = Logger.getLogger("FileLogger");
 	
-	
-	
-	
-	
-	
+		
 	StartTestApp app = new StartTestApp();
 	parserConnector pc;
 	List<CSSStyle> styles;
@@ -49,7 +47,7 @@ public class parserConnectorTest {
 		
 		fileLogger.addAppender(ca);
 		
-		pc = new parserConnector("selectortest.css", app);
+		pc = new parserConnector("colormeasuretest.css", app);
 		styles= pc.getCssh().getStyles();
 	}
 	
