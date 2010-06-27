@@ -40,7 +40,7 @@ public class SelectorTest extends TestCase {
 		pc = new parserConnector("selectortest.css", app);
 		styles= pc.getCssh().getStyles();
 
-		
+		hm.clear();
 		for (CSSStyle s: styles) {
 			hm.put(s.getSelector(), s.getBackgroundColor());
 		}
@@ -60,22 +60,11 @@ public class SelectorTest extends TestCase {
 		MTColor green = new MTColor(0,128,0,255);
 		MTColor red = new MTColor(255,0,0,255);
 		MTColor blue = new MTColor(0,0,255,255);
-		int exists = 0;
-		for (CSSStyle s: styles) {
-			if (s.getSelector().equals(h1)) {
-				assertTrue(s.getBackgroundColor().equals(red));
-				exists++;
-			}
-			if (s.getSelector().equals(id)) {
-				assertTrue(s.getBackgroundColor().equals(blue));
-				exists++;
-			}
-			if (s.getSelector().equals(c0)) {
-				exists++;
-				assertTrue(s.getBackgroundColor().equals(green));
-			}
-		}
-		assertTrue(exists == 3);
+
+		assertTrue(hm.get(h1).equals(red));
+		assertTrue(hm.get(id).equals(blue));
+		assertTrue(hm.get(c0).equals(green));
+
 	}
 	
 	@Test
@@ -89,22 +78,11 @@ public class SelectorTest extends TestCase {
 		MTColor silver = new MTColor(192,192,192,255);
 		int exists = 0;
 		
-		for (CSSStyle s: styles) {
-			if (s.getSelector().equals(h2)) {
-				assertTrue(s.getBackgroundColor().equals(black));
-				exists++;
-			}
-			if (s.getSelector().equals(id3)) {
-				assertTrue(s.getBackgroundColor().equals(purple));
-				exists++;
-			}
-			if (s.getSelector().equals(c4)) {
-				exists++;
-				assertTrue(s.getBackgroundColor().equals(silver));
-			}
-		}
-		assertTrue(exists == 3);
+		assertTrue(hm.get(h2).equals(black));
+		assertTrue(hm.get(id3).equals(purple));
+		assertTrue(hm.get(c4).equals(silver));
 		
+	
 	}
 	
 	@Test
@@ -119,33 +97,12 @@ public class SelectorTest extends TestCase {
 		MTColor gray = new MTColor(128,128,128,255);
 		MTColor maroon = new MTColor(128,0,0,255);
 		
+		assertTrue(hm.get(star).equals(olive));
+		assertTrue(hm.get(h5).equals(white));
+		assertTrue(hm.get(id5).equals(gray));
+		assertTrue(hm.get(c5).equals(maroon));
 		
-		int exists = 0;
-		
-		for (CSSStyle s: styles) {
-			if (s.getSelector().equals(star)) {
-				assertTrue(s.getBackgroundColor().equals(olive));
-				exists++;
-				
-			}
-			if (s.getSelector().equals(h5)) {
-				assertTrue(s.getBackgroundColor().equals(white));
-				exists++;
-			}
-			if (s.getSelector().equals(id5)) {
-				exists++;
-				assertTrue(s.getBackgroundColor().equals(gray));
-			}
-			if (s.getSelector().equals(c5)) {
-				exists++;
-				assertTrue(s.getBackgroundColor().equals(maroon));
-			}
-		}
-		
-		assertTrue(exists == 4);
-		
-		
-		
+
 		
 	}
 	

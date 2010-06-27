@@ -3,6 +3,7 @@ package de.molokoid.test;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -35,9 +36,9 @@ public class FontParserTest extends TestCase{
 	parserConnector pc;
 	List<CSSStyle> styles;
 	MTColor w = new MTColor(255,255,255,255);
+	HashMap<Selector, IFont> hm = new HashMap<Selector, IFont>();
 
-	@Before
-	public void setUp() {
+	public FontParserTest() {
 		logger.addAppender(ca);
 		FileAppender fa;
 		try {
@@ -52,6 +53,15 @@ public class FontParserTest extends TestCase{
 
 		pc = new parserConnector("fonttest.css", app);
 		styles= pc.getCssh().getStyles();
+		hm.clear();
+		for (CSSStyle s: styles) {
+			hm.put(s.getSelector(), s.getFont());
+		}
+	}
+	
+	@Before
+	public void setUp() {
+
 	}
 
 
@@ -73,66 +83,38 @@ public class FontParserTest extends TestCase{
 		Selector sansnormal = new Selector("sansnormal", SelectorType.ID);
 		Selector sansnormalbold = new Selector("sansnormalbold", SelectorType.ID);
 		Selector sansnormallight = new Selector("sansnormallight", SelectorType.ID);
-		int exists = 0;
+
 		IFont sansFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSans.ttf", 16,w,w);
 		IFont sansBoldFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSans-Bold.ttf", 16,w,w);
 		IFont sansItalicFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSans-Oblique.ttf", 16,w,w);
 		IFont sansItalicBoldFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSans-BoldOblique.ttf", 16,w,w);
 		IFont sansLightFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSans-ExtraLight.ttf", 16,w,w);
 
-		for (CSSStyle s: styles) {
-			if (s.getSelector().equals(sans)) {
-				assertTrue(sameFont(s.getFont(), sansFont));
-				exists++;
-			}
-			if (s.getSelector().equals(sansbold)) {
-				assertTrue(sameFont(s.getFont(), sansBoldFont));
-				exists++;
-			}
-			if (s.getSelector().equals(sanslight)) {
-				assertTrue(sameFont(s.getFont(), sansLightFont));
-				exists++;
-			}
-			if (s.getSelector().equals(sansitalic)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), sansItalicFont));
-			}
-			if (s.getSelector().equals(sansitalicbold)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), sansItalicBoldFont));
-			}
-			if (s.getSelector().equals(sansitaliclight)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), sansItalicFont));
-			}
-			if (s.getSelector().equals(sansoblique)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), sansItalicFont));
-			}
-			if (s.getSelector().equals(sansobliquebold)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), sansItalicBoldFont));
-			}
-			if (s.getSelector().equals(sansobliquelight)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), sansItalicFont));
-			}
-			if (s.getSelector().equals(sansnormal)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), sansFont));
-			}
-			if (s.getSelector().equals(sansnormalbold)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), sansBoldFont));
-			}
-			if (s.getSelector().equals(sansnormallight)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), sansLightFont));
-			}
 
+				assertTrue(sameFont(hm.get(sans), sansFont));
 
-		}
-		assertTrue(exists == 12);
+				assertTrue(sameFont(hm.get(sansbold), sansBoldFont));
+
+				assertTrue(sameFont(hm.get(sanslight), sansLightFont));
+
+				assertTrue(sameFont(hm.get(sansitalic), sansItalicFont));
+
+				assertTrue(sameFont(hm.get(sansitalicbold), sansItalicBoldFont));
+
+				assertTrue(sameFont(hm.get(sansitaliclight), sansItalicFont));
+
+				assertTrue(sameFont(hm.get(sansoblique), sansItalicFont));
+
+				assertTrue(sameFont(hm.get(sansobliquebold), sansItalicBoldFont));
+
+				assertTrue(sameFont(hm.get(sansobliquelight), sansItalicFont));
+
+				assertTrue(sameFont(hm.get(sansnormal), sansFont));
+
+				assertTrue(sameFont(hm.get(sansnormalbold), sansBoldFont));
+
+				assertTrue(sameFont(hm.get(sansnormallight), sansLightFont));
+
 
 	}
 	
@@ -150,66 +132,37 @@ public class FontParserTest extends TestCase{
 		Selector serifnormal = new Selector("serifnormal", SelectorType.ID);
 		Selector serifnormalbold = new Selector("serifnormalbold", SelectorType.ID);
 		Selector serifnormallight = new Selector("serifnormallight", SelectorType.ID);
-		int exists = 0;
+
 		IFont serifFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSerif.ttf", 16,w,w);
 		IFont serifBoldFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSerif-Bold.ttf", 16,w,w);
 		IFont serifItalicFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSerif-Italic.ttf", 16,w,w);
 		IFont serifItalicBoldFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSerif-BoldItalic.ttf", 16,w,w);
 		IFont serifLightFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSerif.ttf", 16,w,w);
 
-		for (CSSStyle s: styles) {
-			if (s.getSelector().equals(serif)) {
-				assertTrue(sameFont(s.getFont(), serifFont));
-				exists++;
-			}
-			if (s.getSelector().equals(serifbold)) {
-				assertTrue(sameFont(s.getFont(), serifBoldFont));
-				exists++;
-			}
-			if (s.getSelector().equals(seriflight)) {
-				assertTrue(sameFont(s.getFont(), serifLightFont));
-				exists++;
-			}
-			if (s.getSelector().equals(serifitalic)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), serifItalicFont));
-			}
-			if (s.getSelector().equals(serifitalicbold)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), serifItalicBoldFont));
-			}
-			if (s.getSelector().equals(serifitaliclight)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), serifItalicFont));
-			}
-			if (s.getSelector().equals(serifoblique)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), serifItalicFont));
-			}
-			if (s.getSelector().equals(serifobliquebold)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), serifItalicBoldFont));
-			}
-			if (s.getSelector().equals(serifobliquelight)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), serifItalicFont));
-			}
-			if (s.getSelector().equals(serifnormal)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), serifFont));
-			}
-			if (s.getSelector().equals(serifnormalbold)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), serifBoldFont));
-			}
-			if (s.getSelector().equals(serifnormallight)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), serifLightFont));
-			}
+				assertTrue(sameFont(hm.get(serif), serifFont));
 
+				assertTrue(sameFont(hm.get(serifbold), serifBoldFont));
 
-		}
-		assertTrue(exists == 12);
+				assertTrue(sameFont(hm.get(seriflight), serifLightFont));
+
+				assertTrue(sameFont(hm.get(serifitalic), serifItalicFont));
+
+				assertTrue(sameFont(hm.get(serifitalicbold), serifItalicBoldFont));
+
+				assertTrue(sameFont(hm.get(serifitaliclight), serifItalicFont));
+
+				assertTrue(sameFont(hm.get(serifoblique), serifItalicFont));
+
+				assertTrue(sameFont(hm.get(serifobliquebold), serifItalicBoldFont));
+
+				assertTrue(sameFont(hm.get(serifobliquelight), serifItalicFont));
+
+				assertTrue(sameFont(hm.get(serifnormal), serifFont));
+
+				assertTrue(sameFont(hm.get(serifnormalbold), serifBoldFont));
+
+				assertTrue(sameFont(hm.get(serifnormallight), serifLightFont));
+
 	}
 	@Test
 	public void testFontFamilesMono() {
@@ -225,66 +178,38 @@ public class FontParserTest extends TestCase{
 		Selector mononormal = new Selector("mononormal", SelectorType.ID);
 		Selector mononormalbold = new Selector("mononormalbold", SelectorType.ID);
 		Selector mononormallight = new Selector("mononormallight", SelectorType.ID);
-		int exists = 0;
+
 		IFont monoFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSansMono.ttf", 16,w,w);
 		IFont monoBoldFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSansMono-Bold.ttf", 16,w,w);
 		IFont monoItalicFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSansMono-Oblique.ttf", 16,w,w);
 		IFont monoItalicBoldFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSansMono-BoldOblique.ttf", 16,w,w);
 		IFont monoLightFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSansMono.ttf", 16,w,w);
 
-		for (CSSStyle s: styles) {
-			if (s.getSelector().equals(mono)) {
-				assertTrue(sameFont(s.getFont(), monoFont));
-				exists++;
-			}
-			if (s.getSelector().equals(monobold)) {
-				assertTrue(sameFont(s.getFont(), monoBoldFont));
-				exists++;
-			}
-			if (s.getSelector().equals(monolight)) {
-				assertTrue(sameFont(s.getFont(), monoLightFont));
-				exists++;
-			}
-			if (s.getSelector().equals(monoitalic)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), monoItalicFont));
-			}
-			if (s.getSelector().equals(monoitalicbold)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), monoItalicBoldFont));
-			}
-			if (s.getSelector().equals(monoitaliclight)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), monoItalicFont));
-			}
-			if (s.getSelector().equals(monooblique)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), monoItalicFont));
-			}
-			if (s.getSelector().equals(monoobliquebold)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), monoItalicBoldFont));
-			}
-			if (s.getSelector().equals(monoobliquelight)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), monoItalicFont));
-			}
-			if (s.getSelector().equals(mononormal)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), monoFont));
-			}
-			if (s.getSelector().equals(mononormalbold)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), monoBoldFont));
-			}
-			if (s.getSelector().equals(mononormallight)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), monoLightFont));
-			}
 
+				assertTrue(sameFont(hm.get(mono), monoFont));
 
-		}
-		assertTrue(exists == 12);
+				assertTrue(sameFont(hm.get(monobold), monoBoldFont));
+
+				assertTrue(sameFont(hm.get(monolight), monoLightFont));
+
+				assertTrue(sameFont(hm.get(monoitalic), monoItalicFont));
+
+				assertTrue(sameFont(hm.get(monoitalicbold), monoItalicBoldFont));
+
+				assertTrue(sameFont(hm.get(monoitaliclight), monoItalicFont));
+
+				assertTrue(sameFont(hm.get(monooblique), monoItalicFont));
+
+				assertTrue(sameFont(hm.get(monoobliquebold), monoItalicBoldFont));
+
+				assertTrue(sameFont(hm.get(monoobliquelight), monoItalicFont));
+
+				assertTrue(sameFont(hm.get(mononormal), monoFont));
+
+				assertTrue(sameFont(hm.get(mononormalbold), monoBoldFont));
+
+				assertTrue(sameFont(hm.get(mononormallight), monoLightFont));
+
 	}
 	@Test
 	public void testFontFamilesOther() {
@@ -298,27 +223,15 @@ public class FontParserTest extends TestCase{
 		MTColor g = new MTColor(0,128,0,255);
 		IFont arialgreenFont = FontManager.getInstance().createFont(app, "arial.ttf", 16, g, g);
 		IFont arialsmallerFont = FontManager.getInstance().createFont(app, "arial.ttf", 8, w, w);
-		int exists = 0;
-		for (CSSStyle s: styles) {
-			if (s.getSelector().equals(arial)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), arialFont));
-			}
-			if (s.getSelector().equals(arial12)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), arial12Font));
-			}
-			if (s.getSelector().equals(arialgreen)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), arialgreenFont));
-			}
-			if (s.getSelector().equals(arialsmaller)) {
-				exists++;
-				assertTrue(sameFont(s.getFont(), arialsmallerFont));
-			}
-		}
-		
-		assertTrue(exists == 4);
+
+				assertTrue(sameFont(hm.get(arial), arialFont));
+
+				assertTrue(sameFont(hm.get(arial12), arial12Font));
+
+				assertTrue(sameFont(hm.get(arialgreen), arialgreenFont));
+
+				assertTrue(sameFont(hm.get(arialsmaller), arialsmallerFont));
+
 	}
 	
 	public boolean sameFont(IFont f1, IFont f2) {
