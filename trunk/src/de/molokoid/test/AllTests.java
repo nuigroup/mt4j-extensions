@@ -10,6 +10,9 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ColorMeasureTest.class);
 		suite.addTestSuite(FontParserTest.class);
+		suite.addTestSuite(BorderTest.class);
+		suite.addTestSuite(CSSHandlerTest.class);
+		suite.addTestSuite(SelectorTest.class);
 		//$JUnit-END$
 		return suite;
 	}

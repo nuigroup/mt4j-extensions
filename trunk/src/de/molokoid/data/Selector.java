@@ -13,7 +13,7 @@ public class Selector {
 	
 	public Selector(String primary, SelectorType primaryType) {
 		super();
-		this.primary = primary;
+		this.primary = check(primary);
 		this.primaryType = primaryType;
 	}
 
@@ -26,7 +26,7 @@ public class Selector {
 	}
 
 	public void setPrimary(String primary) {
-		this.primary = primary;
+		this.primary = check(primary);
 	}
 
 	public SelectorType getPrimaryType() {
@@ -42,9 +42,14 @@ public class Selector {
 	}
 
 	public void setSecondary(String secondary) {
-		this.secondary = secondary;
+		this.secondary = check(secondary);
 	}
 
+	public void setSecondary(String secondary, SelectorType type) {
+		this.secondary = check(secondary);
+		this.secondaryType = type;
+	}
+	
 	public SelectorType getSecondaryType() {
 		return secondaryType;
 	}
@@ -144,4 +149,8 @@ public class Selector {
 		}
 		return "No Selector";
 	}
+	private String check(String input) {
+		return input.replace(" ", "").replace(".", "").replace("#", "");
+	}
+	
 }

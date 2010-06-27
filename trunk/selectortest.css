@@ -1,52 +1,32 @@
-H1 {font-family: sans-serif;}
-BODY {color: purple;}
-P {color: green;}
-H3 {color: navy;}
-LI {color: green;}
+H1 {background-color: red;}
+#ID {background-color: blue;}
+.c0 {background-color: green;}
 
-#fonttest {font-family: Helvetica;}
-#fonttest1 {font-family: Helvetica, Times;}
-#fonttest2 {font-family: Arial.ttf;}
-#fonttest3 {font-family: "Futura.ttf";}
-#fonttest4 {font-style: Italic;}
-#fonttest5 {font-weight: bold;}
-#fonttest6 {font-weight: 900;}
-#fonttest7 {font-weight: 200%;}
+H2, H3, H4 {background-color: black;}
+#ID2, #ID3, #ID4 {background-color: purple;}
+.c2, .c3, .c4 {background-color: silver;}
 
-#test {width: 725px;}
-#test2 {color: #E0E0E0;}
-#test3 {padding: 5em;}
-#test4 {border-width: 4pc;}
-#test5 {height: 2cm;}
-#test6 {visibility: true;}
-#test7 {border-style: dashed;}
+* {background-color: olive;}
+*H5 {background-color: white;}
+*#ID5 {background-color: gray;}
+*.c5 {background-color: maroon;}
 
-*.cl1 {color: purple;}
-.pastoral {color: green;}  /* omitted universal selector should be inferred */
-big {font-size: 133%; color: rgb(60%,60%,40%);}
+H6 H6 {background-color: red;}
+H6.c6 {background-color: blue;}
+H6#ID6 {background-color: green;}
 
-.cl21, .cl22, .cl23 {color: green;}
-.cl24, %cl25 {color: red;}
+.c6 H6 {background-color: red;}
+.c6.c6 {background-color: blue;}
+.c6#ID6 {background-color: green;}
 
-/*.cl31 :first-line strong {color: red;}
-/*.cl32em {color: red;}
-/*.cl32+.cl33 {color: green;}
-/*.cl33  +  .cl34 {color: green;} */
+#ID6 H6 {background-color: red;}
+#ID6.c6 {background-color: blue;}
+#ID6#ID6 {background-color: green;}
 
-H1 EM {color: blue;}
-P STRONG {color: maroon;}
-DIV * P {color: green;}
-LI * STRONG {color: green;}
+H6           #ID7 {background-color: purple;}
+LI * STRONG {background-color: purple;}
 
-BODY > P {color: green;}
-BODY>P.cl41 {font-family: sans-serif;}
-DIV OL > LI STRONG {color: green;}
+H7 > H8 {background-color: red;}
+H7>#ID7.c7 {background-color: blue;}
+H7 H8 > #ID7  STRONG {background-color: green;}
 
-P.cl50 {color: green;}
-P.give.liberty {color: blue; border: 2px solid red; background: white;}
-
-#one {color: green;}
-#61 {color: red;}
-#id61 {color: green;}
-P#id62 {color: blue;}
-P#id63 {color: purple;}

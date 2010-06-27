@@ -3,6 +3,7 @@ package de.molokoid.css;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 import org.mt4j.MTApplication;
@@ -573,36 +574,41 @@ public class CSSHandler implements DocumentHandler{
 		
 	}
 	
-	private Selector parseSelector(org.w3c.css.sac.Selector selector) {
+	public Selector parseSelector(org.w3c.css.sac.Selector selector) {
 		//Ignoring "F E" combinator
 		//TODO: FE Combinator
 		
 		//Includes Child
 		
 		Selector newSelector = null;
+		String debugoutput = "";
 		
 		if (selector.toString().contains(">")) {
 			String[] parts = selector.toString().split(">", 2);
 			newSelector = processElement(parts[0]);
 			newSelector.setChild(processElement(parts[1]));
-			
-			
+			String work0 = String.copyValueOf(parts[0].toCharArray());	
+			String work1 = String.copyValueOf(parts[1].toCharArray());	
+			debugoutput = "Parent: " + work0.replace(" ", "_") + " Child: " + work1.replace(" ", "_");
 		} else {
 			//No Children (yet)
 			newSelector = processElement(selector.toString());
-			
+			debugoutput = "No Parent/Child: " + selector.toString().replace(" ", "_");
 			
 		}
-		logger.debug(newSelector);
+		logger.debug(debugoutput + "\n" + newSelector);
 		return newSelector;
 	}
 	
-	private Selector processElement(String in) {
+	public Selector processElement(String in) {
 		Selector newSelector = null;
 		
 		
 		
 		String work = String.copyValueOf(in.toCharArray());	
+		
+		while (work.startsWith(" ")) work = work.substring(1);
+		while (work.endsWith(" ")) work = work.substring(0, work.length()-1);
 		
 		if (work.contains("*") && !work.startsWith("*")) {
 			work = work.substring(0, 1) + work.substring(1).replace("*", "");
@@ -616,9 +622,12 @@ public class CSSHandler implements DocumentHandler{
 		boolean containsDot = false;
 		boolean firstCharacterDot = false;
 		boolean firstCharacterSharp = false;
+		boolean containsSpace = false;
 		
 		if (work.contains("#")) containsSharp = true;
 		if (work.contains(".")) containsDot = true;
+		work = work.replaceAll("[ ]+[#]", "#").replaceAll("[ ]+[.]", ".");
+		if (work.contains(" ")) containsSpace = true;
 		
 		if (work.equals("*")) {
 			newSelector = new Selector("*", SelectorType.UNIVERSAL);
@@ -641,41 +650,66 @@ public class CSSHandler implements DocumentHandler{
 			newSelector = new Selector(work.replace(".", "").replace("#", ""), determineType(work));
 		}
 		
+		if (containsSpace) {
+			StringTokenizer st = new StringTokenizer(work, " ");
+
+			if (st.countTokens() > 1) {
+				String part1 = st.nextToken();
+				String part2 = st.nextToken();
+				newSelector = new Selector(part1, determineType(part1));
+				newSelector.setSecondary(part2);
+				newSelector.setSecondaryType(SelectorType.TYPE);
+				
+			} 
+			
+			return newSelector;
+		}
+		
+		
 		if (containsSharp) {
 			if (firstCharacterSharp) {
-			String[] parts = work.substring(1).split("#",2);
-			newSelector = new Selector(parts[0].replace(".", "").replace("#", ""), SelectorType.ID);
-			newSelector.setSecondary(parts[1].replace(".", "").replace("#", ""));
-			newSelector.setSecondaryType(SelectorType.ID);
+				StringTokenizer st = new StringTokenizer(work.substring(1), "#");
+				
+				if (st.countTokens() > 1) {			
+				newSelector = new Selector(st.nextToken(), SelectorType.ID);
+				newSelector.setSecondary(st.nextToken());
+				newSelector.setSecondaryType(SelectorType.ID);
+				}
 			} else {
-			String[] parts = work.split("#",2);
-			newSelector = new Selector(parts[0].replace(".", "").replace("#", ""), determineType(parts[0]));
-			newSelector.setSecondary(parts[1].replace(".", "").replace("#", ""));
-			newSelector.setSecondaryType(SelectorType.ID);
+			StringTokenizer st = new StringTokenizer(work, "#");
+
+			if (st.countTokens() > 1) {
+				String part1 = st.nextToken();
+				String part2 = st.nextToken();
+				newSelector = new Selector(part1, determineType(part1));
+				newSelector.setSecondary(part2);
+				newSelector.setSecondaryType(SelectorType.ID);
+				
+			} 
 			}
 			return newSelector;
 		}
 		
 		if (containsDot) {
 			if (firstCharacterDot) {
-				String[] parts = work.substring(1).split(".",2);
-				newSelector = new Selector(parts[0], SelectorType.CLASS);
-				newSelector.setSecondary(parts[1]);
+				StringTokenizer st = new StringTokenizer(work.substring(1), ".");
+				
+				if (st.countTokens() > 1) {			
+				newSelector = new Selector(st.nextToken(), SelectorType.CLASS);
+				newSelector.setSecondary(st.nextToken());
 				newSelector.setSecondaryType(SelectorType.CLASS);
-			} else {
-				String[] parts = work.split(".",2);
-				if (parts.length == 0) {
-					for (char c: work.toCharArray()) {
-						logger.debug(c + " = " + (int)c);
-					}
-					
-					logger.debug("Control Sample: " + "." + " = " + (int)".".charAt(0));
 				}
-				
-				
-				newSelector = new Selector(parts[0], determineType(parts[0]));
-				newSelector.setSecondary(parts[1]);
-				newSelector.setSecondaryType(SelectorType.CLASS);
+			} else {
+				StringTokenizer st = new StringTokenizer(work, ".");
+
+				if (st.countTokens() > 1) {
+					String part1 = st.nextToken();
+					String part2 = st.nextToken();
+					newSelector = new Selector(part1, determineType(part1));
+					newSelector.setSecondary(part2);
+					newSelector.setSecondaryType(SelectorType.CLASS);
+					
+				} 
 			}
 			return newSelector;		
 		}
