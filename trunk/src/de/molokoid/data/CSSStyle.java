@@ -12,19 +12,21 @@ import processing.core.PImage;
 
 public class CSSStyle {
 	
+	String uri = "";
+	
 	List<Selector> selectors = new ArrayList<Selector>();	
-	Selector selector;
+	Selector selector = null;
 	//Colours
 	
-	MTColor backgroundColor;
-	MTColor color; //Text Color
-	MTColor borderColor;
+	MTColor backgroundColor = new MTColor(0,0,0,0);
+	MTColor color= new MTColor(255,255,255,255);
+	MTColor borderColor = new MTColor(255,255,255,255);
 	
 	//Background Image
 	
-	PImage backgroundImage;
-	float[] backgroundPosition;
-	boolean backgroundRepeat;
+	PImage backgroundImage = null;
+	float[] backgroundPosition = null;
+	boolean backgroundRepeat = false;;
 	
 	//Border
 	BorderStyle borderStyle;
@@ -32,56 +34,46 @@ public class CSSStyle {
 	CSSFont cssfont;
 	
 	//Sizes
-	float width;
+	float width = 0;
 	boolean widthPercentage = false;
-	float height;
+	float height = 0;
 	boolean heightPercentage = false;
-	float depth;
+	float depth = 0;
 	
-	float xpos;
-	float ypos;
-	float zpos;
+	float xpos = 0;
+	float ypos = 0;
+	float zpos = 0;
 	
-	float borderWidth;
-	float paddingWidth; // Graphics and Text only
+	float borderWidth = 0;
+	float paddingWidth = 0; // Graphics and Text only
 	
-	int fontSize;
+	int fontSize = 16;
 	
 	//General Properties
-	boolean visibility;
-	float zIndex;
+	boolean visibility = true;
+	float zIndex = 0;
 	
-	
-	
+	public CSSStyle() {
+		this.selector = new Selector("Universal", SelectorType.UNIVERSAL);
+	}
 	
 	public CSSStyle(Selector selector) {
 		super();
 		this.selector = selector;
 	}
 	
-	
-	
-	
-	
+
 	public Selector getSelector() {
 		return selector;
 	}
-
-
-
-
 
 	public void setSelector(Selector selector) {
 		this.selector = selector;
 	}
 
-
-
 	public CSSFont getCssfont() {
 		return cssfont;
 	}
-
-
 
 	public void setCssfont(CSSFont cssfont) {
 		this.cssfont = cssfont;
@@ -350,7 +342,7 @@ public class CSSStyle {
 			return false;
 		return true;
 	}
-
+	
 
 
 

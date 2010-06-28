@@ -1,5 +1,7 @@
 package de.molokoid.data;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 public class Selector {
@@ -151,6 +153,72 @@ public class Selector {
 	}
 	private String check(String input) {
 		return input.replace(" ", "").replace(".", "").replace("#", "");
+	}
+	
+	public boolean appliesTo(List<String> superclasses, String ID) {
+		
+		try {
+			if (secondary == null && child == null) {
+				switch (primaryType) {
+				case TYPE:
+					String type = superclasses.get(0);
+					if (primary.equalsIgnoreCase(type.replace(" ", ""))) {
+						return true;
+					}
+					break;
+				case CLASS:
+					for (String s: superclasses) {
+						if (primary.equalsIgnoreCase(s.replace(" ", ""))) {
+							return true;
+						}
+					}
+						
+					break;
+				case ID:
+					if (ID != "" && primary.equalsIgnoreCase(ID.replace(" ", ""))) {
+						return true;
+					}
+					break;
+				case UNIVERSAL:
+					return true;
+				default:
+					break;
+				}
+					
+			} else if (child == null) {
+				switch (secondaryType) {
+				case TYPE:
+					String type = superclasses.get(0);
+					if (secondary.equalsIgnoreCase(type.replace(" ", ""))) {
+						return true;
+					}
+					break;
+				case CLASS:
+					for (String s: superclasses) {
+						if (secondary.equalsIgnoreCase(s.replace(" ", ""))) {
+							return true;
+						}
+					}
+						
+					break;
+				case ID:
+					if (ID != "" && secondary.equalsIgnoreCase(ID.replace(" ", ""))) {
+						return true;
+					}
+					break;
+
+				default:
+					break;
+				}
+			} else {
+				return child.appliesTo(superclasses, ID);
+			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	
 }
