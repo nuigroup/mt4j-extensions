@@ -9,6 +9,7 @@ import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import de.molokoid.css.parserConnector;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleHierarchy;
+import de.molokoid.data.CSSStyleManager;
 
 import processing.core.PApplet;
 
@@ -17,17 +18,23 @@ public class MTCSSRectangle extends MTRectangle {
 	List<CSSStyle> privateStyleSheets = new ArrayList<CSSStyle>();
 	List<CSSStyleHierarchy> sheets = new ArrayList<CSSStyleHierarchy>();
 	CSSStyle virtualStyleSheet = null;
+	CSSStyleManager cssStyleManager;
+	MTApplication app;
 	
-	public MTCSSRectangle(CSSStyle style, float x, float y,	MTApplication mta) {
+	public MTCSSRectangle(CSSStyle style, float x, float y,	MTApplication mta, CSSStyleManager csm) {
 		super(x, y, style.getWidth(), style.getHeight(), mta);
 		this.privateStyleSheets.add(style);
+		this.cssStyleManager = csm;
+		this.app = mta;
 		applyStylesheet();
 	}
 	
-	public MTCSSRectangle(String uri, float x, float y, MTApplication mta) {
+	public MTCSSRectangle(String uri, float x, float y, MTApplication mta, CSSStyleManager csm) {
 		super(x,y,0,0, mta);
 		parserConnector pc = new parserConnector(uri, mta);
 		privateStyleSheets = pc.getCssh().getStyles();
+		this.cssStyleManager = csm;
+		this.app = mta;
 		applyStylesheet();
 		
 		
@@ -60,20 +67,19 @@ public class MTCSSRectangle extends MTRectangle {
 
 	@SuppressWarnings("unchecked")
 	public void evaluateStylesheets() {
-		virtualStyleSheet = new CSSStyle();
+		sheets = cssStyleManager.getRelevantStyles(this);
 		Collections.sort(sheets);
+		virtualStyleSheet = new CSSStyle(app);
 		for (CSSStyleHierarchy h: sheets) {
-			addStyleSheet(h.getStyle());
+			virtualStyleSheet.addStyleSheet(h.getStyle());
 		}
 		for (CSSStyle s: privateStyleSheets) {
-			addStyleSheet(s);
+			virtualStyleSheet.addStyleSheet(s);
 		}
 
 	}
 	
-	private void addStyleSheet(CSSStyle sheet) {
-		
-	}
+
 	
 	public void applyStylesheet() {
 		evaluateStylesheets();

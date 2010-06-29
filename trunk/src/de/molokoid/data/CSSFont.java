@@ -10,6 +10,7 @@ public class CSSFont {
 	private fontweight weight = fontweight.NORMAL;
 	private int fontsize = 16;
 	private MTColor color = new MTColor(255, 255, 255, 255);
+	private boolean modified = false;
 
 	public CSSFont(MTColor color) {
 		super();
@@ -23,17 +24,20 @@ public class CSSFont {
 	public CSSFont(int fontsize) {
 		super();
 		this.fontsize = fontsize;
+		this.modified = true;
 	}
 
 	public CSSFont(String customType) {
 		super();
 		this.customType = customType;
+		this.modified = true;
 		debugOutput();
 	}
 
 	public CSSFont(fontstyle style) {
 		super();
 		this.style = style;
+		this.modified = true;
 		debugOutput();
 	}
 
@@ -46,6 +50,7 @@ public class CSSFont {
 	public CSSFont(fontweight weight) {
 		super();
 		this.weight = weight;
+		this.modified = true;
 		debugOutput();
 	}
 
@@ -55,6 +60,7 @@ public class CSSFont {
 
 	public void setColor(MTColor color) {
 		this.color = color;
+		this.modified = true;
 	}
 
 	public int getFontsize() {
@@ -64,6 +70,7 @@ public class CSSFont {
 
 	public void setFontsize(int fontsize) {
 		this.fontsize = fontsize;
+		this.modified = true;
 		debugOutput();
 	}
 
@@ -73,6 +80,7 @@ public class CSSFont {
 
 	public void setWeight(fontweight weight) {
 		this.weight = weight;
+		this.modified = true;
 		debugOutput();
 	}
 
@@ -82,6 +90,7 @@ public class CSSFont {
 
 	public void setFamily(fontfamily family) {
 		this.family = family;
+		this.modified = true;
 		debugOutput();
 	}
 
@@ -91,6 +100,7 @@ public class CSSFont {
 
 	public void setStyle(fontstyle style) {
 		this.style = style;
+		this.modified = true;
 		debugOutput();
 	}
 
@@ -100,11 +110,16 @@ public class CSSFont {
 
 	public void setCustomType(String customType) {
 		this.customType = customType;
+		this.modified = true;
 		debugOutput();
 	}
 
-	
-
+	public void setModified(boolean modified) {
+		this.modified = modified;
+	}
+	public boolean isModified() {
+		return modified;
+	}
 	private void debugOutput() {
 		/*Logger logger = Logger.getLogger("MT4J Extensions");
 		logger.debug("Font Family: " + family + ", Font Style: " + style

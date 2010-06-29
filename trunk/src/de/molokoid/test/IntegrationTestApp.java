@@ -24,7 +24,7 @@ public class IntegrationTestApp extends AbstractScene{
 		
 		
 		
-		CSSStyle style = new CSSStyle(new Selector("MTRectangle", SelectorType.CLASS));
+		CSSStyle style = new CSSStyle(new Selector("MTRectangle", SelectorType.CLASS), app);
 		style.setWidth(200);
 		style.setHeight(500);
 		style.setBackgroundColor(new MTColor(0,128,0,255));
@@ -32,11 +32,11 @@ public class IntegrationTestApp extends AbstractScene{
 		style.setBorderWidth(2);
 		style.setVisibility(true);
 		
-		MTCSSRectangle mca = new MTCSSRectangle(style, 100,100, mtApplication);
+		MTCSSRectangle mca = new MTCSSRectangle(style, 100,100, mtApplication, cm);
 		this.getCanvas().addChild(mca);
 
 		
-		CSSStyle emptyStyle = new CSSStyle(new Selector("MTCSSRectangle", SelectorType.CLASS));
+		CSSStyle emptyStyle = new CSSStyle(new Selector("MTCSSRectangle", SelectorType.CLASS), app);
 		mca.setStyleSheet(emptyStyle);
 		mca.applyStylesheet();
 
