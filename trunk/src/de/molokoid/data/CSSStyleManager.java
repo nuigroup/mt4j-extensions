@@ -34,7 +34,7 @@ public class CSSStyleManager {
 		
 		
 		for (CSSStyleHierarchy s: styles) {
-			if (s.getStyle().getSelector().appliesTo(superClasses, c.getCSSID())) {
+			if (s.getStyle().getSelector().appliesTo(c)) {
 				relevantStyles.add(s);
 			}
 			

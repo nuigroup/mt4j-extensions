@@ -1,8 +1,11 @@
 package de.molokoid.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.mt4j.components.MTCanvas;
+import org.mt4j.components.MTComponent;
 
 public class Selector {
 	String primary = null;
@@ -155,8 +158,8 @@ public class Selector {
 		return input.replace(" ", "").replace(".", "").replace("#", "");
 	}
 	
-	public boolean appliesTo(List<String> superclasses, String ID) {
-		
+	public boolean appliesTo(MTComponent c) {
+		List<String> superclasses = getSuperclasses(c.getClass());
 		try {
 			if (secondary == null && child == null) {
 				switch (primaryType) {
@@ -175,7 +178,7 @@ public class Selector {
 						
 					break;
 				case ID:
-					if (ID != "" && primary.equalsIgnoreCase(ID.replace(" ", ""))) {
+					if (c.getCSSID() != "" && primary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
 						return true;
 					}
 					break;
@@ -202,7 +205,7 @@ public class Selector {
 						
 					break;
 				case ID:
-					if (ID != "" && secondary.equalsIgnoreCase(ID.replace(" ", ""))) {
+					if (c.getCSSID() != "" && secondary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
 						return true;
 					}
 					break;
@@ -211,7 +214,7 @@ public class Selector {
 					break;
 				}
 			} else {
-				return child.appliesTo(superclasses, ID);
+				return child.appliesTo(c);
 			}
 		} catch (Exception e) {
 
@@ -219,6 +222,186 @@ public class Selector {
 		}
 		
 		return false;
+	}
+	
+	private boolean containsParent(MTComponent c, int level) {
+		//Level:
+		//1: Parent Match
+		//2: Grandparent Parent > Match
+		//3: Grandgrandparent Grandparent > Parent Match
+		//4: Grandparent > Parent Match
+		
+		try {
+			if (c.getParent() != null) {
+				switch (level) {
+				case 1: 
+					return searchLevelsOne(c);		
+				
+				case 2: 	
+					return 	searchLevelsTwo(c);
+				case 3:
+					return 	searchLevelsThree(c);
+				case 4:
+					return 	searchLevelsFour(c);
+				
+				}
+				
+			}
+		} catch (Exception e) {
+			System.out.println("Selector not found - not enough levels?");
+		}
+		
+		
+		return false;
+	}
+	
+	private boolean searchLevelsOne(MTComponent c) {
+		//Search all above levels for instance of Selector
+		int numberOfLevels = numberOfLevels(c);
+		boolean found = false;
+		try {
+			if (numberOfLevels > 1) {
+				for (int i = 2; i <= numberOfLevels; i++) {
+					found = found || isMatch(primaryType, primary, getComponentAtLevel(c,i));				
+				}
+				
+				
+			}
+		} catch (Exception e) {
+
+		}
+			
+		return found;
+	}
+	
+	private boolean searchLevelsTwo(MTComponent c) {
+		//Search all upper levels for Grandparent, Level 1 = Match, Level 2 = Parent (Parent must be directly over child)
+		int numberOfLevels = numberOfLevels(c);
+		boolean found = false;
+		try {
+			if (numberOfLevels > 2) {
+				isMatch(secondaryType, secondary, getComponentAtLevel(c,2));
+				for (int i = 3; i <= numberOfLevels; i++) {
+					found = found || isMatch(primaryType, primary, getComponentAtLevel(c,i));				
+				}
+
+
+			}
+		} catch (Exception e) {
+
+		}
+
+		return found;
+	}
+
+	private boolean searchLevelsThree(MTComponent c) {
+		int numberOfLevels = numberOfLevels(c);
+		boolean found = false;
+
+		try {
+			if (numberOfLevels > 3) {
+				for (int i=3; i<=numberOfLevels-1; i++) {
+					for (int j=i+1; j <= numberOfLevels; j++) {
+						found = found ||
+						(isMatch(primaryType, primary, getComponentAtLevel(c,j)) &&
+								isMatch(secondaryType, secondary, getComponentAtLevel(c, i)) &&
+								isMatch(child.getPrimaryType(), child.getPrimary(), getComponentAtLevel(c,i-1)));
+					}
+				}
+			}
+		} catch (Exception e) {
+
+		}
+
+		return found;
+
+	}
+	private boolean searchLevelsFour (MTComponent c) {
+		//return 	isMatch(primaryType, primary, c.getParent().getParent()) &&
+		//isMatch(child.getPrimaryType(), child.getPrimary(), c.getParent());
+		int numberOfLevels = numberOfLevels(c);
+		boolean found = false;
+		
+		if (numberOfLevels > 2) {
+			for (int i=3; i <= numberOfLevels; i++) {
+				found = found ||
+				(isMatch(primaryType, primary, getComponentAtLevel(c,i)) && 
+						isMatch(child.getPrimaryType(), child.getPrimary(), getComponentAtLevel(c,i-1)));
+				
+			}
+			
+			
+		}
+		
+		
+		return found;
+	}
+	
+	private MTComponent getComponentAtLevel(MTComponent c,int level) {
+		
+		try {
+			if (level <= 1) {
+				return c;
+			} else {
+				return getComponentAtLevel(c.getParent(), level-1);
+			}
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	
+	private int numberOfLevels(MTComponent c) {
+		try {
+			if (c instanceof MTCanvas || c == null) {
+				return 0;
+			} else {
+				return numberOfLevels(c.getParent()) + 1;
+			}
+		} catch (Exception e) {
+			//TODO: Is this right?	
+			return 0;
+		}
+	}
+	
+	private boolean isMatch(SelectorType type, String selector, MTComponent c) {
+		try {
+			if (c != null && c instanceof MTComponent) {
+			List<String> superclasses = getSuperclasses(c.getClass());
+			switch (type) {
+			case TYPE:
+				if (superclasses.get(0).replace(" ", "").equalsIgnoreCase(selector)) return true; 
+				break;
+			case CLASS:
+				for (String s: superclasses) {
+					if (selector.equalsIgnoreCase(s.replace(" ", ""))) return true;
+				}
+				break;
+			case ID: 
+				if (c.getCSSID() != "" && c.getCSSID().replace(" ", "").equalsIgnoreCase(selector)) return true;
+				break;
+			default:
+				System.out.println("WTF? Unknown Type " + type + " with Selector " + selector);
+			
+			}
+			}
+		} catch (Exception e) {
+			
+			System.out.println("Someting went wrong with finding " + selector + " in " + c.getClass().getSimpleName());
+		}
+		return false;
+	}
+	
+	private List<String> getSuperclasses(Class c) {
+		List<String> superclasses = new ArrayList<String>();
+		superclasses.add(c.getSimpleName().toUpperCase().replace(" ", ""));
+		while (c.getSuperclass() != null) {
+			c = c.getSuperclass();
+			superclasses.add(c.getSimpleName().toUpperCase().replace(" ", ""));
+		}
+		
+		
+		return superclasses;
 	}
 	
 }

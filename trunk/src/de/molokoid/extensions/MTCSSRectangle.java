@@ -72,6 +72,7 @@ public class MTCSSRectangle extends MTRectangle {
 		virtualStyleSheet = new CSSStyle(app);
 		for (CSSStyleHierarchy h: sheets) {
 			virtualStyleSheet.addStyleSheet(h.getStyle());
+		
 		}
 		for (CSSStyle s: privateStyleSheets) {
 			virtualStyleSheet.addStyleSheet(s);
