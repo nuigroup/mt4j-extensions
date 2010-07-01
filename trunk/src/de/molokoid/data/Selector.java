@@ -193,28 +193,136 @@ public class Selector {
 				case TYPE:
 					String type = superclasses.get(0);
 					if (secondary.equalsIgnoreCase(type.replace(" ", ""))) {
-						return true;
+						return true && containsParent(c,1);
 					}
 					break;
 				case CLASS:
 					for (String s: superclasses) {
 						if (secondary.equalsIgnoreCase(s.replace(" ", ""))) {
-							return true;
+							return true && containsParent(c,1);
 						}
 					}
 						
 					break;
 				case ID:
 					if (c.getCSSID() != "" && secondary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
-						return true;
+						return true && containsParent(c,1);
 					}
 					break;
-
+				case UNIVERSAL:
+					return true && containsParent(c,1);
 				default:
 					break;
 				}
 			} else {
-				return child.appliesTo(c);
+				//return child.appliesTo(c);
+				if (secondary == null && child.secondary == null) {
+					switch (child.primaryType) {
+					case TYPE:
+						String type = superclasses.get(0);
+						if (child.primary.equalsIgnoreCase(type.replace(" ", ""))) {
+							return true && containsParent(c,1);
+						}
+						break;
+					case CLASS:
+						for (String s: superclasses) {
+							if (child.primary.equalsIgnoreCase(s.replace(" ", ""))) {
+								return true && containsParent(c,1);
+							}
+						}
+							
+						break;
+					case ID:
+						if (c.getCSSID() != "" && child.primary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
+							return true && containsParent(c,1);
+						}
+						break;
+					case UNIVERSAL:
+						return true && containsParent(c,1);
+					default:
+						break;
+					}
+				} else if (secondary == null) {
+					switch (child.secondaryType) {
+					case TYPE:
+						String type = superclasses.get(0);
+						if (child.secondary.equalsIgnoreCase(type.replace(" ", ""))) {
+							return true && containsParent(c,4);
+						}
+						break;
+					case CLASS:
+						for (String s: superclasses) {
+							if (child.secondary.equalsIgnoreCase(s.replace(" ", ""))) {
+								return true && containsParent(c,4);
+							}
+						}
+							
+						break;
+					case ID:
+						if (c.getCSSID() != "" && child.secondary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
+							return true && containsParent(c,4);
+						}
+						break;
+					case UNIVERSAL:
+						return true && containsParent(c,4);
+					default:
+						break;
+					}
+				} else if (child.secondary == null) {
+					switch (child.primaryType) {
+					case TYPE:
+						String type = superclasses.get(0);
+						if (child.primary.equalsIgnoreCase(type.replace(" ", ""))) {
+							return true && containsParent(c,2);
+						}
+						break;
+					case CLASS:
+						for (String s: superclasses) {
+							if (child.primary.equalsIgnoreCase(s.replace(" ", ""))) {
+								return true && containsParent(c,2);
+							}
+						}
+							
+						break;
+					case ID:
+						if (c.getCSSID() != "" && child.primary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
+							return true && containsParent(c,2);
+						}
+						break;
+					case UNIVERSAL:
+						return true && containsParent(c,2);
+					default:
+						break;
+					}
+				} else {
+					switch (child.secondaryType) {
+					case TYPE:
+						String type = superclasses.get(0);
+						if (child.secondary.equalsIgnoreCase(type.replace(" ", ""))) {
+							return true && containsParent(c,3);
+						}
+						break;
+					case CLASS:
+						for (String s: superclasses) {
+							if (child.secondary.equalsIgnoreCase(s.replace(" ", ""))) {
+								return true && containsParent(c,3);
+							}
+						}
+							
+						break;
+					case ID:
+						if (c.getCSSID() != "" && child.secondary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
+							return true && containsParent(c,3);
+						}
+						break;
+					case UNIVERSAL:
+						return true && containsParent(c,3);
+					default:
+						break;
+					}
+				}
+	
+				
 			}
 		} catch (Exception e) {
 
