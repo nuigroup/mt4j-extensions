@@ -20,7 +20,7 @@ public class IntegrationTestApp extends AbstractScene{
 		super(mtApplication, name);
 		this.app = mtApplication;
 		
-		CSSStyleManager cm = new CSSStyleManager();
+		CSSStyleManager cm = new CSSStyleManager(new ArrayList<CSSStyle>());
 		
 		
 		

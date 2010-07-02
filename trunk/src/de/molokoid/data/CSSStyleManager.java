@@ -7,6 +7,12 @@ import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.AbstractShape;
 
 public class CSSStyleManager {
+	public CSSStyleManager(List<CSSStyle> styles) {
+		for (CSSStyle s: styles) {
+			this.styles.add(new CSSStyleHierarchy(s));
+		}
+	}
+	
 	List<CSSStyleHierarchy> styles = new ArrayList<CSSStyleHierarchy>();
 
 	public List<CSSStyleHierarchy> getStyles() {
@@ -30,12 +36,12 @@ public class CSSStyleManager {
 	public List<CSSStyleHierarchy> getRelevantStyles(MTComponent c) {
 		List<CSSStyleHierarchy> relevantStyles = new ArrayList<CSSStyleHierarchy>();
 		List<String> superClasses = getSuperclasses(c.getClass());
-		
-		
+	
 		
 		for (CSSStyleHierarchy s: styles) {
-			if (s.getStyle().getSelector().appliesTo(c)) {
-				relevantStyles.add(s);
+			int temp = s.getStyle().getSelector().appliesTo(c);
+			if (temp != 0) {
+				relevantStyles.add(new CSSStyleHierarchy(s, temp % 100, (short)(temp / 100)));
 			}
 			
 			

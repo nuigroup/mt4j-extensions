@@ -158,7 +158,14 @@ public class Selector {
 		return input.replace(" ", "").replace(".", "").replace("#", "");
 	}
 	
-	public boolean appliesTo(MTComponent c) {
+	public int appliesTo(MTComponent c) {
+		// Selector: 	Pos1 	Pos2 > 	Pos3 	Pos 4
+		// 				100-199	200-299	300-399	400-499
+		
+		
+		
+		
+		int returnInteger;
 		List<String> superclasses = getSuperclasses(c.getClass());
 		try {
 			if (secondary == null && child == null) {
@@ -166,54 +173,64 @@ public class Selector {
 				case TYPE:
 					String type = superclasses.get(0);
 					if (primary.equalsIgnoreCase(type.replace(" ", ""))) {
-						return true;
+						return 175;
 					}
 					break;
 				case CLASS:
+					int i = 0;
 					for (String s: superclasses) {
+						i++;
 						if (primary.equalsIgnoreCase(s.replace(" ", ""))) {
-							return true;
+							return 100 + i;
 						}
 					}
 						
 					break;
 				case ID:
 					if (c.getCSSID() != "" && primary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
-						return true;
+						return 199;
 					}
 					break;
 				case UNIVERSAL:
-					return true;
+					return 100;
 				default:
 					break;
 				}
-					
+				return 0;	
 			} else if (child == null) {
 				switch (secondaryType) {
 				case TYPE:
 					String type = superclasses.get(0);
 					if (secondary.equalsIgnoreCase(type.replace(" ", ""))) {
-						return true && containsParent(c,1);
+						if (containsParent(c,1) != 0) return 200 + containsParent(c,1) - 25;
+						
 					}
 					break;
 				case CLASS:
 					for (String s: superclasses) {
 						if (secondary.equalsIgnoreCase(s.replace(" ", ""))) {
-							return true && containsParent(c,1);
+							if (containsParent(c,1) != 0)
+							return 200 + containsParent(c,1) - 50;
+							
 						}
 					}
 						
 					break;
 				case ID:
 					if (c.getCSSID() != "" && secondary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
-						return true && containsParent(c,1);
+						if (containsParent(c,1) != 0)
+						return 200 +  containsParent(c,1);
+						
 					}
 					break;
 				case UNIVERSAL:
-					return true && containsParent(c,1);
+					if (containsParent(c,1) != 0)
+					return 200 + (100 - containsParent(c,1));
+					
 				default:
 					break;
 				}
+				return 0;
 			} else {
 				//return child.appliesTo(c);
 				if (secondary == null && child.secondary == null) {
@@ -221,105 +238,121 @@ public class Selector {
 					case TYPE:
 						String type = superclasses.get(0);
 						if (child.primary.equalsIgnoreCase(type.replace(" ", ""))) {
-							return true && containsParent(c,1);
+							if (containsParent(c,1) != 0)
+							return 300 + containsParent(c,1) - 25;
 						}
 						break;
 					case CLASS:
 						for (String s: superclasses) {
 							if (child.primary.equalsIgnoreCase(s.replace(" ", ""))) {
-								return true && containsParent(c,1);
+								if (containsParent(c,1) != 0)
+								return 300 + containsParent(c,1) - 50;
 							}
 						}
 							
 						break;
 					case ID:
 						if (c.getCSSID() != "" && child.primary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
-							return true && containsParent(c,1);
+							if (containsParent(c,1) != 0)
+							return 300 + containsParent(c,1);
 						}
 						break;
 					case UNIVERSAL:
-						return true && containsParent(c,1);
+						if (containsParent(c,1) != 0)
+						return 300 + (100 - containsParent(c,1));
 					default:
 						break;
 					}
+					return 0;
 				} else if (secondary == null) {
 					switch (child.secondaryType) {
 					case TYPE:
 						String type = superclasses.get(0);
 						if (child.secondary.equalsIgnoreCase(type.replace(" ", ""))) {
-							return true && containsParent(c,4);
+							if (containsParent(c,4) != 0) 
+								return 300 +  containsParent(c,4) -25;
 						}
 						break;
 					case CLASS:
 						for (String s: superclasses) {
 							if (child.secondary.equalsIgnoreCase(s.replace(" ", ""))) {
-								return true && containsParent(c,4);
+								if (containsParent(c,4) != 0) 
+								return 300 + containsParent(c,4) - 50;
 							}
 						}
 							
 						break;
 					case ID:
 						if (c.getCSSID() != "" && child.secondary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
-							return true && containsParent(c,4);
+							if (containsParent(c,4) != 0) 
+							return 300 + containsParent(c,4);
 						}
 						break;
 					case UNIVERSAL:
-						return true && containsParent(c,4);
+						if (containsParent(c,4) != 0) 
+						return 300 + (100 - containsParent(c,4));
 					default:
 						break;
 					}
+					return 0;
 				} else if (child.secondary == null) {
 					switch (child.primaryType) {
 					case TYPE:
 						String type = superclasses.get(0);
 						if (child.primary.equalsIgnoreCase(type.replace(" ", ""))) {
-							return true && containsParent(c,2);
+							if (containsParent(c,2) != 0) 
+							return 300 + containsParent(c,2) - 25;
 						}
 						break;
 					case CLASS:
 						for (String s: superclasses) {
 							if (child.primary.equalsIgnoreCase(s.replace(" ", ""))) {
-								return true && containsParent(c,2);
+								if (containsParent(c,2) != 0) 
+								return 300 + containsParent(c,2) - 50;
 							}
 						}
 							
 						break;
 					case ID:
 						if (c.getCSSID() != "" && child.primary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
-							return true && containsParent(c,2);
+							if (containsParent(c,2) != 0) 
+							return 300 + containsParent(c,2);
 						}
 						break;
 					case UNIVERSAL:
-						return true && containsParent(c,2);
+						if (containsParent(c,2) != 0) 
+						return 300 + (100 - containsParent(c,2));
 					default:
 						break;
 					}
+					return 0;
 				} else {
 					switch (child.secondaryType) {
 					case TYPE:
 						String type = superclasses.get(0);
 						if (child.secondary.equalsIgnoreCase(type.replace(" ", ""))) {
-							return true && containsParent(c,3);
+							return 400 + containsParent(c,3) - 25;
 						}
 						break;
 					case CLASS:
 						for (String s: superclasses) {
 							if (child.secondary.equalsIgnoreCase(s.replace(" ", ""))) {
-								return true && containsParent(c,3);
+								return 400 + containsParent(c,3) - 50;
 							}
 						}
 							
 						break;
 					case ID:
 						if (c.getCSSID() != "" && child.secondary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
-							return true && containsParent(c,3);
+							return 400 + containsParent(c,3);
 						}
 						break;
 					case UNIVERSAL:
-						return true && containsParent(c,3);
+						return 400 + (100 - containsParent(c,3));
 					default:
 						break;
 					}
+					return 0;
 				}
 	
 				
@@ -329,10 +362,10 @@ public class Selector {
 			e.printStackTrace();
 		}
 		
-		return false;
+		return 0;
 	}
 	
-	private boolean containsParent(MTComponent c, int level) {
+	private int containsParent(MTComponent c, int level) {
 		//Level:
 		//1: Parent Match
 		//2: Grandparent Parent > Match
@@ -360,17 +393,22 @@ public class Selector {
 		}
 		
 		
-		return false;
+		return 0;
 	}
 	
-	private boolean searchLevelsOne(MTComponent c) {
+	private int searchLevelsOne(MTComponent c) {
 		//Search all above levels for instance of Selector
 		int numberOfLevels = numberOfLevels(c);
 		boolean found = false;
+		int foundAtLevel = 0;
 		try {
 			if (numberOfLevels > 1) {
 				for (int i = 2; i <= numberOfLevels; i++) {
-					found = found || isMatch(primaryType, primary, getComponentAtLevel(c,i));				
+					if (isMatch(primaryType, primary, getComponentAtLevel(c,i))) {
+						return 99 - i;
+
+					}
+			
 				}
 				
 				
@@ -379,18 +417,21 @@ public class Selector {
 
 		}
 			
-		return found;
+		return 0;
 	}
 	
-	private boolean searchLevelsTwo(MTComponent c) {
+	private int searchLevelsTwo(MTComponent c) {
 		//Search all upper levels for Grandparent, Level 1 = Match, Level 2 = Parent (Parent must be directly over child)
 		int numberOfLevels = numberOfLevels(c);
-		boolean found = false;
+
 		try {
 			if (numberOfLevels > 2) {
 				isMatch(secondaryType, secondary, getComponentAtLevel(c,2));
 				for (int i = 3; i <= numberOfLevels; i++) {
-					found = found || isMatch(primaryType, primary, getComponentAtLevel(c,i));				
+					if (isMatch(primaryType, primary, getComponentAtLevel(c,i))) {
+						return 100-i;
+					}
+			
 				}
 
 
@@ -399,10 +440,10 @@ public class Selector {
 
 		}
 
-		return found;
+		return 0;
 	}
 
-	private boolean searchLevelsThree(MTComponent c) {
+	private int searchLevelsThree(MTComponent c) {
 		int numberOfLevels = numberOfLevels(c);
 		boolean found = false;
 
@@ -410,10 +451,12 @@ public class Selector {
 			if (numberOfLevels > 3) {
 				for (int i=3; i<=numberOfLevels-1; i++) {
 					for (int j=i+1; j <= numberOfLevels; j++) {
-						found = found ||
-						(isMatch(primaryType, primary, getComponentAtLevel(c,j)) &&
+
+						 if (isMatch(primaryType, primary, getComponentAtLevel(c,j)) &&
 								isMatch(secondaryType, secondary, getComponentAtLevel(c, i)) &&
-								isMatch(child.getPrimaryType(), child.getPrimary(), getComponentAtLevel(c,i-1)));
+								isMatch(child.getPrimaryType(), child.getPrimary(), getComponentAtLevel(c,i-1))) {
+							 return 104 - i - j;
+						 }
 					}
 				}
 			}
@@ -421,10 +464,10 @@ public class Selector {
 
 		}
 
-		return found;
+		return 0;
 
 	}
-	private boolean searchLevelsFour (MTComponent c) {
+	private int searchLevelsFour (MTComponent c) {
 		//return 	isMatch(primaryType, primary, c.getParent().getParent()) &&
 		//isMatch(child.getPrimaryType(), child.getPrimary(), c.getParent());
 		int numberOfLevels = numberOfLevels(c);
@@ -432,9 +475,11 @@ public class Selector {
 		
 		if (numberOfLevels > 2) {
 			for (int i=3; i <= numberOfLevels; i++) {
-				found = found ||
-				(isMatch(primaryType, primary, getComponentAtLevel(c,i)) && 
-						isMatch(child.getPrimaryType(), child.getPrimary(), getComponentAtLevel(c,i-1)));
+
+				if (isMatch(primaryType, primary, getComponentAtLevel(c,i)) && 
+						isMatch(child.getPrimaryType(), child.getPrimary(), getComponentAtLevel(c,i-1))) {
+					return 100 - i;
+				}
 				
 			}
 			
@@ -442,7 +487,7 @@ public class Selector {
 		}
 		
 		
-		return found;
+		return 0;
 	}
 	
 	private MTComponent getComponentAtLevel(MTComponent c,int level) {
