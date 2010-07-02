@@ -153,6 +153,23 @@ public class CSSStyle {
 	public BorderStyle getBorderStyle() {
 		return borderStyle;
 	}
+	
+	public short getBorderStylePattern() {
+		switch (borderStyle) {
+		case SOLID:
+		case NONE:
+			return (short) 0;
+		case DOTTED:
+			return (short) 0xCCCC;
+		case DASHED:
+			return (short) 0x00FF;
+		case HIDDEN:
+			return -1;
+		}
+		
+		return 0;
+	}
+	
 	public void setBorderStyle(BorderStyle borderStyle) {
 		this.borderStyle = borderStyle;
 		this.modifiedBorderStyle = true;

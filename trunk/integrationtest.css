@@ -1,0 +1,7 @@
+MTCSSTextArea {background-color: purple;}
+MTCSSRectangle {background-color: green;}
+MTCSSPolygon {background-color: red; }
+MTCSSEllipse {background-color: white; }
+* {background-color: blue;}
+MTCSSRectangle > MTCSSTextArea {background-color: lime;}
+MTCSSRectangle MTCSSTextArea {background-color: grey;}

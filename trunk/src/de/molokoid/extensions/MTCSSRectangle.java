@@ -11,22 +11,23 @@ import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleHierarchy;
 import de.molokoid.data.CSSStyleManager;
 
-import processing.core.PApplet;
 
-public class MTCSSRectangle extends MTRectangle {
+public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 	
-	List<CSSStyle> privateStyleSheets = new ArrayList<CSSStyle>();
-	List<CSSStyleHierarchy> sheets = new ArrayList<CSSStyleHierarchy>();
-	CSSStyle virtualStyleSheet = null;
-	CSSStyleManager cssStyleManager;
-	MTApplication app;
+	public MTCSSRectangle(float x, float y,	float width, float height, MTApplication mta, CSSStyleManager csm) {
+		super(x, y, width, height, mta);
+
+		this.cssStyleManager = csm;
+		this.app = mta;
+		applyStyleSheet();
+	}
 	
 	public MTCSSRectangle(CSSStyle style, float x, float y,	MTApplication mta, CSSStyleManager csm) {
 		super(x, y, style.getWidth(), style.getHeight(), mta);
 		this.privateStyleSheets.add(style);
 		this.cssStyleManager = csm;
 		this.app = mta;
-		applyStylesheet();
+		applyStyleSheet();
 	}
 	
 	public MTCSSRectangle(String uri, float x, float y, MTApplication mta, CSSStyleManager csm) {
@@ -35,16 +36,20 @@ public class MTCSSRectangle extends MTRectangle {
 		privateStyleSheets = pc.getCssh().getStyles();
 		this.cssStyleManager = csm;
 		this.app = mta;
-		applyStylesheet();
+		applyStyleSheet();
 		
 		
 		
 	}
 	
 	
+
+	List<CSSStyle> privateStyleSheets = new ArrayList<CSSStyle>();
+	List<CSSStyleHierarchy> sheets = new ArrayList<CSSStyleHierarchy>();
+	CSSStyle virtualStyleSheet = null;
+	CSSStyleManager cssStyleManager;
+	MTApplication app;
 	
-
-
 	public List<CSSStyle> getPrivateStyleSheets() {
 		return privateStyleSheets;
 	}
@@ -66,7 +71,7 @@ public class MTCSSRectangle extends MTRectangle {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void evaluateStylesheets() {
+	public void evaluateStyleSheets() {
 		sheets = cssStyleManager.getRelevantStyles(this);
 		Collections.sort(sheets);
 		virtualStyleSheet = new CSSStyle(app);
@@ -82,13 +87,26 @@ public class MTCSSRectangle extends MTRectangle {
 	
 
 	
-	public void applyStylesheet() {
-		evaluateStylesheets();
+	public void applyStyleSheet() {
+		evaluateStyleSheets();
 		this.setSizeLocal(virtualStyleSheet.getWidth(), virtualStyleSheet.getHeight());
 		this.setFillColor(virtualStyleSheet.getBackgroundColor());
 		this.setStrokeColor(virtualStyleSheet.getBorderColor());
 		this.setStrokeWeight(virtualStyleSheet.getBorderWidth());
 		this.setVisible(virtualStyleSheet.isVisibility());
+		
+		if (virtualStyleSheet.getBorderStylePattern() >= 0) {
+			this.setNoStroke(false);
+			this.setLineStipple(virtualStyleSheet.getBorderStylePattern());
+		} else {
+			this.setNoStroke(true);
+		}
+		
+		
 	}
+
+
+
+
 
 }

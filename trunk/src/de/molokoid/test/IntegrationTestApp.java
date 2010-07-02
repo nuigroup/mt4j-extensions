@@ -38,11 +38,11 @@ public class IntegrationTestApp extends AbstractScene{
 		
 		CSSStyle emptyStyle = new CSSStyle(new Selector("MTCSSRectangle", SelectorType.CLASS), app);
 		mca.setStyleSheet(emptyStyle);
-		mca.applyStylesheet();
+		mca.applyStyleSheet();
 
 		emptyStyle.setWidth(200);
 		emptyStyle.setHeight(200);
-		mca.applyStylesheet();
+		mca.applyStyleSheet();
 
 	}
 
