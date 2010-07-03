@@ -1,7 +1,7 @@
 MTCSSTextArea {background-color: purple;}
 MTCSSRectangle {background-color: green;}
 MTCSSPolygon {background-color: red; }
-MTCSSEllipse {background-color: white; }
-* {background-color: blue;}
+.MTEllipse {background-color: white; }
+* {border-color: blue; background-color: black; }
 MTCSSRectangle > MTCSSTextArea {background-color: lime;}
 MTCSSRectangle MTCSSTextArea {background-color: grey;}

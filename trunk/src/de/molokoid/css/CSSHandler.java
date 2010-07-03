@@ -81,7 +81,7 @@ public class CSSHandler implements DocumentHandler{
 	@Override
 	public void endSelector(SelectorList arg0) throws CSSException {
 		// TODO Auto-generated method stub
-		if (currentFont.isModified()) {
+		if (currentFont != null && currentFont.isModified()) {
 			for (CSSStyle s: activeStyles) {
 				s.setCssfont(currentFont);
 			}

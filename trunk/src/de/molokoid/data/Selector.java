@@ -181,7 +181,7 @@ public class Selector {
 					for (String s: superclasses) {
 						i++;
 						if (primary.equalsIgnoreCase(s.replace(" ", ""))) {
-							return 100 + i;
+							return 150 - i;
 						}
 					}
 						

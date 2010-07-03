@@ -38,7 +38,7 @@ public class CSSStyle {
 	boolean modifiedBackgroundImage = false, modifiedBackgroundPosition = false, modifiedBackgroundRepeat = false; 
 	
 	//Border
-	BorderStyle borderStyle;
+	BorderStyle borderStyle = BorderStyle.NONE;
 	IFont font = null;
 	CSSFont cssfont = new CSSFont();
 	
