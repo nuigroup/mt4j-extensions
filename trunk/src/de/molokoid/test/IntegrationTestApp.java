@@ -3,48 +3,62 @@ package de.molokoid.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 import org.mt4j.MTApplication;
+import org.mt4j.components.MTCanvas;
+import org.mt4j.components.MTComponent;
 import org.mt4j.sceneManagement.AbstractScene;
+import org.mt4j.sceneManagement.Iscene;
+import org.mt4j.test.testUtil.DummyScene;
 import org.mt4j.util.MTColor;
 
+import de.molokoid.css.parserConnector;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleManager;
 import de.molokoid.data.Selector;
 import de.molokoid.data.SelectorType;
 import de.molokoid.extensions.MTCSSRectangle;
+import de.molokoid.extensions.MTCSSTextArea;
 
 public class IntegrationTestApp extends AbstractScene{
 	List<CSSStyle> CSSStyleManager = new ArrayList<CSSStyle>();
-	MTApplication app = null;
+	
+	private MTComponent parent;
+	private MTApplication app;
+
+	CSSStyleManager cssm;
+	Logger logger = Logger.getLogger("MT4J Extensions");
+	SimpleLayout l = new SimpleLayout();
+	ConsoleAppender ca = new ConsoleAppender(l);
+	parserConnector pc;
+	List<CSSStyle> styles;
+	MTColor w = new MTColor(255,255,255,255);
+	
 	public IntegrationTestApp(MTApplication mtApplication, String name) {
 		super(mtApplication, name);
-		this.app = mtApplication;
-		
-		CSSStyleManager cm = new CSSStyleManager(new ArrayList<CSSStyle>());
-		
-		
-		
-		CSSStyle style = new CSSStyle(new Selector("MTRectangle", SelectorType.CLASS), app);
-		style.setWidth(200);
-		style.setHeight(500);
-		style.setBackgroundColor(new MTColor(0,128,0,255));
-		style.setBorderColor(new MTColor(200,200,200,255));
-		style.setBorderWidth(2);
-		style.setVisibility(true);
-		
-		MTCSSRectangle mca = new MTCSSRectangle(style, 100,100, mtApplication, cm);
-		this.getCanvas().addChild(mca);
 
 		
-		CSSStyle emptyStyle = new CSSStyle(new Selector("MTCSSRectangle", SelectorType.CLASS), app);
-		mca.setStyleSheet(emptyStyle);
-		mca.applyStyleSheet();
 
-		emptyStyle.setWidth(200);
-		emptyStyle.setHeight(200);
-		mca.applyStyleSheet();
+			this.app = mtApplication;
+			
+			//Set up components
+			parent = new MTComponent(app);
+			this.getCanvas().addChild(parent);
+			
+			logger.addAppender(ca);
+			
+			pc = new parserConnector("integrationtest.css", app);
+			styles= pc.getCssh().getStyles();
+			cssm = new CSSStyleManager(styles);
+		
+			MTCSSTextArea ta = new MTCSSTextArea(app, cssm.getDefaultFont(app), cssm);
+			getCanvas().addChild(ta);
+		
 
 	}
+
 
 	@Override
 	public void init() {

@@ -18,12 +18,13 @@ import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.components.MTCanvas;
 import org.mt4j.components.MTComponent;
+import org.mt4j.components.visibleComponents.font.FontManager;
+import org.mt4j.components.visibleComponents.font.IFont;
 
 import de.molokoid.css.parserConnector;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleManager;
 import de.molokoid.data.Selector;
-import de.molokoid.extensions.MTCSSRectangle;
 import de.molokoid.extensions.*;
 
 public class SelectorIntegrationTest extends AbstractWindowTestcase {
@@ -36,6 +37,7 @@ public class SelectorIntegrationTest extends AbstractWindowTestcase {
 	ConsoleAppender ca = new ConsoleAppender(l);
 	parserConnector pc;
 	List<CSSStyle> styles;
+	MTColor w = new MTColor(255,255,255,255);
 	
 	@Override
 	public void inStartUp(MTApplication app) {
@@ -86,5 +88,30 @@ public class SelectorIntegrationTest extends AbstractWindowTestcase {
 		getCanvas().addChild(e);
 		assertTrue(l.getStrokeColor().equals(new MTColor(0,0,255,255)));
 		assertTrue(e.getStrokeColor().equals(new MTColor(0,0,255,255)));
+	}
+	
+	@Test
+	public void testFontIntegration() {
+
+		
+		
+	}
+	
+	@Test
+	public void testCascadingSelectors() {
+		MTCSSRectangle r = new MTCSSRectangle(0,0,100,100, app, cssm);
+		MTCSSRectangle s = new MTCSSRectangle(0,0,100,100, app, cssm);
+		
+		MTCSSEllipse e = new MTCSSEllipse(app, new Vector3D(500,500), 50, 50, cssm);
+		
+		//IFont font = cssm.getDefaultFont(app);
+		
+
+		
+		getCanvas().addChild(r);
+
+		
+		//assertTrue(t.getFillColor().equals( new MTColor(0,255,0,255)));
+		
 	}
 }

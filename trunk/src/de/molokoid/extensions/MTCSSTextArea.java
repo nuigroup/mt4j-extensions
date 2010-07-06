@@ -5,23 +5,36 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mt4j.MTApplication;
+import org.mt4j.components.visibleComponents.font.FontManager;
 import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleHierarchy;
 import de.molokoid.data.CSSStyleManager;
-
+import org.mt4j.util.*;
 import processing.core.PApplet;
 
 public class MTCSSTextArea extends MTTextArea implements CSSStylable{
 
+	
+	
 	public MTCSSTextArea(MTApplication mta, IFont font, CSSStyleManager csm) {
 		super(mta, font);
 		this.cssStyleManager = csm;
 		this.app = mta;
 		applyStyleSheet();
+		
 	}
+	
+	public MTCSSTextArea(MTApplication mta, CSSStyleManager csm) {
+		super(mta, csm.getDefaultFont(mta));
+		this.cssStyleManager = csm;
+		this.app = mta;
+		applyStyleSheet();
+		
+	}
+	
 	
 	public MTCSSTextArea(MTApplication mta, IFont font, CSSStyleManager csm, CSSStyle style) {
 		super(mta, font);
@@ -74,6 +87,7 @@ public class MTCSSTextArea extends MTTextArea implements CSSStylable{
 			this.setNoStroke(true);
 		}
 		
+		this.setFont(virtualStyleSheet.getFont());
 		
 	}
 }

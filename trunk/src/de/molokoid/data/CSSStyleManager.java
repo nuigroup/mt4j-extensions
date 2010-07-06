@@ -1,11 +1,16 @@
 package de.molokoid.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.mt4j.MTApplication;
 import org.mt4j.components.MTComponent;
+import org.mt4j.components.visibleComponents.font.FontManager;
+import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.components.visibleComponents.shapes.AbstractShape;
+import org.mt4j.util.MTColor;
 
 public class CSSStyleManager {
 	public CSSStyleManager(List<CSSStyle> styles) {
@@ -64,5 +69,13 @@ public class CSSStyleManager {
 		
 		return superclasses;
 	}
+	
+	public IFont getDefaultFont(MTApplication app) {
+		return FontManager.getInstance().createFont(app,
+				"dejavu/DejaVuSans.ttf", 16, // Font size
+				new MTColor(255,255,255,255), // Font fill color
+				new MTColor(255,255,255,255));
+	}
+	
 	
 }
