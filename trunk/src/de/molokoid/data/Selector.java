@@ -238,28 +238,28 @@ public class Selector {
 					case TYPE:
 						String type = superclasses.get(0);
 						if (child.primary.equalsIgnoreCase(type.replace(" ", ""))) {
-							if (containsParent(c,1) != 0)
-							return 300 + containsParent(c,1) - 25;
+							if (containsParent(c,5) != 0)
+							return 300 + containsParent(c,5) - 25;
 						}
 						break;
 					case CLASS:
 						for (String s: superclasses) {
 							if (child.primary.equalsIgnoreCase(s.replace(" ", ""))) {
-								if (containsParent(c,1) != 0)
-								return 300 + containsParent(c,1) - 50;
+								if (containsParent(c,5) != 0)
+								return 300 + containsParent(c,5) - 50;
 							}
 						}
 							
 						break;
 					case ID:
 						if (c.getCSSID() != "" && child.primary.equalsIgnoreCase(c.getCSSID().replace(" ", ""))) {
-							if (containsParent(c,1) != 0)
-							return 300 + containsParent(c,1);
+							if (containsParent(c,5) != 0)
+							return 300 + containsParent(c,5);
 						}
 						break;
 					case UNIVERSAL:
-						if (containsParent(c,1) != 0)
-						return 300 + (100 - containsParent(c,1));
+						if (containsParent(c,5) != 0)
+						return 300 + (100 - containsParent(c,5));
 					default:
 						break;
 					}
@@ -371,7 +371,7 @@ public class Selector {
 		//2: Grandparent Parent > Match
 		//3: Grandgrandparent Grandparent > Parent Match
 		//4: Grandparent > Parent Match
-		
+		//5: Parent > Match
 		try {
 			if (c.getParent() != null) {
 				switch (level) {
@@ -384,7 +384,8 @@ public class Selector {
 					return 	searchLevelsThree(c);
 				case 4:
 					return 	searchLevelsFour(c);
-				
+				case 5:
+					return searchLevelsFive(c);
 				}
 				
 			}
@@ -419,6 +420,8 @@ public class Selector {
 			
 		return 0;
 	}
+	
+	
 	
 	private int searchLevelsTwo(MTComponent c) {
 		//Search all upper levels for Grandparent, Level 1 = Match, Level 2 = Parent (Parent must be directly over child)
@@ -489,6 +492,30 @@ public class Selector {
 		
 		return 0;
 	}
+	
+	private int searchLevelsFive(MTComponent c) {
+		//Search all above levels for instance of Selector
+		int numberOfLevels = numberOfLevels(c);
+		boolean found = false;
+		int foundAtLevel = 0;
+		try {
+			if (numberOfLevels > 1) {
+					if (isMatch(primaryType, primary, getComponentAtLevel(c,2))) {
+						return 99 - 2;
+
+					}
+			
+
+				
+				
+			}
+		} catch (Exception e) {
+
+		}
+			
+		return 0;
+	}
+	
 	
 	private MTComponent getComponentAtLevel(MTComponent c,int level) {
 		

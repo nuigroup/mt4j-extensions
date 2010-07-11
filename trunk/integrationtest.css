@@ -4,5 +4,6 @@ MTCSSPolygon {background-color: red; }
 .MTEllipse {background-color: white; }
 * {border-color: blue; background-color: black; }
 MTCSSRectangle > MTCSSTextArea {background-color: lime;}
-MTCSSRectangle MTCSSTextArea {background-color: grey;}
-MTCSSRectangle {font-family: sans; font-style: normal; font-weight: light;}
+MTCSSRectangle MTCSSTextArea {background-color: blue;}
+MTCSSRectangle MTCSSRectangle {background-color: gray;}
+#fonttest {font-family: sans; font-style: normal; font-weight: light;}

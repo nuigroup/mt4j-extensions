@@ -86,8 +86,9 @@ public class MTCSSTextArea extends MTTextArea implements CSSStylable{
 		} else {
 			this.setNoStroke(true);
 		}
-		
-		this.setFont(virtualStyleSheet.getFont());
+		if (!virtualStyleSheet.getFont().equals(cssStyleManager.getDefaultFont(app))) {
+			this.setFont(virtualStyleSheet.getFont());
+		}
 		
 	}
 }

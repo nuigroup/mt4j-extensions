@@ -47,11 +47,12 @@ public class CSSStyleManager {
 		for (CSSStyleHierarchy s: styles) {
 			int temp = s.getStyle().getSelector().appliesTo(c);
 			if (temp != 0)
-			Logger.getLogger("MT4J Extensions").debug("Relevant Style? " + temp + " (" + s.getStyle().getSelector() + ")");
+				//Debug Only
+				//Logger.getLogger("MT4J Extensions").debug("Relevant Style? " + temp + " (" + s.getStyle().getSelector() + ")");
 			if (temp != 0) {
 				relevantStyles.add(new CSSStyleHierarchy(s, temp % 100, (short)(temp / 100)));
 			}
-			
+
 			
 		}
 		return relevantStyles;

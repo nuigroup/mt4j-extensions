@@ -299,22 +299,23 @@ public class CSSHandler implements DocumentHandler{
 				} catch (Exception e) {e.printStackTrace();};
 			break;
 		case LexicalUnit.SAC_IDENT:
-				if (value.getStringValue().equalsIgnoreCase("black")) return new MTColor(0,0,0,255);
-				if (value.getStringValue().equalsIgnoreCase("white")) return new MTColor(255,255,255,255);
-				if (value.getStringValue().equalsIgnoreCase("silver")) return new MTColor(192,192,192,255);
-				if (value.getStringValue().equalsIgnoreCase("gray")) return new MTColor(128,128,128,255);
-				if (value.getStringValue().equalsIgnoreCase("maroon")) return new MTColor(128,0,0,255);
-				if (value.getStringValue().equalsIgnoreCase("red")) return new MTColor(255,0,0,255);
-				if (value.getStringValue().equalsIgnoreCase("purple")) return new MTColor(128,0,128,255);
-				if (value.getStringValue().equalsIgnoreCase("fuchsia")) return new MTColor(255,0,255,255);
-				if (value.getStringValue().equalsIgnoreCase("green")) return new MTColor(0,128,0,255);
-				if (value.getStringValue().equalsIgnoreCase("lime")) return new MTColor(0,255,0,255);
-				if (value.getStringValue().equalsIgnoreCase("olive")) return new MTColor(128,128,0,255);
-				if (value.getStringValue().equalsIgnoreCase("yellow")) return new MTColor(255,255,0,255);
-				if (value.getStringValue().equalsIgnoreCase("navy")) return new MTColor(0,0,128,255);
-				if (value.getStringValue().equalsIgnoreCase("blue")) return new MTColor(0,0,255,255);
-				if (value.getStringValue().equalsIgnoreCase("teal")) return new MTColor(0,0,128,255);
-				if (value.getStringValue().equalsIgnoreCase("aqua")) return new MTColor(0,255,255,255);
+				if (value.getStringValue().equalsIgnoreCase("black")) return MTColor.BLACK;
+				if (value.getStringValue().equalsIgnoreCase("white")) return MTColor.WHITE;
+				if (value.getStringValue().equalsIgnoreCase("silver")) return MTColor.SILVER;
+				if (value.getStringValue().equalsIgnoreCase("gray")) return MTColor.GRAY;
+				if (value.getStringValue().equalsIgnoreCase("grey")) return MTColor.GREY;
+				if (value.getStringValue().equalsIgnoreCase("maroon")) return MTColor.MAROON;
+				if (value.getStringValue().equalsIgnoreCase("red")) return MTColor.RED;
+				if (value.getStringValue().equalsIgnoreCase("purple")) return MTColor.PURPLE;
+				if (value.getStringValue().equalsIgnoreCase("fuchsia")) return MTColor.FUCHSIA;
+				if (value.getStringValue().equalsIgnoreCase("green")) return MTColor.GREEN;
+				if (value.getStringValue().equalsIgnoreCase("lime")) return MTColor.LIME;
+				if (value.getStringValue().equalsIgnoreCase("olive")) return MTColor.OLIVE;
+				if (value.getStringValue().equalsIgnoreCase("yellow")) return MTColor.YELLOW;
+				if (value.getStringValue().equalsIgnoreCase("navy")) return MTColor.NAVY;
+				if (value.getStringValue().equalsIgnoreCase("blue")) return MTColor.BLUE;
+				if (value.getStringValue().equalsIgnoreCase("teal")) return MTColor.TEAL;
+				if (value.getStringValue().equalsIgnoreCase("aqua")) return MTColor.AQUA;
 				
 				
 				
@@ -465,7 +466,7 @@ public class CSSHandler implements DocumentHandler{
 			debugoutput = "No Parent/Child: " + selector.toString().replace(" ", "_");
 			
 		}
-		logger.debug(debugoutput + "\n" + newSelector);
+		//logger.debug(debugoutput + "\n" + newSelector);
 		return newSelector;
 	}
 	
