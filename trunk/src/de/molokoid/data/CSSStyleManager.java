@@ -12,12 +12,19 @@ import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.components.visibleComponents.shapes.AbstractShape;
 import org.mt4j.util.MTColor;
 
+import de.molokoid.extensions.CSSStylable;
+
 public class CSSStyleManager {
-	public CSSStyleManager(List<CSSStyle> styles) {
+	public CSSStyleManager(List<CSSStyle> styles, MTApplication app) {
 		for (CSSStyle s: styles) {
 			this.styles.add(new CSSStyleHierarchy(s));
 		}
+		this.app = app;
 	}
+	
+	List<CSSStylable> components = new ArrayList<CSSStylable>();
+	
+	MTApplication app = null;
 	
 	List<CSSStyleHierarchy> styles = new ArrayList<CSSStyleHierarchy>();
 
@@ -27,19 +34,36 @@ public class CSSStyleManager {
 
 	public void setStyles(List<CSSStyleHierarchy> styles) {
 		this.styles = styles;
+		applyStyles();
 	}
 	
 	public void addStyle(CSSStyle style) {
 		this.styles.add(new CSSStyleHierarchy(style));
+		applyStyles();
 	}
 	public void addStyle(CSSStyle style, int priority) {
 		this.styles.add(new CSSStyleHierarchy(style, priority));
+		applyStyles();
 	}
 	public void removeStyle(CSSStyle style) {
 		this.styles.remove(style);
+		applyStyles();
 	}
 	
+	public void applyStyles() {
+		for (CSSStylable c: components) {
+			if (c != null) {
+				c.applyStyleSheet();
+			}
+			
+			
+		}
+	}
+	
+	
 	public List<CSSStyleHierarchy> getRelevantStyles(MTComponent c) {
+		if (!components.contains(c) && c instanceof CSSStylable) components.add((CSSStylable)c);
+		
 		List<CSSStyleHierarchy> relevantStyles = new ArrayList<CSSStyleHierarchy>();
 		List<String> superClasses = getSuperclasses(c.getClass());
 	

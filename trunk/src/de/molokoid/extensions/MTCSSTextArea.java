@@ -5,6 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mt4j.MTApplication;
+import org.mt4j.components.MTComponent;
+import org.mt4j.components.StateChange;
+import org.mt4j.components.StateChangeEvent;
+import org.mt4j.components.StateChangeListener;
 import org.mt4j.components.visibleComponents.font.FontManager;
 import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
@@ -23,7 +27,8 @@ public class MTCSSTextArea extends MTTextArea implements CSSStylable{
 		super(mta, font);
 		this.cssStyleManager = csm;
 		this.app = mta;
-		applyStyleSheet();
+		//applyStyleSheet();
+		addListeners();
 		
 	}
 	
@@ -31,7 +36,8 @@ public class MTCSSTextArea extends MTTextArea implements CSSStylable{
 		super(mta, csm.getDefaultFont(mta));
 		this.cssStyleManager = csm;
 		this.app = mta;
-		applyStyleSheet();
+		//applyStyleSheet();
+		addListeners();
 		
 	}
 	
@@ -41,8 +47,22 @@ public class MTCSSTextArea extends MTTextArea implements CSSStylable{
 		this.cssStyleManager = csm;
 		this.app = mta;
 		this.privateStyleSheets.add(style);
-		applyStyleSheet();
+		//applyStyleSheet();
+		addListeners();
 	}
+	private void addListeners() {
+		this.addStateChangeListener(StateChange.ADDED_TO_PARENT, new StateChangeListener() {
+			public void stateChanged(StateChangeEvent evt) {
+				applyStyleSheet();
+			}
+		});
+		this.addStateChangeListener(StateChange.STYLE_CHANGED, new StateChangeListener() {
+			public void stateChanged(StateChangeEvent evt) {
+				applyStyleSheet();
+			}
+		});
+	}
+	
 	
 	List<CSSStyle> privateStyleSheets = new ArrayList<CSSStyle>();
 	List<CSSStyleHierarchy> sheets = new ArrayList<CSSStyleHierarchy>();
@@ -89,6 +109,6 @@ public class MTCSSTextArea extends MTTextArea implements CSSStylable{
 		if (!virtualStyleSheet.getFont().equals(cssStyleManager.getDefaultFont(app))) {
 			this.setFont(virtualStyleSheet.getFont());
 		}
-		
+
 	}
 }

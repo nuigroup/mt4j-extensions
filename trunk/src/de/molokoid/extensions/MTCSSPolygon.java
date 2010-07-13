@@ -5,6 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mt4j.MTApplication;
+import org.mt4j.components.MTComponent;
+import org.mt4j.components.StateChange;
+import org.mt4j.components.StateChangeEvent;
+import org.mt4j.components.StateChangeListener;
 import org.mt4j.components.visibleComponents.shapes.MTPolygon;
 import org.mt4j.util.math.Vertex;
 
@@ -20,7 +24,8 @@ public class MTCSSPolygon extends MTPolygon implements CSSStylable{
 		super(mta, vertices);
 		this.app = mta;
 		this.cssStyleManager = csm;
-		applyStyleSheet();
+		//applyStyleSheet();
+		addListeners();
 	}
 	
 	public MTCSSPolygon(MTApplication mta, Vertex[] vertices, CSSStyle style, CSSStyleManager csm) {
@@ -28,7 +33,21 @@ public class MTCSSPolygon extends MTPolygon implements CSSStylable{
 		this.app = mta;
 		this.cssStyleManager = csm;
 		this.privateStyleSheets.add(style);
-		applyStyleSheet();
+		//applyStyleSheet();
+		addListeners();
+	}
+	
+	private void addListeners() {
+		this.addStateChangeListener(StateChange.ADDED_TO_PARENT, new StateChangeListener() {
+			public void stateChanged(StateChangeEvent evt) {
+				applyStyleSheet();
+			}
+		});
+		this.addStateChangeListener(StateChange.STYLE_CHANGED, new StateChangeListener() {
+			public void stateChanged(StateChangeEvent evt) {
+				applyStyleSheet();
+			}
+		});
 	}
 	
 	List<CSSStyle> privateStyleSheets = new ArrayList<CSSStyle>();
@@ -87,7 +106,12 @@ public class MTCSSPolygon extends MTPolygon implements CSSStylable{
 		} else {
 			this.setNoStroke(true);
 		}
-		
+		for (MTComponent c: this.getChildren()) {
+			if (c instanceof CSSStylable) {
+				CSSStylable s = (CSSStylable)c;
+				s.applyStyleSheet();
+			}
+		}
 		
 	}
 }

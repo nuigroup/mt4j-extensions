@@ -9,6 +9,10 @@ import de.molokoid.data.CSSStyleHierarchy;
 import de.molokoid.data.CSSStyleManager;
 
 import org.mt4j.MTApplication;
+import org.mt4j.components.MTComponent;
+import org.mt4j.components.StateChange;
+import org.mt4j.components.StateChangeEvent;
+import org.mt4j.components.StateChangeListener;
 import org.mt4j.components.visibleComponents.shapes.MTEllipse;
 import org.mt4j.util.math.Vector3D;
 
@@ -27,7 +31,8 @@ public class MTCSSEllipse extends MTEllipse implements CSSStylable{
 
 		this.cssStyleManager = csm;
 		this.app = mta;
-		applyStyleSheet();
+		//applyStyleSheet();
+		addListeners();
 		
 	}
 	
@@ -37,10 +42,25 @@ public class MTCSSEllipse extends MTEllipse implements CSSStylable{
 		this.privateStyleSheets.add(style);
 		this.cssStyleManager = csm;
 		this.app = mta;
-		applyStyleSheet();
+		//applyStyleSheet();
+		addListeners();
 		
 	}
-
+	
+	private void addListeners() {
+		this.addStateChangeListener(StateChange.ADDED_TO_PARENT, new StateChangeListener() {
+			public void stateChanged(StateChangeEvent evt) {
+				applyStyleSheet();
+			}
+		});
+		this.addStateChangeListener(StateChange.STYLE_CHANGED, new StateChangeListener() {
+			public void stateChanged(StateChangeEvent evt) {
+				applyStyleSheet();
+			}
+		});
+	}
+	
+	
 	public void setStyleSheet(CSSStyle sheet) {
 		this.privateStyleSheets.add(sheet);
 	}
@@ -77,7 +97,12 @@ public class MTCSSEllipse extends MTEllipse implements CSSStylable{
 		} else {
 			this.setNoStroke(true);
 		}
-		
+		for (MTComponent c: this.getChildren()) {
+			if (c instanceof CSSStylable) {
+				CSSStylable s = (CSSStylable)c;
+				s.applyStyleSheet();
+			}
+		}
 		
 	}
 

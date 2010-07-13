@@ -4,6 +4,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.mt4j.MTApplication;
+import org.mt4j.components.MTComponent;
+import org.mt4j.components.StateChange;
+import org.mt4j.components.StateChangeEvent;
+import org.mt4j.components.StateChangeListener;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 
 import de.molokoid.css.parserConnector;
@@ -19,7 +23,9 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 
 		this.cssStyleManager = csm;
 		this.app = mta;
-		applyStyleSheet();
+		
+		//applyStyleSheet();
+		addListeners();
 	}
 	
 	public MTCSSRectangle(CSSStyle style, float x, float y,	MTApplication mta, CSSStyleManager csm) {
@@ -27,7 +33,9 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 		this.privateStyleSheets.add(style);
 		this.cssStyleManager = csm;
 		this.app = mta;
-		applyStyleSheet();
+		
+		//applyStyleSheet();
+		addListeners();
 	}
 	
 	public MTCSSRectangle(String uri, float x, float y, MTApplication mta, CSSStyleManager csm) {
@@ -36,12 +44,23 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 		privateStyleSheets = pc.getCssh().getStyles();
 		this.cssStyleManager = csm;
 		this.app = mta;
-		applyStyleSheet();
 		
-		
-		
+		//applyStyleSheet();
+		addListeners();
 	}
 	
+	private void addListeners() {
+		this.addStateChangeListener(StateChange.ADDED_TO_PARENT, new StateChangeListener() {
+			public void stateChanged(StateChangeEvent evt) {
+				applyStyleSheet();
+			}
+		});
+		this.addStateChangeListener(StateChange.STYLE_CHANGED, new StateChangeListener() {
+			public void stateChanged(StateChangeEvent evt) {
+				applyStyleSheet();
+			}
+		});
+	}
 	
 
 	List<CSSStyle> privateStyleSheets = new ArrayList<CSSStyle>();
@@ -102,7 +121,7 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 			this.setNoStroke(true);
 		}
 		
-		
+
 	}
 
 

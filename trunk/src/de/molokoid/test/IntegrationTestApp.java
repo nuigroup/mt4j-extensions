@@ -51,7 +51,7 @@ public class IntegrationTestApp extends AbstractScene{
 			
 			pc = new parserConnector("integrationtest.css", app);
 			styles= pc.getCssh().getStyles();
-			cssm = new CSSStyleManager(styles);
+			cssm = new CSSStyleManager(styles, app);
 		
 			MTCSSTextArea ta = new MTCSSTextArea(app, cssm.getDefaultFont(app), cssm);
 			getCanvas().addChild(ta);

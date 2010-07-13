@@ -55,7 +55,7 @@ public class SelectorIntegrationTest extends AbstractWindowTestcase {
 		
 		pc = new parserConnector("integrationtest.css", app);
 		styles= pc.getCssh().getStyles();
-		cssm = new CSSStyleManager(styles);
+		cssm = new CSSStyleManager(styles,app);
 	}
 	
 	public MTCanvas getCanvas(){
@@ -142,11 +142,11 @@ public class SelectorIntegrationTest extends AbstractWindowTestcase {
 				e.addChild(r3);
 				e.addChild(t2);
 
-				ta.applyStyleSheet();
+				//ta.applyStyleSheet();
 
-				t2.applyStyleSheet();
+				//t2.applyStyleSheet();
 
-				r3.applyStyleSheet();
+				//r3.applyStyleSheet();
 				
 				assertTrue(ta.getFillColor().equals(MTColor.LIME));
 				assertTrue(r3.getFillColor().equals(MTColor.GREY));
