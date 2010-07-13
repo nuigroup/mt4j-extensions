@@ -49,11 +49,6 @@ public class MTCSSLine extends MTLine implements CSSStylable{
 				applyStyleSheet();
 			}
 		});
-		this.addStateChangeListener(StateChange.STYLE_CHANGED, new StateChangeListener() {
-			public void stateChanged(StateChangeEvent evt) {
-				applyStyleSheet();
-			}
-		});
 	}
 	
 	@Override

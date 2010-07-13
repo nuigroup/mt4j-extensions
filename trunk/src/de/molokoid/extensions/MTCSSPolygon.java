@@ -43,11 +43,7 @@ public class MTCSSPolygon extends MTPolygon implements CSSStylable{
 				applyStyleSheet();
 			}
 		});
-		this.addStateChangeListener(StateChange.STYLE_CHANGED, new StateChangeListener() {
-			public void stateChanged(StateChangeEvent evt) {
-				applyStyleSheet();
-			}
-		});
+
 	}
 	
 	List<CSSStyle> privateStyleSheets = new ArrayList<CSSStyle>();
@@ -95,7 +91,7 @@ public class MTCSSPolygon extends MTPolygon implements CSSStylable{
 	
 	public void applyStyleSheet() {
 		evaluateStyleSheets();
-
+		
 		this.setFillColor(virtualStyleSheet.getBackgroundColor());
 		this.setStrokeColor(virtualStyleSheet.getBorderColor());
 		this.setStrokeWeight(virtualStyleSheet.getBorderWidth());

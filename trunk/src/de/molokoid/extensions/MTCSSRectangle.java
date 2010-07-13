@@ -8,6 +8,7 @@ import org.mt4j.components.MTComponent;
 import org.mt4j.components.StateChange;
 import org.mt4j.components.StateChangeEvent;
 import org.mt4j.components.StateChangeListener;
+import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 
 import de.molokoid.css.parserConnector;
@@ -55,11 +56,7 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 				applyStyleSheet();
 			}
 		});
-		this.addStateChangeListener(StateChange.STYLE_CHANGED, new StateChangeListener() {
-			public void stateChanged(StateChangeEvent evt) {
-				applyStyleSheet();
-			}
-		});
+
 	}
 	
 
@@ -108,7 +105,22 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 	
 	public void applyStyleSheet() {
 		evaluateStyleSheets();
-		this.setSizeLocal(virtualStyleSheet.getWidth(), virtualStyleSheet.getHeight());
+		
+		if (virtualStyleSheet.isWidthPercentage() && virtualStyleSheet.isHeightPercentage()) {
+			if (this.getParent() != null) {
+				this.setSizeXYRelativeToParent(	virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.LOCAL), 
+									virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.LOCAL));
+			}
+		} else  if (virtualStyleSheet.isWidthPercentage()) {
+			this.setSizeXYRelativeToParent(	virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.LOCAL), 
+					virtualStyleSheet.getHeight());
+		} else if (virtualStyleSheet.isHeightPercentage()) {
+			this.setSizeXYRelativeToParent(	virtualStyleSheet.getWidth(), 
+					virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.LOCAL));
+		} else {
+			this.setSizeXYRelativeToParent(virtualStyleSheet.getWidth(), virtualStyleSheet.getHeight());
+		}
+		
 		this.setFillColor(virtualStyleSheet.getBackgroundColor());
 		this.setStrokeColor(virtualStyleSheet.getBorderColor());
 		this.setStrokeWeight(virtualStyleSheet.getBorderWidth());

@@ -13,6 +13,7 @@ import org.mt4j.components.MTComponent;
 import org.mt4j.components.StateChange;
 import org.mt4j.components.StateChangeEvent;
 import org.mt4j.components.StateChangeListener;
+import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.shapes.MTEllipse;
 import org.mt4j.util.math.Vector3D;
 
@@ -53,11 +54,7 @@ public class MTCSSEllipse extends MTEllipse implements CSSStylable{
 				applyStyleSheet();
 			}
 		});
-		this.addStateChangeListener(StateChange.STYLE_CHANGED, new StateChangeListener() {
-			public void stateChanged(StateChangeEvent evt) {
-				applyStyleSheet();
-			}
-		});
+
 	}
 	
 	
@@ -84,7 +81,23 @@ public class MTCSSEllipse extends MTEllipse implements CSSStylable{
 	
 	public void applyStyleSheet() {
 		evaluateStyleSheets();
-		this.setHeightXYGlobal(virtualStyleSheet.getHeight());
+		
+		
+		if (virtualStyleSheet.isHeightPercentage()) {
+			if (this.getParent()!= null) this.setHeightXYRelativeToParent(
+					virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.RELATIVE_TO_PARENT));
+		} else {
+			this.setHeightXYRelativeToParent(virtualStyleSheet.getHeight());
+		}
+		
+		if (virtualStyleSheet.isWidthPercentage()) {
+			if (this.getParent() != null) this.setWidthXYRelativeToParent(
+					virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.RELATIVE_TO_PARENT));
+		} else {
+			this.setWidthXYRelativeToParent(virtualStyleSheet.getWidth());
+		}
+		
+		
 		this.setWidthXYGlobal(virtualStyleSheet.getWidth());
 		this.setFillColor(virtualStyleSheet.getBackgroundColor());
 		this.setStrokeColor(virtualStyleSheet.getBorderColor());
