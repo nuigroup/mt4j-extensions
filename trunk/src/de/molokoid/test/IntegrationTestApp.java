@@ -14,6 +14,7 @@ import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.sceneManagement.Iscene;
 import org.mt4j.test.testUtil.DummyScene;
 import org.mt4j.util.MTColor;
+import org.mt4j.util.math.Vertex;
 
 import processing.core.PImage;
 
@@ -22,6 +23,7 @@ import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleManager;
 import de.molokoid.data.Selector;
 import de.molokoid.data.SelectorType;
+import de.molokoid.extensions.MTCSSPolygon;
 import de.molokoid.extensions.MTCSSRectangle;
 import de.molokoid.extensions.MTCSSTextArea;
 
@@ -60,7 +62,12 @@ public class IntegrationTestApp extends AbstractScene{
 			this.getCanvas().addChild(r);
 			PImage bgImage = app.loadImage("beamer_test.jpg");
 			r.tiledBackground(bgImage);
-
+			
+			Vertex[] vtcs = {new Vertex(100,100), new Vertex(200, 20), new Vertex(300, 200) ,new Vertex(100,100)};
+			MTCSSPolygon p = new MTCSSPolygon(app, vtcs, cssm);
+			this.getCanvas().addChild(p);
+			p.tiledBackground(bgImage);
+			
 	}
 
 

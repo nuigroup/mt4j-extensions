@@ -176,15 +176,36 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 			
 			Vector3D[] bV = this.getBounds().getVectorsLocal();
 			
+			
 			Vertex[] backgroundVertices = this.getVerticesLocal();
-			backgroundVertices[0].setTexCoordU(0);
+			
+			float minx, miny;
+			
+			if (backgroundVertices.length > 0) {
+				minx = backgroundVertices[0].x;
+				miny = backgroundVertices[0].y;
+			
+			for (Vertex vtx: backgroundVertices) {
+				if (vtx.x < minx) minx = vtx.x;
+				if (vtx.y < miny) miny = vtx.y;
+			}
+			
+			for (Vertex vtx: backgroundVertices) {
+				vtx.setTexCoordU((float)getXDistance(minx, vtx) / (float)bgImage.width);
+				vtx.setTexCoordV((float)getYDistance(miny, vtx) / (float)bgImage.height);
+			}
+			
+			}
+			
+			
+/*			backgroundVertices[0].setTexCoordU(0);
 			backgroundVertices[0].setTexCoordV(0);
 			backgroundVertices[1].setTexCoordU(u);
 			backgroundVertices[1].setTexCoordV(0);
 			backgroundVertices[2].setTexCoordU(u);
 			backgroundVertices[2].setTexCoordV(v);
 			backgroundVertices[3].setTexCoordU(0);
-			backgroundVertices[3].setTexCoordV(v);
+			backgroundVertices[3].setTexCoordV(v);*/
 			
 			System.out.println(getXDistance(backgroundVertices[0].x, backgroundVertices[1]) + " " + getYDistance(backgroundVertices[0].y, backgroundVertices[1]));
 			System.out.println(getXDistance(backgroundVertices[0].x, backgroundVertices[2]) + " " + getYDistance(backgroundVertices[0].y, backgroundVertices[2]));
