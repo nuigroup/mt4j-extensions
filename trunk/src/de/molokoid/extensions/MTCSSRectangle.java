@@ -13,6 +13,7 @@ import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Tools3D;
+import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
 import org.mt4j.util.opengl.GLTexture;
 import org.mt4j.util.opengl.GLTextureSettings;
@@ -173,6 +174,8 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 			float u = (float)this.getBounds().getWidthXY(TransformSpace.LOCAL)/(float)bgImage.width;
 			float v = (float)this.getBounds().getHeightXY(TransformSpace.LOCAL)/(float)bgImage.height;
 			
+			Vector3D[] bV = this.getBounds().getVectorsLocal();
+			
 			Vertex[] backgroundVertices = this.getVerticesLocal();
 			backgroundVertices[0].setTexCoordU(0);
 			backgroundVertices[0].setTexCoordV(0);
@@ -183,7 +186,11 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 			backgroundVertices[3].setTexCoordU(0);
 			backgroundVertices[3].setTexCoordV(v);
 			
+			System.out.println(getXDistance(backgroundVertices[0].x, backgroundVertices[1]) + " " + getYDistance(backgroundVertices[0].y, backgroundVertices[1]));
+			System.out.println(getXDistance(backgroundVertices[0].x, backgroundVertices[2]) + " " + getYDistance(backgroundVertices[0].y, backgroundVertices[2]));
+			System.out.println(getXDistance(backgroundVertices[0].x, backgroundVertices[3]) + " " + getYDistance(backgroundVertices[0].y, backgroundVertices[3]));
 
+				
 			//Update changed texture coordinates for opengl buffer drawing
 			if (MT4jSettings.getInstance().isOpenGlMode())
 				this.getGeometryInfo().updateTextureBuffer(this.isUseVBOs());
@@ -198,8 +205,16 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 			if (pot){
 				tex = new GLTexture(app, bgImage, g);
 			}else{
+				if (tiled) {
 				g.target = TEXTURE_TARGET.RECTANGULAR;
+				g.shrinkFilter = SHRINKAGE_FILTER.Trilinear; //Because NPOT texture with GL_REPEAT isnt supported -> gluBuild2Dmipmapds strechtes the texture to POT size
+
 				tex = new GLTexture(app, bgImage, g);
+				} else {
+					g.target = TEXTURE_TARGET.RECTANGULAR;
+
+					tex = new GLTexture(app, bgImage, g);
+				}
 			}
 			this.setTexture(tex);
 		}else{
@@ -210,7 +225,19 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 		
 		
 	}
-
+	
+	private float getXDistance(float x, Vertex v2) {
+		float distance = x - v2.x;
+		if (distance >= 0) return distance;
+		else return -distance;
+		
+		
+	}
+	private float getYDistance(float y, Vertex v2) {
+		float distance = y - v2.y;
+		if (distance >= 0) return distance;
+		else return -distance;
+	}
 
 
 }
