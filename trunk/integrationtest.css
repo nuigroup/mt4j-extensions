@@ -7,3 +7,6 @@ MTCSSRectangle > MTCSSTextArea {background-color: lime;}
 MTCSSRectangle MTCSSTextArea {background-color: blue;}
 MTCSSRectangle MTCSSRectangle {background-color: gray;}
 #fonttest {font-family: sans; font-style: normal; font-weight: light;}
+#widthtest {width: 90px;}
+#heighttest {height: 110px;}
+#sizetest {width: 120px; height: 450px;}

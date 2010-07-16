@@ -93,19 +93,34 @@ public class MTCSSTextArea extends MTTextArea implements CSSStylable{
 		evaluateStyleSheets();
 		if (virtualStyleSheet.isWidthPercentage() && virtualStyleSheet.isHeightPercentage()) {
 			if (this.getParent() != null) {
-				this.setSizeXYRelativeToParent(	virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.LOCAL), 
-									virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.LOCAL));
+				if (virtualStyleSheet.getWidth() > 0) 
+					this.setWidthXYRelativeToParent(virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.RELATIVE_TO_PARENT));
+				
+				if (virtualStyleSheet.getHeight() > 0)
+					this.setHeightXYRelativeToParent(virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.RELATIVE_TO_PARENT));
+				
+
 			}
 		} else  if (virtualStyleSheet.isWidthPercentage()) {
-			this.setSizeXYRelativeToParent(	virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.LOCAL), 
-					virtualStyleSheet.getHeight());
+			if (virtualStyleSheet.getWidth() > 0) 
+				this.setWidthXYRelativeToParent(virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.RELATIVE_TO_PARENT));
+			
+			if (virtualStyleSheet.getHeight() > 0)
+				this.setHeightXYRelativeToParent(virtualStyleSheet.getHeight());
 		} else if (virtualStyleSheet.isHeightPercentage()) {
-			this.setSizeXYRelativeToParent(	virtualStyleSheet.getWidth(), 
-					virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.LOCAL));
+			if (virtualStyleSheet.getWidth() > 0) 
+				this.setWidthXYRelativeToParent(virtualStyleSheet.getWidth());
+			
+			if (virtualStyleSheet.getHeight() > 0)
+				this.setHeightXYRelativeToParent(virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.RELATIVE_TO_PARENT));
+
 		} else {
-			this.setSizeXYRelativeToParent(virtualStyleSheet.getWidth(), virtualStyleSheet.getHeight());
+			if (virtualStyleSheet.getWidth() > 0) 
+				this.setWidthXYRelativeToParent(virtualStyleSheet.getWidth());
+			
+			if (virtualStyleSheet.getHeight() > 0)
+				this.setHeightXYRelativeToParent(virtualStyleSheet.getHeight());
 		}
-		
 		
 		
 		this.setFillColor(virtualStyleSheet.getBackgroundColor());

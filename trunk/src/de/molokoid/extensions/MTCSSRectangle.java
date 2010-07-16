@@ -10,6 +10,18 @@ import org.mt4j.components.StateChangeEvent;
 import org.mt4j.components.StateChangeListener;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
+import org.mt4j.util.MT4jSettings;
+import org.mt4j.util.MTColor;
+import org.mt4j.util.math.Tools3D;
+import org.mt4j.util.math.Vertex;
+import org.mt4j.util.opengl.GLTexture;
+import org.mt4j.util.opengl.GLTextureSettings;
+import org.mt4j.util.opengl.GLTexture.EXPANSION_FILTER;
+import org.mt4j.util.opengl.GLTexture.SHRINKAGE_FILTER;
+import org.mt4j.util.opengl.GLTexture.TEXTURE_TARGET;
+import org.mt4j.util.opengl.GLTexture.WRAP_MODE;
+
+import processing.core.PImage;
 
 import de.molokoid.css.parserConnector;
 import de.molokoid.data.CSSStyle;
@@ -62,7 +74,7 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 
 	List<CSSStyle> privateStyleSheets = new ArrayList<CSSStyle>();
 	List<CSSStyleHierarchy> sheets = new ArrayList<CSSStyleHierarchy>();
-	CSSStyle virtualStyleSheet = null;
+	public CSSStyle virtualStyleSheet = null;
 	CSSStyleManager cssStyleManager;
 	MTApplication app;
 	
@@ -108,17 +120,33 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 		
 		if (virtualStyleSheet.isWidthPercentage() && virtualStyleSheet.isHeightPercentage()) {
 			if (this.getParent() != null) {
-				this.setSizeXYRelativeToParent(	virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.LOCAL), 
-									virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.LOCAL));
+				if (virtualStyleSheet.getWidth() > 0) 
+					this.setWidthLocal(virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.RELATIVE_TO_PARENT));
+				
+				if (virtualStyleSheet.getHeight() > 0)
+					this.setHeightLocal(virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.RELATIVE_TO_PARENT));
+				
+
 			}
 		} else  if (virtualStyleSheet.isWidthPercentage()) {
-			this.setSizeXYRelativeToParent(	virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.LOCAL), 
-					virtualStyleSheet.getHeight());
+			if (virtualStyleSheet.getWidth() > 0) 
+				this.setWidthLocal(virtualStyleSheet.getWidth() / 100f * this.getParent().getBounds().getWidthXY(TransformSpace.RELATIVE_TO_PARENT));
+			
+			if (virtualStyleSheet.getHeight() > 0)
+				this.setHeightLocal(virtualStyleSheet.getHeight());
 		} else if (virtualStyleSheet.isHeightPercentage()) {
-			this.setSizeXYRelativeToParent(	virtualStyleSheet.getWidth(), 
-					virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.LOCAL));
+			if (virtualStyleSheet.getWidth() > 0) 
+				this.setWidthLocal(virtualStyleSheet.getWidth());
+			
+			if (virtualStyleSheet.getHeight() > 0)
+				this.setHeightLocal(virtualStyleSheet.getHeight() / 100f * this.getParent().getBounds().getHeightXY(TransformSpace.RELATIVE_TO_PARENT));
+
 		} else {
-			this.setSizeXYRelativeToParent(virtualStyleSheet.getWidth(), virtualStyleSheet.getHeight());
+			if (virtualStyleSheet.getWidth() > 0) 
+				this.setWidthLocal(virtualStyleSheet.getWidth());
+			
+			if (virtualStyleSheet.getHeight() > 0)
+				this.setHeightLocal(virtualStyleSheet.getHeight());
 		}
 		
 		this.setFillColor(virtualStyleSheet.getBackgroundColor());
@@ -136,7 +164,52 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 
 	}
 
+	public void tiledBackground (PImage bgImage) {
+		boolean pot = Tools3D.isPowerOfTwoDimension(bgImage);
+		boolean tiled = true;
+		this.setFillColor(MTColor.WHITE);
+		if (tiled){
+			//Generate texture coordinates to repeat the texture over the whole background (works only with OpenGL)
+			float u = (float)this.getBounds().getWidthXY(TransformSpace.LOCAL)/(float)bgImage.width;
+			float v = (float)this.getBounds().getHeightXY(TransformSpace.LOCAL)/(float)bgImage.height;
+			
+			Vertex[] backgroundVertices = this.getVerticesLocal();
+			backgroundVertices[0].setTexCoordU(0);
+			backgroundVertices[0].setTexCoordV(0);
+			backgroundVertices[1].setTexCoordU(u);
+			backgroundVertices[1].setTexCoordV(0);
+			backgroundVertices[2].setTexCoordU(u);
+			backgroundVertices[2].setTexCoordV(v);
+			backgroundVertices[3].setTexCoordU(0);
+			backgroundVertices[3].setTexCoordV(v);
+			
 
+			//Update changed texture coordinates for opengl buffer drawing
+			if (MT4jSettings.getInstance().isOpenGlMode())
+				this.getGeometryInfo().updateTextureBuffer(this.isUseVBOs());
+		}
+		
+		
+		if (MT4jSettings.getInstance().isOpenGlMode()){
+
+			
+			GLTextureSettings g = new GLTextureSettings(TEXTURE_TARGET.TEXTURE_2D, SHRINKAGE_FILTER.BilinearNoMipMaps, EXPANSION_FILTER.Bilinear, WRAP_MODE.REPEAT, WRAP_MODE.REPEAT); 
+			GLTexture tex;
+			if (pot){
+				tex = new GLTexture(app, bgImage, g);
+			}else{
+				g.target = TEXTURE_TARGET.RECTANGULAR;
+				tex = new GLTexture(app, bgImage, g);
+			}
+			this.setTexture(tex);
+		}else{
+			this.setTexture(bgImage);
+		}
+		
+
+		
+		
+	}
 
 
 

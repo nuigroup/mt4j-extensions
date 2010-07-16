@@ -19,6 +19,7 @@ import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.components.MTCanvas;
 import org.mt4j.components.MTComponent;
+import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.font.FontManager;
 import org.mt4j.components.visibleComponents.font.IFont;
 
@@ -155,5 +156,30 @@ public class SelectorIntegrationTest extends AbstractWindowTestcase {
 		});
 			
 		
+	}
+	
+	@Test
+	public void testSizes() {
+		MTCSSRectangle r1 = new MTCSSRectangle(100,100,100,100, app, cssm);
+		MTCSSRectangle r2 = new MTCSSRectangle(100,100,100,100, app, cssm);
+		MTCSSRectangle r3 = new MTCSSRectangle(100,100,100,100, app, cssm);
+		
+		r1.setCSSID("widthtest");
+		r2.setCSSID("heighttest");
+		r3.setCSSID("sizetest");
+		
+		getCanvas().addChild(r1);
+		getCanvas().addChild(r2);
+		getCanvas().addChild(r3);
+
+		logger.debug(r1.getWidthXY(TransformSpace.RELATIVE_TO_PARENT));
+		assertTrue(r1.getWidthXY(TransformSpace.RELATIVE_TO_PARENT) == 90f);
+		assertTrue(r2.getHeightXY(TransformSpace.RELATIVE_TO_PARENT) == 110f);
+		
+		
+		logger.debug("Width: " + r3.getWidthXY(TransformSpace.RELATIVE_TO_PARENT) + "(" + r3.virtualStyleSheet.getWidth()+ ")");
+		assertTrue(r3.getWidthXY(TransformSpace.RELATIVE_TO_PARENT) == 120f);
+		logger.debug("Height: " + r3.getHeightXY(TransformSpace.RELATIVE_TO_PARENT));
+		assertTrue(r3.getHeightXY(TransformSpace.RELATIVE_TO_PARENT) == 450f);
 	}
 }
