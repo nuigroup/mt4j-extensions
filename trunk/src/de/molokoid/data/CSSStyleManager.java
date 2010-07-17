@@ -60,6 +60,12 @@ public class CSSStyleManager {
 		}
 	}
 	
+	public CSSStyle getFirstStyleForSelector(Selector s) {
+		for (CSSStyleHierarchy sty: styles) {
+			if (sty.getStyle().getSelector().equals(s)) return sty.getStyle();
+		}
+		return null;
+	}
 	
 	public List<CSSStyleHierarchy> getRelevantStyles(MTComponent c) {
 		if (!components.contains(c) && c instanceof CSSStylable) components.add((CSSStylable)c);

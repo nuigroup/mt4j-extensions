@@ -17,9 +17,13 @@ import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 
+import processing.core.PImage;
+
 import de.molokoid.data.BorderStyle;
 import de.molokoid.data.CSSFont;
 import de.molokoid.data.CSSStyle;
+import de.molokoid.data.CSSStyle.BackgroundRepeat;
+import de.molokoid.data.Keywords;
 import de.molokoid.data.Selector;
 import de.molokoid.data.SelectorType;
 import de.molokoid.data.fontfamily;
@@ -50,37 +54,35 @@ public class CSSHandler implements DocumentHandler{
 	
 	@Override
 	public void comment(String arg0) throws CSSException {
-		// TODO Auto-generated method stub
-		
+		//Don't hand comments
 	}
 
 	@Override
 	public void endDocument(InputSource arg0) throws CSSException {
-		// TODO Auto-generated method stub
+		//Document done, nothing to do
 		
 	}
 
 	@Override
 	public void endFontFace() throws CSSException {
-		// TODO Auto-generated method stub
+		//
 		
 	}
 
 	@Override
 	public void endMedia(SACMediaList arg0) throws CSSException {
-		// TODO Auto-generated method stub
+		//
 		
 	}
 
 	@Override
 	public void endPage(String arg0, String arg1) throws CSSException {
-		// TODO Auto-generated method stub
+		//
 		
 	}
 
 	@Override
 	public void endSelector(SelectorList arg0) throws CSSException {
-		// TODO Auto-generated method stub
 		if (currentFont != null && currentFont.isModified()) {
 			for (CSSStyle s: activeStyles) {
 				s.setCssfont(currentFont);
@@ -95,21 +97,21 @@ public class CSSHandler implements DocumentHandler{
 	
 	@Override
 	public void ignorableAtRule(String arg0) throws CSSException {
-		// TODO Auto-generated method stub
+		//
 		
 	}
 
 	@Override
 	public void importStyle(String arg0, SACMediaList arg1, String arg2)
 			throws CSSException {
-		// TODO Auto-generated method stub
+		//
 		
 	}
 
 	@Override
 	public void namespaceDeclaration(String arg0, String arg1)
 			throws CSSException {
-		// TODO Auto-generated method stub
+		//
 		
 	}
 
@@ -138,16 +140,57 @@ public class CSSHandler implements DocumentHandler{
 			for (CSSStyle sty: activeStyles) sty.setBackgroundColor(color);
 			
 			break;
+		case BACKGROUNDIMAGE:
+			PImage backgroundImage = handleBackgroundImage(value);
+			if (backgroundImage != null) 
+				for (CSSStyle sty: activeStyles) sty.setBackgroundImage(backgroundImage);
+			break;
+		case BACKGROUND:
+			List<LexicalUnit> parameters = new ArrayList<LexicalUnit>();
+			parameters.add(value);
+			while (value.getNextLexicalUnit() != null) {
+				value = value.getNextLexicalUnit();
+				parameters.add(value);
+			}
+			
+			for (LexicalUnit lu: parameters) {
+				switch (identifyBackgroundTag(lu)) {
+				case 1:
+					MTColor backgroundColor = handleColor(lu);
+					if (backgroundColor != null) 
+						for (CSSStyle sty: activeStyles) sty.setBackgroundColor(backgroundColor);
+					break;
+				case 2:
+					PImage backgroundImage2 = handleBackgroundImage(lu);
+					if (backgroundImage2 != null) 
+						for (CSSStyle sty: activeStyles) sty.setBackgroundImage(backgroundImage2);
+					break;
+				case 3:
+					BackgroundRepeat backgroundRepeat = handleBackgroundRepeat(lu);
+					if (backgroundRepeat != null) 
+						for (CSSStyle sty: activeStyles) sty.setBackgroundRepeat(backgroundRepeat);
+					break;
+				default:
+					break;
+				}
+	
+			}
+		break;
+		case BACKGROUNDREPEAT:
+			BackgroundRepeat bR = handleBackgroundRepeat(value);
+			if (bR != null) 
+				for (CSSStyle sty: activeStyles) sty.setBackgroundRepeat(bR);
+			break;
+						
 		case COLOR:
 			color = handleColor(value);
-			//for (CSSStyle sty: activeStyles) sty.setBackgroundColor(color);
 			if (currentFont == null) currentFont = new CSSFont(color);
 			else currentFont.setColor(color);
 			break;
 			
 		case WIDTH:
 			LexicalUnit parameter = value;
-			//TODO: Relative Größe
+			
 			for (CSSStyle sty: activeStyles) {
 				sty.setWidth(parseMeasuringUnit(parameter,100));
 				if (parameter.getLexicalUnitType() == LexicalUnit.SAC_PERCENTAGE) sty.setWidthPercentage(true);
@@ -155,18 +198,42 @@ public class CSSHandler implements DocumentHandler{
 			break;
 		case HEIGHT:
 			parameter = value;
-			//TODO: Relative Größe
 			for (CSSStyle sty: activeStyles) {
 				sty.setHeight(parseMeasuringUnit(parameter, 100));
 				if (parameter.getLexicalUnitType() == LexicalUnit.SAC_PERCENTAGE) sty.setHeightPercentage(true);
 			}
 			break;
 		case BORDER:
+			parameters = new ArrayList<LexicalUnit>();
+			parameters.add(value);
+			while (value.getNextLexicalUnit() != null) {
+				value = value.getNextLexicalUnit();
+				parameters.add(value);
+			}
 			
+			for (LexicalUnit lu: parameters) {
+				switch (identifyBorderTag(lu)) {
+				case 1:
+					float width = handleBorderWidth(value);
+					for (CSSStyle sty: activeStyles) sty.setBorderWidth(width);
+					break;
+				case 2:
+					BorderStyle style = parseBorderStyle(value);
+					for (CSSStyle sty: activeStyles) sty.setBorderStyle(style);
+					break;
+				case 3:
+					color = handleColor(value);
+					for (CSSStyle sty: activeStyles) sty.setBorderColor(color);
+					break;
+				default:
+					break;
+				}
+	
+			}
 			break;
 		case BORDERWIDTH:
-			parameter = value;
-			for (CSSStyle sty: activeStyles) sty.setBorderWidth(parseMeasuringUnit(parameter,1));
+			float width = handleBorderWidth(value);
+			for (CSSStyle sty: activeStyles) sty.setBorderWidth(width);
 			break;
 		case BORDERCOLOR:
 			color = handleColor(value);
@@ -184,10 +251,10 @@ public class CSSHandler implements DocumentHandler{
 		case FONTSIZE:
 			parameter = value;
 			//Have to convert to pt
-			if (numericalValues.contains(parameter.getLexicalUnitType())) {
+			if (Keywords.isMeasuringUnit(parameter)) {
 			if (currentFont == null) currentFont = new CSSFont((int) (parseMeasuringUnit(parameter,defaultFontSize) * (72f/100f)));
 			else currentFont.setFontsize((int) (parseMeasuringUnit(parameter,defaultFontSize)* (72f/100f)));
-			} else if (stringValues.contains(parameter.getLexicalUnitType())){
+			} else if (Keywords.isString(parameter)){
 				if (currentFont == null) currentFont = new CSSFont(handleFontSizeString(parameter));
 				else currentFont.setFontsize(handleFontSizeString(parameter));
 			}
@@ -202,6 +269,38 @@ public class CSSHandler implements DocumentHandler{
 			handleFontFamily(value);
 			break;
 		case FONT:
+			parameters = new ArrayList<LexicalUnit>();
+			parameters.add(value);
+			while (value.getNextLexicalUnit() != null) {
+				value = value.getNextLexicalUnit();
+				parameters.add(value);
+			}
+			
+			for (LexicalUnit lu: parameters) {
+				switch (identifyFontTag(lu)) {
+				case 1:
+					parameter = lu;
+					if (Keywords.isMeasuringUnit(parameter)) {
+						if (currentFont == null) currentFont = new CSSFont((int) (parseMeasuringUnit(parameter,defaultFontSize) * (72f/100f)));
+						else currentFont.setFontsize((int) (parseMeasuringUnit(parameter,defaultFontSize)* (72f/100f)));
+						} else if (Keywords.isString(parameter)){
+							if (currentFont == null) currentFont = new CSSFont(handleFontSizeString(parameter));
+							else currentFont.setFontsize(handleFontSizeString(parameter));
+						}
+					break;
+				case 2:
+					handleFontWeight(lu);
+					break;
+				case 3:
+					handleFontStyle(lu);
+					break;
+				case 4:
+					handleFontFamily(lu);
+					break;
+				default:
+					break;
+				}
+			}
 			break;
 		case FONTSTYLE:
 			handleFontStyle(value);
@@ -221,6 +320,110 @@ public class CSSHandler implements DocumentHandler{
 		}
 	}
 	
+	private int identifyFontTag(LexicalUnit lu) {
+		//0: Unknown
+		//1: font-size
+		//2: font-weight
+		//3: font-style
+		//4: font-family
+		
+		if (Keywords.isMeasuringUnit(lu)) {
+			if (lu.getFloatValue() >= 100) return 2;
+			else return 1;
+		}
+		if (Keywords.isFontWeight(lu)) return 2;
+		
+		if (Keywords.isFontFamily(lu)) return 4;
+		
+		if (Keywords.isFontStyle(lu)) return 3;
+		
+		return 0;
+	}
+
+
+	private int identifyBorderTag(LexicalUnit lu) {
+		//0: Unknown
+		//1: Border-Width
+		//2: Border-Style
+		//3. Border-Color
+		if (lu.getLexicalUnitType() == LexicalUnit.SAC_RGBCOLOR) return 3;
+		if (Keywords.isMeasuringUnit(lu)) return 1;
+		if (lu.getLexicalUnitType() == LexicalUnit.SAC_IDENT) {
+			if (Keywords.isBorderStyle(lu)) return 2;
+			if (Keywords.isColor(lu)) return 3;
+		
+		}
+		return 0;
+	}
+
+
+	private BackgroundRepeat handleBackgroundRepeat(LexicalUnit value) {
+		logger.debug("Background Repeat Type: " + value.getLexicalUnitType());
+		if (value.getLexicalUnitType() == LexicalUnit.SAC_IDENT) {
+			if (value.getStringValue().replaceAll(" ", "").equalsIgnoreCase("REPEAT-X")) return BackgroundRepeat.XREPEAT;
+			if (value.getStringValue().replaceAll(" ", "").equalsIgnoreCase("REPEAT-Y")) return BackgroundRepeat.YREPEAT;
+			if (value.getStringValue().replaceAll(" ", "").equalsIgnoreCase("REPEAT")) return BackgroundRepeat.REPEAT;
+			if (value.getStringValue().replaceAll(" ", "").equalsIgnoreCase("NO-REPEAT")) return BackgroundRepeat.NONE;
+		}
+		
+		
+		
+		return null;
+	}
+	
+	private int identifyBackgroundTag(LexicalUnit value) {
+		//Return Values:
+		//0: Unknown
+		//1: Color
+		//2: Background-Image
+		//3: Repeat
+		
+		if (value.getLexicalUnitType() == LexicalUnit.SAC_RGBCOLOR) return 1;
+		if (value.getLexicalUnitType() == LexicalUnit.SAC_URI) return 2;
+		if (value.getLexicalUnitType() == LexicalUnit.SAC_IDENT) {
+			if (Keywords.isColor(value)) return 1;
+			if (Keywords.isBackgroundRepeat(value)) return 3;
+			if (Keywords.isBackgroundPosition(value)) return 0;
+			if (Keywords.isBackgroundAttachment(value)) return 0;
+		}
+		
+		
+		return 0;
+	}
+	
+	private float handleBorderWidth(LexicalUnit lu) {
+		if (Keywords.isMeasuringUnit(lu)) {
+			return parseMeasuringUnit(lu,1);
+		} 
+		if (Keywords.isString(lu)) {
+			if (Keywords.isBorderWidth(lu)) {
+				if (lu.getStringValue().replaceAll(" ", "").equalsIgnoreCase("THIN")) return 0.5f;
+				if (lu.getStringValue().replaceAll(" ", "").equalsIgnoreCase("MEDIUM")) return 1f;
+				if (lu.getStringValue().replaceAll(" ", "").equalsIgnoreCase("THICK")) return 2f;
+			}
+		
+		}
+
+		return 0f;
+	}
+	
+
+	private PImage handleBackgroundImage(LexicalUnit value) {
+		if (value.getLexicalUnitType() == LexicalUnit.SAC_URI) {
+		
+			try {
+				return app.loadImage(value.getStringValue());
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+	
+		}
+		
+		return null;
+	}
+
+
 	private int handleFontSizeString(LexicalUnit parameter) {
 		
 		if (parameter.getStringValue().toUpperCase().contains("SMALLER")) return 8;
@@ -367,9 +570,7 @@ public class CSSHandler implements DocumentHandler{
 	private float parseMeasuringUnit(LexicalUnit value, float referenceValue) {
 		float dpi = 100f;
 		
-		//TODO: Font Sizes
 		float emtopx = 16f/72f * dpi;
-		//float extopx;
 		float inchtopx = dpi;
 		float centtopx = (10f/254f) * dpi;
 		float mmtopx = (1f/254f) * dpi;
@@ -409,25 +610,21 @@ public class CSSHandler implements DocumentHandler{
 	
 	@Override
 	public void startDocument(InputSource arg0) throws CSSException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void startFontFace() throws CSSException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void startMedia(SACMediaList arg0) throws CSSException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void startPage(String arg0, String arg1) throws CSSException {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -445,10 +642,7 @@ public class CSSHandler implements DocumentHandler{
 	}
 	
 	public Selector parseSelector(org.w3c.css.sac.Selector selector) {
-		//Ignoring "F E" combinator
-		//TODO: FE Combinator
-		
-		//Includes Child
+
 		
 		Selector newSelector = null;
 		String debugoutput = "";
@@ -602,7 +796,8 @@ public class CSSHandler implements DocumentHandler{
 	}
 	
 	private enum cssproperties {
-		COLOR, BACKGROUNDCOLOR, BORDERCOLOR, BACKGROUNDIMAGE, BACKGROUNDPOSITION, BACKGROUNDREPEAT, BORDERSTYLE, FONTFAMILY, FONT, FONTSIZE, FONTSTYLE, FONTWEIGHT, WIDTH, HEIGHT, BORDERWIDTH, PADDING, VISIBILITY, ZINDEX, BORDER, UNKNOWN 
+		COLOR, BACKGROUNDCOLOR, BORDERCOLOR, BACKGROUNDIMAGE, BACKGROUNDPOSITION, BACKGROUNDREPEAT, BORDERSTYLE, FONTFAMILY, FONT, FONTSIZE, FONTSTYLE, FONTWEIGHT, WIDTH, HEIGHT, BORDERWIDTH, PADDING, VISIBILITY, ZINDEX, BORDER, UNKNOWN, BACKGROUND 
 	}
 	
+
 }

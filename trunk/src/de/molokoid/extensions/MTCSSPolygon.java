@@ -155,15 +155,6 @@ public class MTCSSPolygon extends MTPolygon implements CSSStylable{
 			
 			}
 			
-			
-/*			backgroundVertices[0].setTexCoordU(0);
-			backgroundVertices[0].setTexCoordV(0);
-			backgroundVertices[1].setTexCoordU(u);
-			backgroundVertices[1].setTexCoordV(0);
-			backgroundVertices[2].setTexCoordU(u);
-			backgroundVertices[2].setTexCoordV(v);
-			backgroundVertices[3].setTexCoordU(0);
-			backgroundVertices[3].setTexCoordV(v);*/
 	
 				
 			//Update changed texture coordinates for opengl buffer drawing
@@ -202,14 +193,14 @@ public class MTCSSPolygon extends MTPolygon implements CSSStylable{
 	}
 	
 	private float getXDistance(float x, Vertex v2) {
-		float distance = x - v2.x;
+		float distance = v2.x -x;
 		if (distance >= 0) return distance;
 		else return -distance;
 		
 		
 	}
 	private float getYDistance(float y, Vertex v2) {
-		float distance = y - v2.y;
+		float distance = v2.y - y;
 		if (distance >= 0) return distance;
 		else return -distance;
 	}

@@ -196,22 +196,8 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 			}
 			
 			}
-			
-			
-/*			backgroundVertices[0].setTexCoordU(0);
-			backgroundVertices[0].setTexCoordV(0);
-			backgroundVertices[1].setTexCoordU(u);
-			backgroundVertices[1].setTexCoordV(0);
-			backgroundVertices[2].setTexCoordU(u);
-			backgroundVertices[2].setTexCoordV(v);
-			backgroundVertices[3].setTexCoordU(0);
-			backgroundVertices[3].setTexCoordV(v);*/
-			
-			System.out.println(getXDistance(backgroundVertices[0].x, backgroundVertices[1]) + " " + getYDistance(backgroundVertices[0].y, backgroundVertices[1]));
-			System.out.println(getXDistance(backgroundVertices[0].x, backgroundVertices[2]) + " " + getYDistance(backgroundVertices[0].y, backgroundVertices[2]));
-			System.out.println(getXDistance(backgroundVertices[0].x, backgroundVertices[3]) + " " + getYDistance(backgroundVertices[0].y, backgroundVertices[3]));
 
-				
+		
 			//Update changed texture coordinates for opengl buffer drawing
 			if (MT4jSettings.getInstance().isOpenGlMode())
 				this.getGeometryInfo().updateTextureBuffer(this.isUseVBOs());
@@ -248,14 +234,14 @@ public class MTCSSRectangle extends MTRectangle implements CSSStylable{
 	}
 	
 	private float getXDistance(float x, Vertex v2) {
-		float distance = x - v2.x;
+		float distance = v2.x -x;
 		if (distance >= 0) return distance;
 		else return -distance;
 		
 		
 	}
 	private float getYDistance(float y, Vertex v2) {
-		float distance = y - v2.y;
+		float distance = v2.y - y;
 		if (distance >= 0) return distance;
 		else return -distance;
 	}

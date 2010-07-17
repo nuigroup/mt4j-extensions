@@ -33,7 +33,12 @@ public class CSSStyle {
 	
 	PImage backgroundImage = null;
 	float[] backgroundPosition = null;
-	boolean backgroundRepeat = false;;
+	BackgroundRepeat backgroundRepeat = BackgroundRepeat.NONE;;
+	
+	public enum BackgroundRepeat {
+		XREPEAT, YREPEAT, REPEAT, NONE;
+	}
+	
 	
 	boolean modifiedBackgroundImage = false, modifiedBackgroundPosition = false, modifiedBackgroundRepeat = false; 
 	
@@ -143,10 +148,10 @@ public class CSSStyle {
 		this.backgroundPosition = backgroundPosition;
 		this.modifiedBackgroundPosition = true;
 	}
-	public boolean isBackgroundRepeat() {
+	public BackgroundRepeat getBackgroundRepeat() {
 		return backgroundRepeat;
 	}
-	public void setBackgroundRepeat(boolean backgroundRepeat) {
+	public void setBackgroundRepeat(BackgroundRepeat backgroundRepeat) {
 		this.backgroundRepeat = backgroundRepeat;
 		this.modifiedBackgroundRepeat = true;
 	}
@@ -293,14 +298,20 @@ public class CSSStyle {
 
 
 
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((app == null) ? 0 : app.hashCode());
 		result = prime * result
 				+ ((backgroundColor == null) ? 0 : backgroundColor.hashCode());
+		result = prime * result
+				+ ((backgroundImage == null) ? 0 : backgroundImage.hashCode());
 		result = prime * result + Arrays.hashCode(backgroundPosition);
-		result = prime * result + (backgroundRepeat ? 1231 : 1237);
+		result = prime
+				* result
+				+ ((backgroundRepeat == null) ? 0 : backgroundRepeat.hashCode());
 		result = prime * result
 				+ ((borderColor == null) ? 0 : borderColor.hashCode());
 		result = prime * result
@@ -313,9 +324,34 @@ public class CSSStyle {
 		result = prime * result + fontSize;
 		result = prime * result + Float.floatToIntBits(height);
 		result = prime * result + (heightPercentage ? 1231 : 1237);
+		result = prime * result + (modifiedBackgroundColor ? 1231 : 1237);
+		result = prime * result + (modifiedBackgroundImage ? 1231 : 1237);
+		result = prime * result + (modifiedBackgroundPosition ? 1231 : 1237);
+		result = prime * result + (modifiedBackgroundRepeat ? 1231 : 1237);
+		result = prime * result + (modifiedBorderColor ? 1231 : 1237);
+		result = prime * result + (modifiedBorderStyle ? 1231 : 1237);
+		result = prime * result + (modifiedBorderWidth ? 1231 : 1237);
+		result = prime * result + (modifiedColor ? 1231 : 1237);
+		result = prime * result + (modifiedCssfont ? 1231 : 1237);
+		result = prime * result + (modifiedDepth ? 1231 : 1237);
+		result = prime * result + (modifiedFont ? 1231 : 1237);
+		result = prime * result + (modifiedFontSize ? 1231 : 1237);
+		result = prime * result + (modifiedHeight ? 1231 : 1237);
+		result = prime * result + (modifiedHeightPercentage ? 1231 : 1237);
+		result = prime * result + (modifiedPaddingWidth ? 1231 : 1237);
+		result = prime * result + (modifiedSelector ? 1231 : 1237);
+		result = prime * result + (modifiedUri ? 1231 : 1237);
+		result = prime * result + (modifiedVisibility ? 1231 : 1237);
+		result = prime * result + (modifiedWidth ? 1231 : 1237);
+		result = prime * result + (modifiedWidthPercentage ? 1231 : 1237);
+		result = prime * result + (modifiedXpos ? 1231 : 1237);
+		result = prime * result + (modifiedYpos ? 1231 : 1237);
+		result = prime * result + (modifiedZIndex ? 1231 : 1237);
+		result = prime * result + (modifiedZpos ? 1231 : 1237);
 		result = prime * result + Float.floatToIntBits(paddingWidth);
 		result = prime * result
 				+ ((selector == null) ? 0 : selector.hashCode());
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
 		result = prime * result + (visibility ? 1231 : 1237);
 		result = prime * result + Float.floatToIntBits(width);
 		result = prime * result + (widthPercentage ? 1231 : 1237);
@@ -326,10 +362,6 @@ public class CSSStyle {
 		return result;
 	}
 
-
-
-
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -339,10 +371,20 @@ public class CSSStyle {
 		if (getClass() != obj.getClass())
 			return false;
 		CSSStyle other = (CSSStyle) obj;
+		if (app == null) {
+			if (other.app != null)
+				return false;
+		} else if (!app.equals(other.app))
+			return false;
 		if (backgroundColor == null) {
 			if (other.backgroundColor != null)
 				return false;
 		} else if (!backgroundColor.equals(other.backgroundColor))
+			return false;
+		if (backgroundImage == null) {
+			if (other.backgroundImage != null)
+				return false;
+		} else if (!backgroundImage.equals(other.backgroundImage))
 			return false;
 		if (!Arrays.equals(backgroundPosition, other.backgroundPosition))
 			return false;
@@ -353,10 +395,7 @@ public class CSSStyle {
 				return false;
 		} else if (!borderColor.equals(other.borderColor))
 			return false;
-		if (borderStyle == null) {
-			if (other.borderStyle != null)
-				return false;
-		} else if (!borderStyle.equals(other.borderStyle))
+		if (borderStyle != other.borderStyle)
 			return false;
 		if (Float.floatToIntBits(borderWidth) != Float
 				.floatToIntBits(other.borderWidth))
@@ -384,6 +423,54 @@ public class CSSStyle {
 			return false;
 		if (heightPercentage != other.heightPercentage)
 			return false;
+		if (modifiedBackgroundColor != other.modifiedBackgroundColor)
+			return false;
+		if (modifiedBackgroundImage != other.modifiedBackgroundImage)
+			return false;
+		if (modifiedBackgroundPosition != other.modifiedBackgroundPosition)
+			return false;
+		if (modifiedBackgroundRepeat != other.modifiedBackgroundRepeat)
+			return false;
+		if (modifiedBorderColor != other.modifiedBorderColor)
+			return false;
+		if (modifiedBorderStyle != other.modifiedBorderStyle)
+			return false;
+		if (modifiedBorderWidth != other.modifiedBorderWidth)
+			return false;
+		if (modifiedColor != other.modifiedColor)
+			return false;
+		if (modifiedCssfont != other.modifiedCssfont)
+			return false;
+		if (modifiedDepth != other.modifiedDepth)
+			return false;
+		if (modifiedFont != other.modifiedFont)
+			return false;
+		if (modifiedFontSize != other.modifiedFontSize)
+			return false;
+		if (modifiedHeight != other.modifiedHeight)
+			return false;
+		if (modifiedHeightPercentage != other.modifiedHeightPercentage)
+			return false;
+		if (modifiedPaddingWidth != other.modifiedPaddingWidth)
+			return false;
+		if (modifiedSelector != other.modifiedSelector)
+			return false;
+		if (modifiedUri != other.modifiedUri)
+			return false;
+		if (modifiedVisibility != other.modifiedVisibility)
+			return false;
+		if (modifiedWidth != other.modifiedWidth)
+			return false;
+		if (modifiedWidthPercentage != other.modifiedWidthPercentage)
+			return false;
+		if (modifiedXpos != other.modifiedXpos)
+			return false;
+		if (modifiedYpos != other.modifiedYpos)
+			return false;
+		if (modifiedZIndex != other.modifiedZIndex)
+			return false;
+		if (modifiedZpos != other.modifiedZpos)
+			return false;
 		if (Float.floatToIntBits(paddingWidth) != Float
 				.floatToIntBits(other.paddingWidth))
 			return false;
@@ -392,7 +479,11 @@ public class CSSStyle {
 				return false;
 		} else if (!selector.equals(other.selector))
 			return false;
-
+		if (uri == null) {
+			if (other.uri != null)
+				return false;
+		} else if (!uri.equals(other.uri))
+			return false;
 		if (visibility != other.visibility)
 			return false;
 		if (Float.floatToIntBits(width) != Float.floatToIntBits(other.width))
@@ -618,13 +709,13 @@ public class CSSStyle {
 		if (s.isModifiedBackgroundImage()) {
 			v.setBackgroundImage(s.getBackgroundImage());
 			v.setBackgroundPosition(s.getBackgroundPosition());
-			v.setBackgroundRepeat(s.isBackgroundRepeat());
+			v.setBackgroundRepeat(s.getBackgroundRepeat());
 		}
 		if (s.isModifiedBackgroundPosition()) {
 			v.setBackgroundPosition(s.getBackgroundPosition());
 		}
 		if (s.isModifiedBackgroundRepeat()) {
-			v.setBackgroundRepeat(s.isBackgroundRepeat());
+			v.setBackgroundRepeat(s.getBackgroundRepeat());
 		}
 		if (s.isModifiedBorderColor()) {
 			v.setBorderColor(s.getBorderColor());
