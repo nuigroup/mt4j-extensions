@@ -1,14 +1,11 @@
 package de.molokoid.css;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 import org.mt4j.MTApplication;
-import org.mt4j.components.visibleComponents.font.FontManager;
-import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.util.MTColor;
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.DocumentHandler;
