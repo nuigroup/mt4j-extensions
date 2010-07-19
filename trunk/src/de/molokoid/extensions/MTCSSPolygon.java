@@ -30,7 +30,7 @@ import de.molokoid.data.CSSStyleManager;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class MTCSSPolygon extends MTPolygon implements CSSStylable{
+public class MTCSSPolygon extends MTPolygon implements MTCSSStylable{
 
 	public MTCSSPolygon(MTApplication mta, Vertex[] vertices, CSSStyleManager csm) {
 		super(mta, vertices);
@@ -115,8 +115,8 @@ public class MTCSSPolygon extends MTPolygon implements CSSStylable{
 			this.setNoStroke(true);
 		}
 		for (MTComponent c: this.getChildren()) {
-			if (c instanceof CSSStylable) {
-				CSSStylable s = (CSSStylable)c;
+			if (c instanceof MTCSSStylable) {
+				MTCSSStylable s = (MTCSSStylable)c;
 				s.applyStyleSheet();
 			}
 		}

@@ -61,7 +61,7 @@ public class IntegrationTestApp extends AbstractScene{
 			MTCSSRectangle r = new MTCSSRectangle(500, 500, 500, 500, app, cssm);
 			this.getCanvas().addChild(r);
 			PImage bgImage = app.loadImage("beamer_test.jpg");
-			r.tiledBackground(bgImage);
+			//r.tiledBackground(bgImage);
 			
 			Vertex[] vtcs = {new Vertex(100,100), new Vertex(200, 20), new Vertex(300, 200) ,new Vertex(100,100)};
 			MTCSSPolygon p = new MTCSSPolygon(app, vtcs, cssm);

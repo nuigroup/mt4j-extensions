@@ -177,7 +177,7 @@ public class SelectorIntegrationTest extends AbstractWindowTestcase {
 		assertTrue(r2.getHeightXY(TransformSpace.RELATIVE_TO_PARENT) == 110f);
 		
 		
-		logger.debug("Width: " + r3.getWidthXY(TransformSpace.RELATIVE_TO_PARENT) + "(" + r3.virtualStyleSheet.getWidth()+ ")");
+		//logger.debug("Width: " + r3.getWidthXY(TransformSpace.RELATIVE_TO_PARENT) + "(" + r3.virtualStyleSheet.getWidth()+ ")");
 		assertTrue(r3.getWidthXY(TransformSpace.RELATIVE_TO_PARENT) == 120f);
 		logger.debug("Height: " + r3.getHeightXY(TransformSpace.RELATIVE_TO_PARENT));
 		assertTrue(r3.getHeightXY(TransformSpace.RELATIVE_TO_PARENT) == 450f);

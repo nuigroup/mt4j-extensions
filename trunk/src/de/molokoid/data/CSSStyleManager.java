@@ -12,7 +12,7 @@ import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.components.visibleComponents.shapes.AbstractShape;
 import org.mt4j.util.MTColor;
 
-import de.molokoid.extensions.CSSStylable;
+import de.molokoid.extensions.MTCSSStylable;
 
 public class CSSStyleManager {
 	public CSSStyleManager(List<CSSStyle> styles, MTApplication app) {
@@ -22,7 +22,7 @@ public class CSSStyleManager {
 		this.app = app;
 	}
 	
-	List<CSSStylable> components = new ArrayList<CSSStylable>();
+	List<MTCSSStylable> components = new ArrayList<MTCSSStylable>();
 	
 	MTApplication app = null;
 	
@@ -51,7 +51,7 @@ public class CSSStyleManager {
 	}
 	
 	public void applyStyles() {
-		for (CSSStylable c: components) {
+		for (MTCSSStylable c: components) {
 			if (c != null) {
 				c.applyStyleSheet();
 			}
@@ -68,7 +68,7 @@ public class CSSStyleManager {
 	}
 	
 	public List<CSSStyleHierarchy> getRelevantStyles(MTComponent c) {
-		if (!components.contains(c) && c instanceof CSSStylable) components.add((CSSStylable)c);
+		if (!components.contains(c) && c instanceof MTCSSStylable) components.add((MTCSSStylable)c);
 		
 		List<CSSStyleHierarchy> relevantStyles = new ArrayList<CSSStyleHierarchy>();
 		List<String> superClasses = getSuperclasses(c.getClass());

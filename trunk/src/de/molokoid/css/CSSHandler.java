@@ -39,11 +39,6 @@ public class CSSHandler implements DocumentHandler{
 	CSSFont currentFont = null;
 	MTApplication app = null;
 	float defaultFontSize = 16f;
-	List<Short> numericalValues = new ArrayList<Short>( Arrays.asList(LexicalUnit.SAC_CENTIMETER,LexicalUnit.SAC_INCH,LexicalUnit.SAC_MILLIMETER,LexicalUnit.SAC_POINT,LexicalUnit.SAC_PICA,LexicalUnit.SAC_EM, LexicalUnit.SAC_PIXEL,LexicalUnit.SAC_INTEGER,LexicalUnit.SAC_REAL,LexicalUnit.SAC_PERCENTAGE));
-	List<Short> stringValues = new ArrayList<Short>( Arrays.asList(LexicalUnit.SAC_IDENT, LexicalUnit.SAC_STRING_VALUE));
-
-	
-	
 	
 	public CSSHandler(MTApplication app, List<CSSStyle> styles) {
 		logger = Logger.getLogger("MT4J Extensions");
@@ -130,7 +125,7 @@ public class CSSHandler implements DocumentHandler{
 		try {
 			cssproperties prop = cssproperties.UNKNOWN;
 			try {
-				prop  = cssproperties.valueOf(name.replace(" ", "").replace("-", "").toUpperCase());
+				prop  = cssproperties.valueOf(name.replaceAll(" ", "").replaceAll("-", "").toUpperCase());
 			} catch (IllegalArgumentException iae) {
 				iae.printStackTrace();
 			}
@@ -310,7 +305,7 @@ public class CSSHandler implements DocumentHandler{
 			break;
 		case UNKNOWN:
 		default:
-			logger.error("Unknown Identifier: " + name.replace(" ", "").replace("-", "").toUpperCase());
+			logger.error("Unknown Identifier: " + name.replaceAll(" ", "").replaceAll("-", "").toUpperCase());
 			break;
 		
 			
@@ -653,11 +648,11 @@ public class CSSHandler implements DocumentHandler{
 			newSelector.setChild(processElement(parts[1]));
 			String work0 = String.copyValueOf(parts[0].toCharArray());	
 			String work1 = String.copyValueOf(parts[1].toCharArray());	
-			debugoutput = "Parent: " + work0.replace(" ", "_") + " Child: " + work1.replace(" ", "_");
+			debugoutput = "Parent: " + work0.replaceAll(" ", "_") + " Child: " + work1.replaceAll(" ", "_");
 		} else {
 			//No Children (yet)
 			newSelector = processElement(selector.toString());
-			debugoutput = "No Parent/Child: " + selector.toString().replace(" ", "_");
+			debugoutput = "No Parent/Child: " + selector.toString().replaceAll(" ", "_");
 			
 		}
 		//logger.debug(debugoutput + "\n" + newSelector);
@@ -674,14 +669,14 @@ public class CSSHandler implements DocumentHandler{
 		while (work.startsWith(" ")) work = work.substring(1);
 		while (work.endsWith(" ")) work = work.substring(0, work.length()-1);
 		
-		if (work.contains("*") && !work.startsWith("*")) {
-			work = work.substring(0, 1) + work.substring(1).replace("*", "");
+		if (work.contains("*") && !work.startsWith("*")) { // replace?
+			work = work.substring(0, 1) + work.substring(1).replaceAll("*", "");
 		}
 		
 		if (work.startsWith("*") && !work.equals("*")) {
 			work = work.substring(1);
 		}
-		work.replace(" ", "");
+		work.replaceAll(" ", "");
 		boolean containsSharp = false;
 		boolean containsDot = false;
 		boolean firstCharacterDot = false;
@@ -711,7 +706,7 @@ public class CSSHandler implements DocumentHandler{
 		
 		
 		if (!containsSharp && !containsDot) {
-			newSelector = new Selector(work.replace(".", "").replace("#", ""), determineType(work));
+			newSelector = new Selector(work.replaceAll(".", "").replaceAll("#", ""), determineType(work));
 		}
 		
 		if (containsSpace) {
