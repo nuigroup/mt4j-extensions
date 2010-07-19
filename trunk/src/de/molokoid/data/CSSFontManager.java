@@ -5,6 +5,8 @@ import org.mt4j.components.visibleComponents.font.FontManager;
 import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.util.MTColor;
 
+import de.molokoid.data.CSSKeywords.CSSFontWeight;
+
 public class CSSFontManager {
 	MTApplication app;
 	public CSSFontManager(MTApplication app) {

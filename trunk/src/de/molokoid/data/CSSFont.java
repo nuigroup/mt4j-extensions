@@ -3,6 +3,10 @@ package de.molokoid.data;
 import org.apache.log4j.Logger;
 import org.mt4j.util.MTColor;
 
+import de.molokoid.data.CSSKeywords.CSSFontFamily;
+import de.molokoid.data.CSSKeywords.CSSFontStyle;
+import de.molokoid.data.CSSKeywords.CSSFontWeight;
+
 public class CSSFont {
 	private CSSFontFamily family = CSSFontFamily.CUSTOM;
 	private CSSFontStyle style = CSSFontStyle.NORMAL;

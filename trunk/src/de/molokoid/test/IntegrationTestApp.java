@@ -22,7 +22,6 @@ import de.molokoid.css.CSSParserConnection;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleManager;
 import de.molokoid.data.CSSSelector;
-import de.molokoid.data.CSSSelectorType;
 import de.molokoid.extensions.MTCSSPolygon;
 import de.molokoid.extensions.MTCSSRectangle;
 import de.molokoid.extensions.MTCSSTextArea;

@@ -13,10 +13,10 @@ import org.junit.Test;
 import org.mt4j.util.MTColor;
 
 import de.molokoid.css.CSSParserConnection;
-import de.molokoid.data.CSSBorderStyle;
+import de.molokoid.data.CSSKeywords.CSSBorderStyle;
+import de.molokoid.data.CSSKeywords.CSSSelectorType;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSSelector;
-import de.molokoid.data.CSSSelectorType;
 
 
 public class BorderTest extends TestCase {

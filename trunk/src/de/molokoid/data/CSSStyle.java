@@ -8,6 +8,9 @@ import org.mt4j.MTApplication;
 import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.util.MTColor;
 
+import de.molokoid.data.CSSKeywords.CSSBorderStyle;
+import de.molokoid.data.CSSKeywords.CSSSelectorType;
+
 
 import processing.core.PImage;
 

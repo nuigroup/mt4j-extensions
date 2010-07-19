@@ -17,9 +17,9 @@ import org.mt4j.MTApplication;
 import org.mt4j.util.MTColor;
 
 import de.molokoid.css.CSSParserConnection;
+import de.molokoid.data.CSSKeywords.CSSSelectorType;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSSelector;
-import de.molokoid.data.CSSSelectorType;
 
 public class ColorMeasureTest extends TestCase {
 	Logger logger = Logger.getLogger("MT4J Extensions");

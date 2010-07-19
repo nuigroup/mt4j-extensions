@@ -15,10 +15,10 @@ import org.mt4j.test.testUtil.DummyScene;
 import org.mt4j.util.MTColor;
 
 import de.molokoid.css.CSSParserConnection;
+import de.molokoid.data.CSSKeywords.CSSSelectorType;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleManager;
 import de.molokoid.data.CSSSelector;
-import de.molokoid.data.CSSSelectorType;
 
 public class BackgroundImageTest  extends AbstractWindowTestcase {
 	private MTComponent parent;

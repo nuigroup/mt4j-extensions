@@ -19,9 +19,9 @@ import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.util.MTColor;
 
 import de.molokoid.css.CSSParserConnection;
+import de.molokoid.data.CSSKeywords.CSSSelectorType;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSSelector;
-import de.molokoid.data.CSSSelectorType;
 
 
 public class FontParserTest extends TestCase{

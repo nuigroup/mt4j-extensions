@@ -19,16 +19,17 @@ import org.w3c.css.sac.SelectorList;
 
 import processing.core.PImage;
 
-import de.molokoid.data.CSSBorderStyle;
 import de.molokoid.data.CSSFont;
-import de.molokoid.data.CSSFontWeight;
+import de.molokoid.data.CSSKeywords.CSSBorderStyle;
+import de.molokoid.data.CSSKeywords.CSSFontFamily;
+import de.molokoid.data.CSSKeywords.CSSFontStyle;
+import de.molokoid.data.CSSKeywords.CSSFontWeight;
+import de.molokoid.data.CSSKeywords.CSSSelectorType;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyle.BackgroundRepeat;
 import de.molokoid.data.CSSKeywords;
 import de.molokoid.data.CSSSelector;
-import de.molokoid.data.CSSSelectorType;
-import de.molokoid.data.CSSFontFamily;
-import de.molokoid.data.CSSFontStyle;
+
 
 
 public class CSSHandler implements DocumentHandler{

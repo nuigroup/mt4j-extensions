@@ -111,4 +111,19 @@ public class CSSKeywords {
 	public static boolean isFontWeight(LexicalUnit lu) {
 		return contains(fontWeightNames, lu);
 	}
+	public enum CSSFontWeight {
+		BOLD, LIGHT, NORMAL;
+	}
+	public enum CSSSelectorType {
+		UNIVERSAL, TYPE, ID, CLASS, CUSTOM;
+	}
+	public enum CSSFontFamily {
+		SANS, SERIF, MONO, CUSTOM, DEFAULT;
+	}
+	public enum CSSFontStyle {
+		ITALIC, OBLIQUE, NORMAL;
+	}
+	public enum CSSBorderStyle {
+		SOLID, DASHED, DOTTED, NONE, HIDDEN;
+	}
 }

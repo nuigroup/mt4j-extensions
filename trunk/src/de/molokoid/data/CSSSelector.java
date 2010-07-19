@@ -7,6 +7,8 @@ import org.apache.log4j.Logger;
 import org.mt4j.components.MTCanvas;
 import org.mt4j.components.MTComponent;
 
+import de.molokoid.data.CSSKeywords.CSSSelectorType;
+
 public class CSSSelector {
 	String primary = null;
 	CSSSelectorType primaryType = null;
