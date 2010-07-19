@@ -56,13 +56,21 @@ public class Keywords {
 	};
 	
 	public static boolean isMeasuringUnit(LexicalUnit lu) {
-		if (Arrays.asList(measuringUnits).contains(lu.getLexicalUnitType()))
+			
+		if (contains(measuringUnits,lu))
 			return true;
 		return false;
 	}
 	
+	private static boolean contains(short[] keywords, LexicalUnit lu) {
+		for (short s: keywords) {
+			if (s == lu.getLexicalUnitType()) return true;
+		}
+		return false;
+	}
+	
 	public static boolean isString(LexicalUnit lu) {
-		if (Arrays.asList(stringValues).contains(lu.getLexicalUnitType()))
+		if (contains(stringValues,lu))
 			return true;
 		return false;
 	}

@@ -125,7 +125,7 @@ public class CSSHandler implements DocumentHandler{
 		try {
 			cssproperties prop = cssproperties.UNKNOWN;
 			try {
-				prop  = cssproperties.valueOf(name.replaceAll(" ", "").replaceAll("-", "").toUpperCase());
+				prop  = cssproperties.valueOf(name.replace(" ", "").replace("-", "").toUpperCase());
 			} catch (IllegalArgumentException iae) {
 				iae.printStackTrace();
 			}
@@ -305,7 +305,7 @@ public class CSSHandler implements DocumentHandler{
 			break;
 		case UNKNOWN:
 		default:
-			logger.error("Unknown Identifier: " + name.replaceAll(" ", "").replaceAll("-", "").toUpperCase());
+			logger.error("Unknown Identifier: " + name.replace(" ", "").replace("-", "").toUpperCase());
 			break;
 		
 			
@@ -670,13 +670,13 @@ public class CSSHandler implements DocumentHandler{
 		while (work.endsWith(" ")) work = work.substring(0, work.length()-1);
 		
 		if (work.contains("*") && !work.startsWith("*")) { // replace?
-			work = work.substring(0, 1) + work.substring(1).replaceAll("*", "");
+			work = work.substring(0, 1) + work.substring(1).replace("*", "");
 		}
 		
 		if (work.startsWith("*") && !work.equals("*")) {
 			work = work.substring(1);
 		}
-		work.replaceAll(" ", "");
+		work.replace(" ", "");
 		boolean containsSharp = false;
 		boolean containsDot = false;
 		boolean firstCharacterDot = false;
@@ -706,7 +706,7 @@ public class CSSHandler implements DocumentHandler{
 		
 		
 		if (!containsSharp && !containsDot) {
-			newSelector = new Selector(work.replaceAll(".", "").replaceAll("#", ""), determineType(work));
+			newSelector = new Selector(work.replace(".", "").replace("#", ""), determineType(work));
 		}
 		
 		if (containsSpace) {

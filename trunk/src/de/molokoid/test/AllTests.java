@@ -13,6 +13,7 @@ public class AllTests {
 		suite.addTestSuite(BorderTest.class);
 		suite.addTestSuite(CSSHandlerTest.class);
 		suite.addTestSuite(SelectorTest.class);
+		suite.addTestSuite(SelectorIntegrationTest.class);
 		//$JUnit-END$
 		return suite;
 	}
