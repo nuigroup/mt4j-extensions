@@ -35,7 +35,7 @@ import de.molokoid.extensions.MTCSSStylable;
 
 import processing.core.PImage;
 
-public class MTCSSHelper {
+public class CSSHelper {
 	
 	private void addListeners() {
 		c.addStateChangeListener(StateChange.ADDED_TO_PARENT, new StateChangeListener() {
@@ -88,14 +88,14 @@ public class MTCSSHelper {
 
 	}
 	
-	public MTCSSHelper(MTComponent c, MTApplication a, CSSStyleManager sm) {
+	public CSSHelper(MTComponent c, MTApplication a, CSSStyleManager sm) {
 		this.c = c;
 		this.app = a;
 		this.cssStyleManager = sm;
 		addListeners();
 	}
 	
-	public MTCSSHelper(MTComponent c, MTApplication a, CSSStyleManager sm, CSSStyle s) {
+	public CSSHelper(MTComponent c, MTApplication a, CSSStyleManager sm, CSSStyle s) {
 		this.c = c;
 		this.app = a;
 		this.cssStyleManager = sm;
@@ -103,7 +103,7 @@ public class MTCSSHelper {
 		addListeners();
 		
 	}
-	public MTCSSHelper(MTComponent c, MTApplication a, CSSStyleManager sm, List<CSSStyle> s) {
+	public CSSHelper(MTComponent c, MTApplication a, CSSStyleManager sm, List<CSSStyle> s) {
 		this.c = c;
 		this.app = a;
 		this.cssStyleManager = sm;

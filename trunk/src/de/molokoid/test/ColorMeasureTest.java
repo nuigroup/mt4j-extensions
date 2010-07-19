@@ -16,10 +16,10 @@ import org.junit.Test;
 import org.mt4j.MTApplication;
 import org.mt4j.util.MTColor;
 
-import de.molokoid.css.parserConnector;
+import de.molokoid.css.CSSParserConnection;
 import de.molokoid.data.CSSStyle;
-import de.molokoid.data.Selector;
-import de.molokoid.data.SelectorType;
+import de.molokoid.data.CSSSelector;
+import de.molokoid.data.CSSSelectorType;
 
 public class ColorMeasureTest extends TestCase {
 	Logger logger = Logger.getLogger("MT4J Extensions");
@@ -30,7 +30,7 @@ public class ColorMeasureTest extends TestCase {
 	
 		
 	StartTestApp app = new StartTestApp();
-	parserConnector pc;
+	CSSParserConnection pc;
 	List<CSSStyle> styles;
 	
 	@Before
@@ -47,7 +47,7 @@ public class ColorMeasureTest extends TestCase {
 		
 		fileLogger.addAppender(ca);
 		
-		pc = new parserConnector("colormeasuretest.css", app);
+		pc = new CSSParserConnection("colormeasuretest.css", app);
 		styles= pc.getCssh().getStyles();
 	}
 	
@@ -63,7 +63,7 @@ public class ColorMeasureTest extends TestCase {
 	
 	@Test
 	public void testHexColors() {
-		Selector reference = new Selector("testhexcolor", SelectorType.ID);
+		CSSSelector reference = new CSSSelector("testhexcolor", CSSSelectorType.ID);
 		boolean exists = false;
 		for (CSSStyle s: styles) {
 			if (s.getSelector().equals(reference)) {
@@ -75,7 +75,7 @@ public class ColorMeasureTest extends TestCase {
 	}
 	@Test
 	public void testRGBColors() {
-		Selector reference = new Selector("testrgbcolor", SelectorType.ID);
+		CSSSelector reference = new CSSSelector("testrgbcolor", CSSSelectorType.ID);
 		boolean exists = false;
 		for (CSSStyle s: styles) {
 			if (s.getSelector().equals(reference)) {
@@ -87,11 +87,11 @@ public class ColorMeasureTest extends TestCase {
 	}
 	@Test
 	public void testNameColors() {
-		Selector white = new Selector("testNameColorWhite", SelectorType.ID);
-		Selector red = new Selector("testNameColorRed", SelectorType.ID);
-		Selector green = new Selector("testNameColorGreen", SelectorType.ID);
-		Selector blue = new Selector("testNameColorBlue", SelectorType.ID);
-		Selector purple = new Selector("testNameColorPurple", SelectorType.ID);
+		CSSSelector white = new CSSSelector("testNameColorWhite", CSSSelectorType.ID);
+		CSSSelector red = new CSSSelector("testNameColorRed", CSSSelectorType.ID);
+		CSSSelector green = new CSSSelector("testNameColorGreen", CSSSelectorType.ID);
+		CSSSelector blue = new CSSSelector("testNameColorBlue", CSSSelectorType.ID);
+		CSSSelector purple = new CSSSelector("testNameColorPurple", CSSSelectorType.ID);
 		int exists = 0;
 		for (CSSStyle s: styles) {
 			if (s.getSelector().equals(white)) {
@@ -119,10 +119,10 @@ public class ColorMeasureTest extends TestCase {
 	}
 	@Test
 	public void testDimensions () {
-		Selector testWidth = new Selector("testWidth", SelectorType.ID);
-		Selector testHeight = new Selector("testHeight", SelectorType.ID);
-		Selector testWidthPercentage = new Selector("testWidthPercentage", SelectorType.ID);
-		Selector testHeightPercentage = new Selector("testHeightPercentage", SelectorType.ID);
+		CSSSelector testWidth = new CSSSelector("testWidth", CSSSelectorType.ID);
+		CSSSelector testHeight = new CSSSelector("testHeight", CSSSelectorType.ID);
+		CSSSelector testWidthPercentage = new CSSSelector("testWidthPercentage", CSSSelectorType.ID);
+		CSSSelector testHeightPercentage = new CSSSelector("testHeightPercentage", CSSSelectorType.ID);
 		int exists = 0;
 		for (CSSStyle s: styles) {
 			if (s.getSelector().equals(testWidth)) {
@@ -149,16 +149,16 @@ public class ColorMeasureTest extends TestCase {
 	}
 	@Test
 	public void testMeasures() {
-		Selector testMeasuresPx = new Selector("testMeasuresPx", SelectorType.ID);
-		Selector testMeasuresCm = new Selector("testMeasuresCm", SelectorType.ID);
-		Selector testMeasuresIn = new Selector("testMeasuresIn", SelectorType.ID);
-		Selector testMeasuresMm = new Selector("testMeasuresMm", SelectorType.ID);
-		Selector testMeasuresPt = new Selector("testMeasuresPt", SelectorType.ID);
-		Selector testMeasuresPc = new Selector("testMeasuresPc", SelectorType.ID);
-		Selector testMeasuresEm = new Selector("testMeasuresEm", SelectorType.ID);
-		Selector testMeasuresInt = new Selector("testMeasuresInt", SelectorType.ID);
-		Selector testMeasuresReal = new Selector("testMeasuresReal", SelectorType.ID);
-		Selector testMeasuresPerc = new Selector("testMeasuresPerc", SelectorType.ID);
+		CSSSelector testMeasuresPx = new CSSSelector("testMeasuresPx", CSSSelectorType.ID);
+		CSSSelector testMeasuresCm = new CSSSelector("testMeasuresCm", CSSSelectorType.ID);
+		CSSSelector testMeasuresIn = new CSSSelector("testMeasuresIn", CSSSelectorType.ID);
+		CSSSelector testMeasuresMm = new CSSSelector("testMeasuresMm", CSSSelectorType.ID);
+		CSSSelector testMeasuresPt = new CSSSelector("testMeasuresPt", CSSSelectorType.ID);
+		CSSSelector testMeasuresPc = new CSSSelector("testMeasuresPc", CSSSelectorType.ID);
+		CSSSelector testMeasuresEm = new CSSSelector("testMeasuresEm", CSSSelectorType.ID);
+		CSSSelector testMeasuresInt = new CSSSelector("testMeasuresInt", CSSSelectorType.ID);
+		CSSSelector testMeasuresReal = new CSSSelector("testMeasuresReal", CSSSelectorType.ID);
+		CSSSelector testMeasuresPerc = new CSSSelector("testMeasuresPerc", CSSSelectorType.ID);
 		int exists = 0;
 		for (CSSStyle s: styles) {
 		if (s.getSelector().equals(testMeasuresPx)) {

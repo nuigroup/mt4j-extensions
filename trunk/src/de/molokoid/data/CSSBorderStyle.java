@@ -1,5 +1,5 @@
 package de.molokoid.data;
 
-public enum BorderStyle {
+public enum CSSBorderStyle {
 	SOLID, DASHED, DOTTED, NONE, HIDDEN;
 }

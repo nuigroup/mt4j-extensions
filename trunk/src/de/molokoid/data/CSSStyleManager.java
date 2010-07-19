@@ -60,7 +60,7 @@ public class CSSStyleManager {
 		}
 	}
 	
-	public CSSStyle getFirstStyleForSelector(Selector s) {
+	public CSSStyle getFirstStyleForSelector(CSSSelector s) {
 		for (CSSStyleHierarchy sty: styles) {
 			if (sty.getStyle().getSelector().equals(s)) return sty.getStyle();
 		}

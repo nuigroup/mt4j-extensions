@@ -18,10 +18,10 @@ import org.mt4j.components.visibleComponents.font.FontManager;
 import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.util.MTColor;
 
-import de.molokoid.css.parserConnector;
+import de.molokoid.css.CSSParserConnection;
 import de.molokoid.data.CSSStyle;
-import de.molokoid.data.Selector;
-import de.molokoid.data.SelectorType;
+import de.molokoid.data.CSSSelector;
+import de.molokoid.data.CSSSelectorType;
 
 
 public class FontParserTest extends TestCase{
@@ -33,10 +33,10 @@ public class FontParserTest extends TestCase{
 
 
 	StartTestApp app = new StartTestApp();
-	parserConnector pc;
+	CSSParserConnection pc;
 	List<CSSStyle> styles;
 	MTColor w = new MTColor(255,255,255,255);
-	HashMap<Selector, IFont> hm = new HashMap<Selector, IFont>();
+	HashMap<CSSSelector, IFont> hm = new HashMap<CSSSelector, IFont>();
 
 	public FontParserTest() {
 		logger.addAppender(ca);
@@ -51,7 +51,7 @@ public class FontParserTest extends TestCase{
 
 		fileLogger.addAppender(ca);
 
-		pc = new parserConnector("fonttest.css", app);
+		pc = new CSSParserConnection("fonttest.css", app);
 		styles= pc.getCssh().getStyles();
 		hm.clear();
 		for (CSSStyle s: styles) {
@@ -71,18 +71,18 @@ public class FontParserTest extends TestCase{
 
 	@Test
 	public void testFontFamilesSans() {
-		Selector sans = new Selector("sans", SelectorType.ID);
-		Selector sansbold = new Selector("sansbold", SelectorType.ID);
-		Selector sanslight = new Selector("sanslight", SelectorType.ID);
-		Selector sansitalic = new Selector("sansitalic", SelectorType.ID);
-		Selector sansitalicbold = new Selector("sansitalicbold", SelectorType.ID);
-		Selector sansitaliclight = new Selector("sansitaliclight", SelectorType.ID);
-		Selector sansoblique = new Selector("sansoblique", SelectorType.ID);
-		Selector sansobliquebold = new Selector("sansobliquebold", SelectorType.ID);
-		Selector sansobliquelight = new Selector("sansobliquelight", SelectorType.ID);
-		Selector sansnormal = new Selector("sansnormal", SelectorType.ID);
-		Selector sansnormalbold = new Selector("sansnormalbold", SelectorType.ID);
-		Selector sansnormallight = new Selector("sansnormallight", SelectorType.ID);
+		CSSSelector sans = new CSSSelector("sans", CSSSelectorType.ID);
+		CSSSelector sansbold = new CSSSelector("sansbold", CSSSelectorType.ID);
+		CSSSelector sanslight = new CSSSelector("sanslight", CSSSelectorType.ID);
+		CSSSelector sansitalic = new CSSSelector("sansitalic", CSSSelectorType.ID);
+		CSSSelector sansitalicbold = new CSSSelector("sansitalicbold", CSSSelectorType.ID);
+		CSSSelector sansitaliclight = new CSSSelector("sansitaliclight", CSSSelectorType.ID);
+		CSSSelector sansoblique = new CSSSelector("sansoblique", CSSSelectorType.ID);
+		CSSSelector sansobliquebold = new CSSSelector("sansobliquebold", CSSSelectorType.ID);
+		CSSSelector sansobliquelight = new CSSSelector("sansobliquelight", CSSSelectorType.ID);
+		CSSSelector sansnormal = new CSSSelector("sansnormal", CSSSelectorType.ID);
+		CSSSelector sansnormalbold = new CSSSelector("sansnormalbold", CSSSelectorType.ID);
+		CSSSelector sansnormallight = new CSSSelector("sansnormallight", CSSSelectorType.ID);
 
 		IFont sansFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSans.ttf", 16,w,w);
 		IFont sansBoldFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSans-Bold.ttf", 16,w,w);
@@ -120,18 +120,18 @@ public class FontParserTest extends TestCase{
 	
 	@Test
 	public void testFontFamilesSerif() {
-		Selector serif = new Selector("serif", SelectorType.ID);
-		Selector serifbold = new Selector("serifbold", SelectorType.ID);
-		Selector seriflight = new Selector("seriflight", SelectorType.ID);
-		Selector serifitalic = new Selector("serifitalic", SelectorType.ID);
-		Selector serifitalicbold = new Selector("serifitalicbold", SelectorType.ID);
-		Selector serifitaliclight = new Selector("serifitaliclight", SelectorType.ID);
-		Selector serifoblique = new Selector("serifoblique", SelectorType.ID);
-		Selector serifobliquebold = new Selector("serifobliquebold", SelectorType.ID);
-		Selector serifobliquelight = new Selector("serifobliquelight", SelectorType.ID);
-		Selector serifnormal = new Selector("serifnormal", SelectorType.ID);
-		Selector serifnormalbold = new Selector("serifnormalbold", SelectorType.ID);
-		Selector serifnormallight = new Selector("serifnormallight", SelectorType.ID);
+		CSSSelector serif = new CSSSelector("serif", CSSSelectorType.ID);
+		CSSSelector serifbold = new CSSSelector("serifbold", CSSSelectorType.ID);
+		CSSSelector seriflight = new CSSSelector("seriflight", CSSSelectorType.ID);
+		CSSSelector serifitalic = new CSSSelector("serifitalic", CSSSelectorType.ID);
+		CSSSelector serifitalicbold = new CSSSelector("serifitalicbold", CSSSelectorType.ID);
+		CSSSelector serifitaliclight = new CSSSelector("serifitaliclight", CSSSelectorType.ID);
+		CSSSelector serifoblique = new CSSSelector("serifoblique", CSSSelectorType.ID);
+		CSSSelector serifobliquebold = new CSSSelector("serifobliquebold", CSSSelectorType.ID);
+		CSSSelector serifobliquelight = new CSSSelector("serifobliquelight", CSSSelectorType.ID);
+		CSSSelector serifnormal = new CSSSelector("serifnormal", CSSSelectorType.ID);
+		CSSSelector serifnormalbold = new CSSSelector("serifnormalbold", CSSSelectorType.ID);
+		CSSSelector serifnormallight = new CSSSelector("serifnormallight", CSSSelectorType.ID);
 
 		IFont serifFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSerif.ttf", 16,w,w);
 		IFont serifBoldFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSerif-Bold.ttf", 16,w,w);
@@ -166,18 +166,18 @@ public class FontParserTest extends TestCase{
 	}
 	@Test
 	public void testFontFamilesMono() {
-		Selector mono = new Selector("mono", SelectorType.ID);
-		Selector monobold = new Selector("monobold", SelectorType.ID);
-		Selector monolight = new Selector("monolight", SelectorType.ID);
-		Selector monoitalic = new Selector("monoitalic", SelectorType.ID);
-		Selector monoitalicbold = new Selector("monoitalicbold", SelectorType.ID);
-		Selector monoitaliclight = new Selector("monoitaliclight", SelectorType.ID);
-		Selector monooblique = new Selector("monooblique", SelectorType.ID);
-		Selector monoobliquebold = new Selector("monoobliquebold", SelectorType.ID);
-		Selector monoobliquelight = new Selector("monoobliquelight", SelectorType.ID);
-		Selector mononormal = new Selector("mononormal", SelectorType.ID);
-		Selector mononormalbold = new Selector("mononormalbold", SelectorType.ID);
-		Selector mononormallight = new Selector("mononormallight", SelectorType.ID);
+		CSSSelector mono = new CSSSelector("mono", CSSSelectorType.ID);
+		CSSSelector monobold = new CSSSelector("monobold", CSSSelectorType.ID);
+		CSSSelector monolight = new CSSSelector("monolight", CSSSelectorType.ID);
+		CSSSelector monoitalic = new CSSSelector("monoitalic", CSSSelectorType.ID);
+		CSSSelector monoitalicbold = new CSSSelector("monoitalicbold", CSSSelectorType.ID);
+		CSSSelector monoitaliclight = new CSSSelector("monoitaliclight", CSSSelectorType.ID);
+		CSSSelector monooblique = new CSSSelector("monooblique", CSSSelectorType.ID);
+		CSSSelector monoobliquebold = new CSSSelector("monoobliquebold", CSSSelectorType.ID);
+		CSSSelector monoobliquelight = new CSSSelector("monoobliquelight", CSSSelectorType.ID);
+		CSSSelector mononormal = new CSSSelector("mononormal", CSSSelectorType.ID);
+		CSSSelector mononormalbold = new CSSSelector("mononormalbold", CSSSelectorType.ID);
+		CSSSelector mononormallight = new CSSSelector("mononormallight", CSSSelectorType.ID);
 
 		IFont monoFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSansMono.ttf", 16,w,w);
 		IFont monoBoldFont = FontManager.getInstance().createFont(app,"dejavu/DejaVuSansMono-Bold.ttf", 16,w,w);
@@ -213,10 +213,10 @@ public class FontParserTest extends TestCase{
 	}
 	@Test
 	public void testFontFamilesOther() {
-		Selector arial = new Selector("arial", SelectorType.ID);
-		Selector arial12 = new Selector("arial12", SelectorType.ID);
-		Selector arialgreen = new Selector("arialgreen", SelectorType.ID);
-		Selector arialsmaller = new Selector("arialsmaller", SelectorType.ID);
+		CSSSelector arial = new CSSSelector("arial", CSSSelectorType.ID);
+		CSSSelector arial12 = new CSSSelector("arial12", CSSSelectorType.ID);
+		CSSSelector arialgreen = new CSSSelector("arialgreen", CSSSelectorType.ID);
+		CSSSelector arialsmaller = new CSSSelector("arialsmaller", CSSSelectorType.ID);
 		
 		IFont arialFont = FontManager.getInstance().createFont(app,"arial.ttf", 16,w,w);
 		IFont arial12Font = FontManager.getInstance().createFont(app, "arial.ttf", 12, w, w);

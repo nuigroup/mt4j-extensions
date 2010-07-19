@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.w3c.css.sac.LexicalUnit;
 
-public class Keywords {
+public class CSSKeywords {
 	public static String[] colourNames = new String[] {
 			"BLACK", "WHITE", "SILVER", "GREY", "GRAY",
 			"AQUA", "BLUE", "NAVY",

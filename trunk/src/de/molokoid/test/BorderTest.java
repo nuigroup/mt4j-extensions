@@ -12,11 +12,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mt4j.util.MTColor;
 
-import de.molokoid.css.parserConnector;
-import de.molokoid.data.BorderStyle;
+import de.molokoid.css.CSSParserConnection;
+import de.molokoid.data.CSSBorderStyle;
 import de.molokoid.data.CSSStyle;
-import de.molokoid.data.Selector;
-import de.molokoid.data.SelectorType;
+import de.molokoid.data.CSSSelector;
+import de.molokoid.data.CSSSelectorType;
 
 
 public class BorderTest extends TestCase {
@@ -27,7 +27,7 @@ public class BorderTest extends TestCase {
 	
 		
 	StartTestApp app = new StartTestApp();
-	parserConnector pc;
+	CSSParserConnection pc;
 	List<CSSStyle> styles;
 
 	
@@ -35,7 +35,7 @@ public class BorderTest extends TestCase {
 	public void setUp() {
 		logger.addAppender(ca);
 		
-		pc = new parserConnector("bordertest.css", app);
+		pc = new CSSParserConnection("bordertest.css", app);
 		styles= pc.getCssh().getStyles();
 
 		
@@ -48,7 +48,7 @@ public class BorderTest extends TestCase {
 	
 	@Test 
 	public void testWidth() {
-		Selector borderwidth = new Selector("borderwidth", SelectorType.ID);
+		CSSSelector borderwidth = new CSSSelector("borderwidth", CSSSelectorType.ID);
 		boolean exists = false;
 		for (CSSStyle s: styles) {
 			if (s.getSelector().equals(borderwidth)) {
@@ -62,12 +62,12 @@ public class BorderTest extends TestCase {
 	
 	@Test
 	public void testStyle() {
-		Selector borderstyle = new Selector("borderstyle", SelectorType.ID);
+		CSSSelector borderstyle = new CSSSelector("borderstyle", CSSSelectorType.ID);
 		boolean exists = false;
 		for (CSSStyle s: styles) {
 			if (s.getSelector().equals(borderstyle)) {
 				exists = !exists;
-				assertTrue(s.getBorderStyle() == BorderStyle.DASHED);
+				assertTrue(s.getBorderStyle() == CSSBorderStyle.DASHED);
 			}
 		}
 		assertTrue(exists);
@@ -75,7 +75,7 @@ public class BorderTest extends TestCase {
 	
 	@Test
 	public void testColor() {
-		Selector bordercolor = new Selector("bordercolor", SelectorType.ID);
+		CSSSelector bordercolor = new CSSSelector("bordercolor", CSSSelectorType.ID);
 		boolean exists = false;
 		for (CSSStyle s: styles) {
 			if (s.getSelector().equals(bordercolor)) {

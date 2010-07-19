@@ -1,5 +1,5 @@
 package de.molokoid.data;
 
-public enum fontfamily {
+public enum CSSFontFamily {
 	SANS, SERIF, MONO, CUSTOM, DEFAULT;
 }

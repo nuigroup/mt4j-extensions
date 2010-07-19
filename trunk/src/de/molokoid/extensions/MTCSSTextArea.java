@@ -14,7 +14,7 @@ import org.mt4j.components.visibleComponents.font.FontManager;
 import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 
-import de.molokoid.css.MTCSSHelper;
+import de.molokoid.css.CSSHelper;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleHierarchy;
 import de.molokoid.data.CSSStyleManager;
@@ -23,7 +23,7 @@ import processing.core.PApplet;
 
 public class MTCSSTextArea extends MTTextArea implements MTCSSStylable{
 
-	MTCSSHelper cssh;
+	CSSHelper cssh;
 	
 	public void applyStyleSheet() {
 		cssh.applyStyleSheet();
@@ -31,20 +31,20 @@ public class MTCSSTextArea extends MTTextArea implements MTCSSStylable{
 	
 	public MTCSSTextArea(MTApplication mta, IFont font, CSSStyleManager csm) {
 		super(mta, font);
-		cssh = new MTCSSHelper(this, mta, csm);
+		cssh = new CSSHelper(this, mta, csm);
 		
 	}
 	
 	public MTCSSTextArea(MTApplication mta, CSSStyleManager csm) {
 		super(mta, csm.getDefaultFont(mta));
-		cssh = new MTCSSHelper(this, mta, csm);
+		cssh = new CSSHelper(this, mta, csm);
 		
 	}
 	
 	
 	public MTCSSTextArea(MTApplication mta, IFont font, CSSStyleManager csm, CSSStyle style) {
 		super(mta, font);
-		cssh = new MTCSSHelper(this, mta, csm, style);
+		cssh = new CSSHelper(this, mta, csm, style);
 	}
 
 

@@ -4,10 +4,10 @@ import org.apache.log4j.Logger;
 import org.mt4j.util.MTColor;
 
 public class CSSFont {
-	private fontfamily family = fontfamily.CUSTOM;
-	private fontstyle style = fontstyle.NORMAL;
+	private CSSFontFamily family = CSSFontFamily.CUSTOM;
+	private CSSFontStyle style = CSSFontStyle.NORMAL;
 	private String customType = "";
-	private fontweight weight = fontweight.NORMAL;
+	private CSSFontWeight weight = CSSFontWeight.NORMAL;
 	private int fontsize = 16;
 	private MTColor color = new MTColor(255, 255, 255, 255);
 	private boolean modified = false;
@@ -18,7 +18,7 @@ public class CSSFont {
 	}
 	public CSSFont() {
 		super();
-		this.family = fontfamily.DEFAULT;
+		this.family = CSSFontFamily.DEFAULT;
 	}
 	
 	public CSSFont(int fontsize) {
@@ -34,20 +34,20 @@ public class CSSFont {
 		debugOutput();
 	}
 
-	public CSSFont(fontstyle style) {
+	public CSSFont(CSSFontStyle style) {
 		super();
 		this.style = style;
 		this.modified = true;
 		debugOutput();
 	}
 
-	public CSSFont(fontfamily family) {
+	public CSSFont(CSSFontFamily family) {
 		super();
 		this.family = family;
 		debugOutput();
 	}
 
-	public CSSFont(fontweight weight) {
+	public CSSFont(CSSFontWeight weight) {
 		super();
 		this.weight = weight;
 		this.modified = true;
@@ -74,31 +74,31 @@ public class CSSFont {
 		debugOutput();
 	}
 
-	public fontweight getWeight() {
+	public CSSFontWeight getWeight() {
 		return weight;
 	}
 
-	public void setWeight(fontweight weight) {
+	public void setWeight(CSSFontWeight weight) {
 		this.weight = weight;
 		this.modified = true;
 		debugOutput();
 	}
 
-	public fontfamily getFamily() {
+	public CSSFontFamily getFamily() {
 		return family;
 	}
 
-	public void setFamily(fontfamily family) {
+	public void setFamily(CSSFontFamily family) {
 		this.family = family;
 		this.modified = true;
 		debugOutput();
 	}
 
-	public fontstyle getStyle() {
+	public CSSFontStyle getStyle() {
 		return style;
 	}
 
-	public void setStyle(fontstyle style) {
+	public void setStyle(CSSFontStyle style) {
 		this.style = style;
 		this.modified = true;
 		debugOutput();

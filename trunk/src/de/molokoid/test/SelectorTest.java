@@ -17,10 +17,10 @@ import org.junit.Test;
 import org.mt4j.MTApplication;
 import org.mt4j.util.MTColor;
 
-import de.molokoid.css.parserConnector;
+import de.molokoid.css.CSSParserConnection;
 import de.molokoid.data.CSSStyle;
-import de.molokoid.data.Selector;
-import de.molokoid.data.SelectorType;
+import de.molokoid.data.CSSSelector;
+import de.molokoid.data.CSSSelectorType;
 
 public class SelectorTest extends TestCase {
 	Logger logger = Logger.getLogger("MT4J Extensions");
@@ -29,15 +29,15 @@ public class SelectorTest extends TestCase {
 	
 		
 	StartTestApp app = new StartTestApp();
-	parserConnector pc;
+	CSSParserConnection pc;
 	List<CSSStyle> styles;
-	HashMap<Selector, MTColor> hm = new HashMap<Selector, MTColor>();
+	HashMap<CSSSelector, MTColor> hm = new HashMap<CSSSelector, MTColor>();
 	
 	@Before
 	public void setUp() {
 		logger.addAppender(ca);
 		
-		pc = new parserConnector("selectortest.css", app);
+		pc = new CSSParserConnection("selectortest.css", app);
 		styles= pc.getCssh().getStyles();
 
 		hm.clear();
@@ -53,9 +53,9 @@ public class SelectorTest extends TestCase {
 	
 	@Test
 	public void testSimpleSelectors() {
-		Selector h1 = new Selector("H1", SelectorType.TYPE);
-		Selector id = new Selector("ID", SelectorType.ID);
-		Selector c0 = new Selector("c0", SelectorType.CLASS);
+		CSSSelector h1 = new CSSSelector("H1", CSSSelectorType.TYPE);
+		CSSSelector id = new CSSSelector("ID", CSSSelectorType.ID);
+		CSSSelector c0 = new CSSSelector("c0", CSSSelectorType.CLASS);
 		
 		MTColor green = new MTColor(0,128,0,255);
 		MTColor red = new MTColor(255,0,0,255);
@@ -69,9 +69,9 @@ public class SelectorTest extends TestCase {
 	
 	@Test
 	public void testMultipleSelectors() {
-		Selector h2 = new Selector("H2", SelectorType.TYPE);
-		Selector id3 = new Selector("ID3", SelectorType.ID);
-		Selector c4 = new Selector("c4", SelectorType.CLASS);
+		CSSSelector h2 = new CSSSelector("H2", CSSSelectorType.TYPE);
+		CSSSelector id3 = new CSSSelector("ID3", CSSSelectorType.ID);
+		CSSSelector c4 = new CSSSelector("c4", CSSSelectorType.CLASS);
 		
 		MTColor black = new MTColor(0,0,0,255);
 		MTColor purple = new MTColor(128,0,128,255);
@@ -87,10 +87,10 @@ public class SelectorTest extends TestCase {
 	
 	@Test
 	public void testUniversalSelector() {
-		Selector star = new Selector("*", SelectorType.UNIVERSAL);
-		Selector h5 = new Selector("H5", SelectorType.TYPE);
-		Selector id5 = new Selector("ID5", SelectorType.ID);
-		Selector c5 = new Selector("c5", SelectorType.CLASS);
+		CSSSelector star = new CSSSelector("*", CSSSelectorType.UNIVERSAL);
+		CSSSelector h5 = new CSSSelector("H5", CSSSelectorType.TYPE);
+		CSSSelector id5 = new CSSSelector("ID5", CSSSelectorType.ID);
+		CSSSelector c5 = new CSSSelector("c5", CSSSelectorType.CLASS);
 		
 		MTColor olive = new MTColor(128,128,0,255);
 		MTColor white = new MTColor(255,255,255,255);
@@ -108,42 +108,42 @@ public class SelectorTest extends TestCase {
 	
 	@Test
 	public void testCascadingSelectors () {
-		Selector h6h6 = new Selector("H6", SelectorType.TYPE);
+		CSSSelector h6h6 = new CSSSelector("H6", CSSSelectorType.TYPE);
 		h6h6.setSecondary("H6");
-		h6h6.setSecondaryType(SelectorType.TYPE);
-		Selector h6c6  = new Selector("H6", SelectorType.TYPE);
+		h6h6.setSecondaryType(CSSSelectorType.TYPE);
+		CSSSelector h6c6  = new CSSSelector("H6", CSSSelectorType.TYPE);
 		h6c6.setSecondary("c6");
-		h6c6.setSecondaryType(SelectorType.CLASS);
-		Selector h6id6 = new Selector("H6", SelectorType.TYPE);
+		h6c6.setSecondaryType(CSSSelectorType.CLASS);
+		CSSSelector h6id6 = new CSSSelector("H6", CSSSelectorType.TYPE);
 		h6id6.setSecondary("ID6");
-		h6id6.setSecondaryType(SelectorType.ID);
+		h6id6.setSecondaryType(CSSSelectorType.ID);
 		
-		Selector c6h6 = new Selector("c6", SelectorType.CLASS);
+		CSSSelector c6h6 = new CSSSelector("c6", CSSSelectorType.CLASS);
 		c6h6.setSecondary("H6");
-		c6h6.setSecondaryType(SelectorType.TYPE);
-		Selector c6c6  = new Selector("c6", SelectorType.CLASS);
+		c6h6.setSecondaryType(CSSSelectorType.TYPE);
+		CSSSelector c6c6  = new CSSSelector("c6", CSSSelectorType.CLASS);
 		c6c6.setSecondary("c6");
-		c6c6.setSecondaryType(SelectorType.CLASS);
-		Selector c6id6 = new Selector("c6", SelectorType.CLASS);
+		c6c6.setSecondaryType(CSSSelectorType.CLASS);
+		CSSSelector c6id6 = new CSSSelector("c6", CSSSelectorType.CLASS);
 		c6id6.setSecondary("ID6");
-		c6id6.setSecondaryType(SelectorType.ID);
+		c6id6.setSecondaryType(CSSSelectorType.ID);
 		
-		Selector id6h6 = new Selector("ID6", SelectorType.ID);
+		CSSSelector id6h6 = new CSSSelector("ID6", CSSSelectorType.ID);
 		id6h6.setSecondary("H6");
-		id6h6.setSecondaryType(SelectorType.TYPE);
-		Selector id6c6  = new Selector("ID6", SelectorType.ID);
+		id6h6.setSecondaryType(CSSSelectorType.TYPE);
+		CSSSelector id6c6  = new CSSSelector("ID6", CSSSelectorType.ID);
 		id6c6.setSecondary("c6");
-		id6c6.setSecondaryType(SelectorType.CLASS);
-		Selector id6id6 = new Selector("ID6", SelectorType.ID);
+		id6c6.setSecondaryType(CSSSelectorType.CLASS);
+		CSSSelector id6id6 = new CSSSelector("ID6", CSSSelectorType.ID);
 		id6id6.setSecondary("ID6");
-		id6id6.setSecondaryType(SelectorType.ID);
+		id6id6.setSecondaryType(CSSSelectorType.ID);
 		
-		Selector h6id7  = new Selector("H6", SelectorType.TYPE);
+		CSSSelector h6id7  = new CSSSelector("H6", CSSSelectorType.TYPE);
 		h6id7.setSecondary("ID7");
-		h6id7.setSecondaryType(SelectorType.ID);
-		Selector listrong = new Selector("LI", SelectorType.TYPE);
+		h6id7.setSecondaryType(CSSSelectorType.ID);
+		CSSSelector listrong = new CSSSelector("LI", CSSSelectorType.TYPE);
 		listrong.setSecondary("STRONG");
-		listrong.setSecondaryType(SelectorType.TYPE);
+		listrong.setSecondaryType(CSSSelectorType.TYPE);
 		
 		
 		MTColor purple = new MTColor(128,0,128,255);
@@ -170,18 +170,18 @@ public class SelectorTest extends TestCase {
 		MTColor red = new MTColor(255,0,0,255);
 		MTColor blue = new MTColor(0,0,255,255);
 		
-		Selector h7h8 = new Selector("H7", SelectorType.TYPE);
-		h7h8.setChild(new Selector("H8", SelectorType.TYPE));
+		CSSSelector h7h8 = new CSSSelector("H7", CSSSelectorType.TYPE);
+		h7h8.setChild(new CSSSelector("H8", CSSSelectorType.TYPE));
 		
-		Selector h7id7c7 = new Selector("H7", SelectorType.TYPE);
-		Selector child = new Selector("ID7", SelectorType.ID);
-		child.setSecondary("c7", SelectorType.CLASS);
+		CSSSelector h7id7c7 = new CSSSelector("H7", CSSSelectorType.TYPE);
+		CSSSelector child = new CSSSelector("ID7", CSSSelectorType.ID);
+		child.setSecondary("c7", CSSSelectorType.CLASS);
 		h7id7c7.setChild(child);
 		
-		Selector h7h8id7 = new Selector("H7", SelectorType.TYPE);
-		h7h8id7.setSecondary("H8", SelectorType.TYPE);
-		h7h8id7.setChild(new Selector("ID7", SelectorType.ID));
-		h7h8id7.getChild().setSecondary("STRONG", SelectorType.TYPE);
+		CSSSelector h7h8id7 = new CSSSelector("H7", CSSSelectorType.TYPE);
+		h7h8id7.setSecondary("H8", CSSSelectorType.TYPE);
+		h7h8id7.setChild(new CSSSelector("ID7", CSSSelectorType.ID));
+		h7h8id7.getChild().setSecondary("STRONG", CSSSelectorType.TYPE);
 		assertTrue(hm.get(h7h8).equals(red));
 		assertTrue(hm.get(h7id7c7).equals(blue));
 		assertTrue(hm.get(h7h8id7).equals(green));

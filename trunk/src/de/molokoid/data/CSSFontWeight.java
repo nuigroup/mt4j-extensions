@@ -1,5 +1,5 @@
 package de.molokoid.data;
 
-public enum fontweight {
+public enum CSSFontWeight {
 	BOLD, LIGHT, NORMAL;
 }

@@ -19,16 +19,16 @@ import org.w3c.css.sac.SelectorList;
 
 import processing.core.PImage;
 
-import de.molokoid.data.BorderStyle;
+import de.molokoid.data.CSSBorderStyle;
 import de.molokoid.data.CSSFont;
+import de.molokoid.data.CSSFontWeight;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyle.BackgroundRepeat;
-import de.molokoid.data.Keywords;
-import de.molokoid.data.Selector;
-import de.molokoid.data.SelectorType;
-import de.molokoid.data.fontfamily;
-import de.molokoid.data.fontstyle;
-import de.molokoid.data.fontweight;
+import de.molokoid.data.CSSKeywords;
+import de.molokoid.data.CSSSelector;
+import de.molokoid.data.CSSSelectorType;
+import de.molokoid.data.CSSFontFamily;
+import de.molokoid.data.CSSFontStyle;
 
 
 public class CSSHandler implements DocumentHandler{
@@ -213,7 +213,7 @@ public class CSSHandler implements DocumentHandler{
 					for (CSSStyle sty: activeStyles) sty.setBorderWidth(width);
 					break;
 				case 2:
-					BorderStyle style = parseBorderStyle(value);
+					CSSBorderStyle style = parseBorderStyle(value);
 					for (CSSStyle sty: activeStyles) sty.setBorderStyle(style);
 					break;
 				case 3:
@@ -236,7 +236,7 @@ public class CSSHandler implements DocumentHandler{
 			
 			break;
 		case BORDERSTYLE:
-			BorderStyle style = parseBorderStyle(value);
+			CSSBorderStyle style = parseBorderStyle(value);
 			for (CSSStyle sty: activeStyles) sty.setBorderStyle(style);
 			break;
 		case PADDING:
@@ -246,10 +246,10 @@ public class CSSHandler implements DocumentHandler{
 		case FONTSIZE:
 			parameter = value;
 			//Have to convert to pt
-			if (Keywords.isMeasuringUnit(parameter)) {
+			if (CSSKeywords.isMeasuringUnit(parameter)) {
 			if (currentFont == null) currentFont = new CSSFont((int) (parseMeasuringUnit(parameter,defaultFontSize) * (72f/100f)));
 			else currentFont.setFontsize((int) (parseMeasuringUnit(parameter,defaultFontSize)* (72f/100f)));
-			} else if (Keywords.isString(parameter)){
+			} else if (CSSKeywords.isString(parameter)){
 				if (currentFont == null) currentFont = new CSSFont(handleFontSizeString(parameter));
 				else currentFont.setFontsize(handleFontSizeString(parameter));
 			}
@@ -275,10 +275,10 @@ public class CSSHandler implements DocumentHandler{
 				switch (identifyFontTag(lu)) {
 				case 1:
 					parameter = lu;
-					if (Keywords.isMeasuringUnit(parameter)) {
+					if (CSSKeywords.isMeasuringUnit(parameter)) {
 						if (currentFont == null) currentFont = new CSSFont((int) (parseMeasuringUnit(parameter,defaultFontSize) * (72f/100f)));
 						else currentFont.setFontsize((int) (parseMeasuringUnit(parameter,defaultFontSize)* (72f/100f)));
-						} else if (Keywords.isString(parameter)){
+						} else if (CSSKeywords.isString(parameter)){
 							if (currentFont == null) currentFont = new CSSFont(handleFontSizeString(parameter));
 							else currentFont.setFontsize(handleFontSizeString(parameter));
 						}
@@ -322,15 +322,15 @@ public class CSSHandler implements DocumentHandler{
 		//3: font-style
 		//4: font-family
 		
-		if (Keywords.isMeasuringUnit(lu)) {
+		if (CSSKeywords.isMeasuringUnit(lu)) {
 			if (lu.getFloatValue() >= 100) return 2;
 			else return 1;
 		}
-		if (Keywords.isFontWeight(lu)) return 2;
+		if (CSSKeywords.isFontWeight(lu)) return 2;
 		
-		if (Keywords.isFontFamily(lu)) return 4;
+		if (CSSKeywords.isFontFamily(lu)) return 4;
 		
-		if (Keywords.isFontStyle(lu)) return 3;
+		if (CSSKeywords.isFontStyle(lu)) return 3;
 		
 		return 0;
 	}
@@ -342,10 +342,10 @@ public class CSSHandler implements DocumentHandler{
 		//2: Border-Style
 		//3. Border-Color
 		if (lu.getLexicalUnitType() == LexicalUnit.SAC_RGBCOLOR) return 3;
-		if (Keywords.isMeasuringUnit(lu)) return 1;
+		if (CSSKeywords.isMeasuringUnit(lu)) return 1;
 		if (lu.getLexicalUnitType() == LexicalUnit.SAC_IDENT) {
-			if (Keywords.isBorderStyle(lu)) return 2;
-			if (Keywords.isColor(lu)) return 3;
+			if (CSSKeywords.isBorderStyle(lu)) return 2;
+			if (CSSKeywords.isColor(lu)) return 3;
 		
 		}
 		return 0;
@@ -376,10 +376,10 @@ public class CSSHandler implements DocumentHandler{
 		if (value.getLexicalUnitType() == LexicalUnit.SAC_RGBCOLOR) return 1;
 		if (value.getLexicalUnitType() == LexicalUnit.SAC_URI) return 2;
 		if (value.getLexicalUnitType() == LexicalUnit.SAC_IDENT) {
-			if (Keywords.isColor(value)) return 1;
-			if (Keywords.isBackgroundRepeat(value)) return 3;
-			if (Keywords.isBackgroundPosition(value)) return 0;
-			if (Keywords.isBackgroundAttachment(value)) return 0;
+			if (CSSKeywords.isColor(value)) return 1;
+			if (CSSKeywords.isBackgroundRepeat(value)) return 3;
+			if (CSSKeywords.isBackgroundPosition(value)) return 0;
+			if (CSSKeywords.isBackgroundAttachment(value)) return 0;
 		}
 		
 		
@@ -387,11 +387,11 @@ public class CSSHandler implements DocumentHandler{
 	}
 	
 	private float handleBorderWidth(LexicalUnit lu) {
-		if (Keywords.isMeasuringUnit(lu)) {
+		if (CSSKeywords.isMeasuringUnit(lu)) {
 			return parseMeasuringUnit(lu,1);
 		} 
-		if (Keywords.isString(lu)) {
-			if (Keywords.isBorderWidth(lu)) {
+		if (CSSKeywords.isString(lu)) {
+			if (CSSKeywords.isBorderWidth(lu)) {
 				if (lu.getStringValue().replaceAll(" ", "").equalsIgnoreCase("THIN")) return 0.5f;
 				if (lu.getStringValue().replaceAll(" ", "").equalsIgnoreCase("MEDIUM")) return 1f;
 				if (lu.getStringValue().replaceAll(" ", "").equalsIgnoreCase("THICK")) return 2f;
@@ -432,19 +432,19 @@ public class CSSHandler implements DocumentHandler{
 
 
 	private void handleFontWeight(LexicalUnit value) {
-		fontweight weight = fontweight.NORMAL;
+		CSSFontWeight weight = CSSFontWeight.NORMAL;
 		if (currentFont == null) currentFont = new CSSFont(weight);
 		switch (value.getLexicalUnitType()) {
 		case LexicalUnit.SAC_IDENT:
 		case LexicalUnit.SAC_STRING_VALUE:
-			if (value.getStringValue().toUpperCase().contains("BOLD")) {currentFont.setWeight(fontweight.BOLD); break;}
-			if (value.getStringValue().toUpperCase().contains("LIGHT")) {currentFont.setWeight(fontweight.LIGHT); break;}
-			currentFont.setWeight(fontweight.NORMAL);
+			if (value.getStringValue().toUpperCase().contains("BOLD")) {currentFont.setWeight(CSSFontWeight.BOLD); break;}
+			if (value.getStringValue().toUpperCase().contains("LIGHT")) {currentFont.setWeight(CSSFontWeight.LIGHT); break;}
+			currentFont.setWeight(CSSFontWeight.NORMAL);
 			break;
 		case LexicalUnit.SAC_INTEGER:
-			if (value.getIntegerValue() < 400) {currentFont.setWeight(fontweight.LIGHT); break;}
-			if (value.getIntegerValue() > 600) {currentFont.setWeight(fontweight.BOLD); break;}
-			currentFont.setWeight(fontweight.NORMAL); 
+			if (value.getIntegerValue() < 400) {currentFont.setWeight(CSSFontWeight.LIGHT); break;}
+			if (value.getIntegerValue() > 600) {currentFont.setWeight(CSSFontWeight.BOLD); break;}
+			currentFont.setWeight(CSSFontWeight.NORMAL); 
 			break;
 		default: break;
 		}
@@ -453,17 +453,17 @@ public class CSSHandler implements DocumentHandler{
 
 
 	private void handleFontFamily(LexicalUnit value) {
-		fontfamily family = fontfamily.CUSTOM;
+		CSSFontFamily family = CSSFontFamily.CUSTOM;
 		if (currentFont == null) currentFont = new CSSFont(family);
 		if (value.getLexicalUnitType() == LexicalUnit.SAC_IDENT || value.getLexicalUnitType() == LexicalUnit.SAC_STRING_VALUE) {
 			
 			if (value.getStringValue().toUpperCase().contains("TTF")) {
-				currentFont.setFamily(fontfamily.CUSTOM); 
+				currentFont.setFamily(CSSFontFamily.CUSTOM); 
 				currentFont.setCustomType(value.getStringValue()); 
 				return;}
-			if (value.getStringValue().toUpperCase().contains("MONO")) {currentFont.setFamily(fontfamily.MONO); return;}
-			if (value.getStringValue().toUpperCase().contains("SANS")) {currentFont.setFamily(fontfamily.SANS); return;}
-			if (value.getStringValue().toUpperCase().contains("SERIF")) {currentFont.setFamily(fontfamily.SERIF); return;}
+			if (value.getStringValue().toUpperCase().contains("MONO")) {currentFont.setFamily(CSSFontFamily.MONO); return;}
+			if (value.getStringValue().toUpperCase().contains("SANS")) {currentFont.setFamily(CSSFontFamily.SANS); return;}
+			if (value.getStringValue().toUpperCase().contains("SERIF")) {currentFont.setFamily(CSSFontFamily.SERIF); return;}
 
 		} else {
 			logger.debug(value.getLexicalUnitType());
@@ -472,11 +472,11 @@ public class CSSHandler implements DocumentHandler{
 	}
 	private void handleFontStyle(LexicalUnit value) {
 		
-		fontstyle style = fontstyle.NORMAL;
+		CSSFontStyle style = CSSFontStyle.NORMAL;
 		if (currentFont == null) currentFont = new CSSFont(style);
 		if (value.getLexicalUnitType() == LexicalUnit.SAC_IDENT || value.getLexicalUnitType() == LexicalUnit.SAC_STRING_VALUE) {
-			if (value.getStringValue().toUpperCase().contains("ITALIC")) {currentFont.setStyle(fontstyle.ITALIC); return;}
-			if (value.getStringValue().toUpperCase().contains("OBLIQUE")) {currentFont.setStyle(fontstyle.OBLIQUE); return;}
+			if (value.getStringValue().toUpperCase().contains("ITALIC")) {currentFont.setStyle(CSSFontStyle.ITALIC); return;}
+			if (value.getStringValue().toUpperCase().contains("OBLIQUE")) {currentFont.setStyle(CSSFontStyle.OBLIQUE); return;}
 		}
 	}
 	
@@ -536,16 +536,16 @@ public class CSSHandler implements DocumentHandler{
 		return false;
 	}
 	
-	private BorderStyle parseBorderStyle(LexicalUnit value) {
+	private CSSBorderStyle parseBorderStyle(LexicalUnit value) {
 		LexicalUnit parameter = value;
 		if (parameter.getLexicalUnitType() == LexicalUnit.SAC_IDENT) {
-			if (parameter.getStringValue().equalsIgnoreCase("dashed")) return BorderStyle.DASHED;
-			if (parameter.getStringValue().equalsIgnoreCase("dotted")) return BorderStyle.DOTTED;
-			if (parameter.getStringValue().equalsIgnoreCase("none")) return BorderStyle.NONE;
-			if (parameter.getStringValue().equalsIgnoreCase("hidden")) return BorderStyle.HIDDEN;
+			if (parameter.getStringValue().equalsIgnoreCase("dashed")) return CSSBorderStyle.DASHED;
+			if (parameter.getStringValue().equalsIgnoreCase("dotted")) return CSSBorderStyle.DOTTED;
+			if (parameter.getStringValue().equalsIgnoreCase("none")) return CSSBorderStyle.NONE;
+			if (parameter.getStringValue().equalsIgnoreCase("hidden")) return CSSBorderStyle.HIDDEN;
 		}
 		
-		return BorderStyle.SOLID;
+		return CSSBorderStyle.SOLID;
 	}
 	
 	private float parseNumber(LexicalUnit component) {
@@ -636,10 +636,10 @@ public class CSSHandler implements DocumentHandler{
 		
 	}
 	
-	public Selector parseSelector(org.w3c.css.sac.Selector selector) {
+	public CSSSelector parseSelector(org.w3c.css.sac.Selector selector) {
 
 		
-		Selector newSelector = null;
+		CSSSelector newSelector = null;
 		String debugoutput = "";
 		
 		if (selector.toString().contains(">")) {
@@ -659,8 +659,8 @@ public class CSSHandler implements DocumentHandler{
 		return newSelector;
 	}
 	
-	public Selector processElement(String in) {
-		Selector newSelector = null;
+	public CSSSelector processElement(String in) {
+		CSSSelector newSelector = null;
 		
 		
 		
@@ -689,7 +689,7 @@ public class CSSHandler implements DocumentHandler{
 		if (work.contains(" ")) containsSpace = true;
 		
 		if (work.equals("*")) {
-			newSelector = new Selector("*", SelectorType.UNIVERSAL);
+			newSelector = new CSSSelector("*", CSSSelectorType.UNIVERSAL);
 			return newSelector;
 		}
 		
@@ -706,7 +706,7 @@ public class CSSHandler implements DocumentHandler{
 		
 		
 		if (!containsSharp && !containsDot) {
-			newSelector = new Selector(work.replace(".", "").replace("#", ""), determineType(work));
+			newSelector = new CSSSelector(work.replace(".", "").replace("#", ""), determineType(work));
 		}
 		
 		if (containsSpace) {
@@ -715,9 +715,9 @@ public class CSSHandler implements DocumentHandler{
 			if (st.countTokens() > 1) {
 				String part1 = st.nextToken();
 				String part2 = st.nextToken();
-				newSelector = new Selector(part1, determineType(part1));
+				newSelector = new CSSSelector(part1, determineType(part1));
 				newSelector.setSecondary(part2);
-				newSelector.setSecondaryType(SelectorType.TYPE);
+				newSelector.setSecondaryType(CSSSelectorType.TYPE);
 				
 			} 
 			
@@ -730,9 +730,9 @@ public class CSSHandler implements DocumentHandler{
 				StringTokenizer st = new StringTokenizer(work.substring(1), "#");
 				
 				if (st.countTokens() > 1) {			
-				newSelector = new Selector(st.nextToken(), SelectorType.ID);
+				newSelector = new CSSSelector(st.nextToken(), CSSSelectorType.ID);
 				newSelector.setSecondary(st.nextToken());
-				newSelector.setSecondaryType(SelectorType.ID);
+				newSelector.setSecondaryType(CSSSelectorType.ID);
 				}
 			} else {
 			StringTokenizer st = new StringTokenizer(work, "#");
@@ -740,9 +740,9 @@ public class CSSHandler implements DocumentHandler{
 			if (st.countTokens() > 1) {
 				String part1 = st.nextToken();
 				String part2 = st.nextToken();
-				newSelector = new Selector(part1, determineType(part1));
+				newSelector = new CSSSelector(part1, determineType(part1));
 				newSelector.setSecondary(part2);
-				newSelector.setSecondaryType(SelectorType.ID);
+				newSelector.setSecondaryType(CSSSelectorType.ID);
 				
 			} 
 			}
@@ -754,9 +754,9 @@ public class CSSHandler implements DocumentHandler{
 				StringTokenizer st = new StringTokenizer(work.substring(1), ".");
 				
 				if (st.countTokens() > 1) {			
-				newSelector = new Selector(st.nextToken(), SelectorType.CLASS);
+				newSelector = new CSSSelector(st.nextToken(), CSSSelectorType.CLASS);
 				newSelector.setSecondary(st.nextToken());
-				newSelector.setSecondaryType(SelectorType.CLASS);
+				newSelector.setSecondaryType(CSSSelectorType.CLASS);
 				}
 			} else {
 				StringTokenizer st = new StringTokenizer(work, ".");
@@ -764,9 +764,9 @@ public class CSSHandler implements DocumentHandler{
 				if (st.countTokens() > 1) {
 					String part1 = st.nextToken();
 					String part2 = st.nextToken();
-					newSelector = new Selector(part1, determineType(part1));
+					newSelector = new CSSSelector(part1, determineType(part1));
 					newSelector.setSecondary(part2);
-					newSelector.setSecondaryType(SelectorType.CLASS);
+					newSelector.setSecondaryType(CSSSelectorType.CLASS);
 					
 				} 
 			}
@@ -782,12 +782,12 @@ public class CSSHandler implements DocumentHandler{
 		return styles;
 	}
 	
-	private SelectorType determineType (String in) {
-		if (in.contains(".")) return SelectorType.CLASS;
-		if (in.contains("#")) return SelectorType.ID;
-		if (in.contains("*")) return SelectorType.UNIVERSAL;
+	private CSSSelectorType determineType (String in) {
+		if (in.contains(".")) return CSSSelectorType.CLASS;
+		if (in.contains("#")) return CSSSelectorType.ID;
+		if (in.contains("*")) return CSSSelectorType.UNIVERSAL;
 			
-		return SelectorType.TYPE;
+		return CSSSelectorType.TYPE;
 	}
 	
 	private enum cssproperties {

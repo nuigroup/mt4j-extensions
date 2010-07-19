@@ -13,13 +13,13 @@ import org.w3c.css.sac.InputSource;
 
 import de.molokoid.data.CSSStyle;
 
-public class parserConnector {
+public class CSSParserConnection {
 	Parser pa = null;
 	FileReader fileReader = null;
 	CSSHandler cssh = null;
 	
 	
-	public parserConnector(String source, MTApplication app) {
+	public CSSParserConnection(String source, MTApplication app) {
 		
 		List<CSSStyle> styles= new ArrayList<CSSStyle>();
 		cssh = new CSSHandler(app, styles);

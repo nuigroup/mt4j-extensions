@@ -23,10 +23,10 @@ import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.font.FontManager;
 import org.mt4j.components.visibleComponents.font.IFont;
 
-import de.molokoid.css.parserConnector;
+import de.molokoid.css.CSSParserConnection;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleManager;
-import de.molokoid.data.Selector;
+import de.molokoid.data.CSSSelector;
 import de.molokoid.extensions.*;
 
 public class SelectorIntegrationTest extends AbstractWindowTestcase {
@@ -37,7 +37,7 @@ public class SelectorIntegrationTest extends AbstractWindowTestcase {
 	Logger logger = Logger.getLogger("MT4J Extensions");
 	SimpleLayout l = new SimpleLayout();
 	ConsoleAppender ca = new ConsoleAppender(l);
-	parserConnector pc;
+	CSSParserConnection pc;
 	List<CSSStyle> styles;
 	MTColor w = new MTColor(255,255,255,255);
 	
@@ -54,7 +54,7 @@ public class SelectorIntegrationTest extends AbstractWindowTestcase {
 		
 		logger.addAppender(ca);
 		
-		pc = new parserConnector("integrationtest.css", app);
+		pc = new CSSParserConnection("integrationtest.css", app);
 		styles= pc.getCssh().getStyles();
 		cssm = new CSSStyleManager(styles,app);
 	}

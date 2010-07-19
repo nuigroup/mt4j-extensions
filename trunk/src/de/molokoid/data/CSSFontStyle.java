@@ -1,5 +1,5 @@
 package de.molokoid.data;
 
-public enum fontstyle {
+public enum CSSFontStyle {
 	ITALIC, OBLIQUE, NORMAL;
 }

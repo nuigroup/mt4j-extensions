@@ -15,9 +15,9 @@ import org.junit.Test;
 
 
 import de.molokoid.css.CSSHandler;
-import de.molokoid.css.parserConnector;
+import de.molokoid.css.CSSParserConnection;
 import de.molokoid.data.CSSStyle;
-import de.molokoid.data.Selector;
+import de.molokoid.data.CSSSelector;
 
 public class CSSHandlerTest extends TestCase{
 
@@ -38,7 +38,7 @@ public class CSSHandlerTest extends TestCase{
 	
 	@Test 
 	public void testProcessElement() {
-		Selector test = cssh.processElement("P.c141");
+		CSSSelector test = cssh.processElement("P.c141");
 		logger.debug(test);
 		test = cssh.processElement("P#c141");
 		logger.debug(test);

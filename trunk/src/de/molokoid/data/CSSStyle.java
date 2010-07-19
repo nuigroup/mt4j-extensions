@@ -19,7 +19,7 @@ public class CSSStyle {
 	boolean modifiedUri = false;
 	
 
-	Selector selector = null;
+	CSSSelector selector = null;
 	boolean modifiedSelector = false;
 	//Colours
 	
@@ -43,7 +43,7 @@ public class CSSStyle {
 	boolean modifiedBackgroundImage = false, modifiedBackgroundPosition = false, modifiedBackgroundRepeat = false; 
 	
 	//Border
-	BorderStyle borderStyle = BorderStyle.NONE;
+	CSSBorderStyle borderStyle = CSSBorderStyle.NONE;
 	IFont font = null;
 	CSSFont cssfont = new CSSFont();
 	
@@ -82,11 +82,11 @@ public class CSSStyle {
 	boolean modifiedVisibility = false, modifiedZIndex = false;
 	
 	public CSSStyle(MTApplication app) {
-		this.selector = new Selector("Universal", SelectorType.UNIVERSAL);
+		this.selector = new CSSSelector("Universal", CSSSelectorType.UNIVERSAL);
 		this.app = app;
 	}
 	
-	public CSSStyle(Selector selector,MTApplication app) {
+	public CSSStyle(CSSSelector selector,MTApplication app) {
 		super();
 		this.selector = selector;
 		this.modifiedSelector = true;
@@ -94,11 +94,11 @@ public class CSSStyle {
 	}
 	
 
-	public Selector getSelector() {
+	public CSSSelector getSelector() {
 		return selector;
 	}
 
-	public void setSelector(Selector selector) {
+	public void setSelector(CSSSelector selector) {
 		this.selector = selector;
 		this.modifiedSelector = true;
 	}
@@ -155,7 +155,7 @@ public class CSSStyle {
 		this.backgroundRepeat = backgroundRepeat;
 		this.modifiedBackgroundRepeat = true;
 	}
-	public BorderStyle getBorderStyle() {
+	public CSSBorderStyle getBorderStyle() {
 		return borderStyle;
 	}
 	
@@ -175,7 +175,7 @@ public class CSSStyle {
 		return 0;
 	}
 	
-	public void setBorderStyle(BorderStyle borderStyle) {
+	public void setBorderStyle(CSSBorderStyle borderStyle) {
 		this.borderStyle = borderStyle;
 		this.modifiedBorderStyle = true;
 	}

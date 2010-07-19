@@ -7,16 +7,16 @@ import org.apache.log4j.Logger;
 import org.mt4j.components.MTCanvas;
 import org.mt4j.components.MTComponent;
 
-public class Selector {
+public class CSSSelector {
 	String primary = null;
-	SelectorType primaryType = null;
+	CSSSelectorType primaryType = null;
 	
 	String secondary = null;
-	SelectorType secondaryType = null;
+	CSSSelectorType secondaryType = null;
 	
 	
 	
-	public Selector(String primary, SelectorType primaryType) {
+	public CSSSelector(String primary, CSSSelectorType primaryType) {
 		super();
 		this.primary = check(primary);
 		this.primaryType = primaryType;
@@ -24,7 +24,7 @@ public class Selector {
 
 	boolean selectChild = false;
 
-	Selector child = null;
+	CSSSelector child = null;
 	
 	public String getPrimary() {
 		return primary;
@@ -34,11 +34,11 @@ public class Selector {
 		this.primary = check(primary);
 	}
 
-	public SelectorType getPrimaryType() {
+	public CSSSelectorType getPrimaryType() {
 		return primaryType;
 	}
 
-	public void setPrimaryType(SelectorType primaryType) {
+	public void setPrimaryType(CSSSelectorType primaryType) {
 		this.primaryType = primaryType;
 	}
 
@@ -50,16 +50,16 @@ public class Selector {
 		this.secondary = check(secondary);
 	}
 
-	public void setSecondary(String secondary, SelectorType type) {
+	public void setSecondary(String secondary, CSSSelectorType type) {
 		this.secondary = check(secondary);
 		this.secondaryType = type;
 	}
 	
-	public SelectorType getSecondaryType() {
+	public CSSSelectorType getSecondaryType() {
 		return secondaryType;
 	}
 
-	public void setSecondaryType(SelectorType secondaryType) {
+	public void setSecondaryType(CSSSelectorType secondaryType) {
 		this.secondaryType = secondaryType;
 	}
 
@@ -71,12 +71,12 @@ public class Selector {
 		this.selectChild = selectChild;
 	}
 
-	public Selector getChild() {
+	public CSSSelector getChild() {
 		if (selectChild) return child;
 		else return null;
 	}
 
-	public void setChild(Selector child) {
+	public void setChild(CSSSelector child) {
 		if (child != null) {
 		this.selectChild = true;
 		this.child = child;
@@ -110,7 +110,7 @@ public class Selector {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Selector other = (Selector) obj;
+		CSSSelector other = (CSSSelector) obj;
 		if (child == null) {
 			if (other.child != null)
 				return false;
@@ -544,7 +544,7 @@ public class Selector {
 		}
 	}
 	
-	private boolean isMatch(SelectorType type, String selector, MTComponent c) {
+	private boolean isMatch(CSSSelectorType type, String selector, MTComponent c) {
 		try {
 			if (c != null && c instanceof MTComponent) {
 			List<String> superclasses = getSuperclasses(c.getClass());

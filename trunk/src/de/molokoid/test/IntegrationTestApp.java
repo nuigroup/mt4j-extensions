@@ -18,11 +18,11 @@ import org.mt4j.util.math.Vertex;
 
 import processing.core.PImage;
 
-import de.molokoid.css.parserConnector;
+import de.molokoid.css.CSSParserConnection;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleManager;
-import de.molokoid.data.Selector;
-import de.molokoid.data.SelectorType;
+import de.molokoid.data.CSSSelector;
+import de.molokoid.data.CSSSelectorType;
 import de.molokoid.extensions.MTCSSPolygon;
 import de.molokoid.extensions.MTCSSRectangle;
 import de.molokoid.extensions.MTCSSTextArea;
@@ -37,7 +37,7 @@ public class IntegrationTestApp extends AbstractScene{
 	Logger logger = Logger.getLogger("MT4J Extensions");
 	SimpleLayout l = new SimpleLayout();
 	ConsoleAppender ca = new ConsoleAppender(l);
-	parserConnector pc;
+	CSSParserConnection pc;
 	List<CSSStyle> styles;
 	MTColor w = new MTColor(255,255,255,255);
 	
@@ -54,7 +54,7 @@ public class IntegrationTestApp extends AbstractScene{
 			
 			logger.addAppender(ca);
 			
-			pc = new parserConnector("integrationtest.css", app);
+			pc = new CSSParserConnection("integrationtest.css", app);
 			styles= pc.getCssh().getStyles();
 			cssm = new CSSStyleManager(styles, app);
 		

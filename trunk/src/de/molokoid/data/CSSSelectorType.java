@@ -1,5 +1,5 @@
 package de.molokoid.data;
 
-public enum SelectorType {
+public enum CSSSelectorType {
 	UNIVERSAL, TYPE, ID, CLASS, CUSTOM;
 }

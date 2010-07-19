@@ -14,11 +14,11 @@ import org.mt4j.test.AbstractWindowTestcase;
 import org.mt4j.test.testUtil.DummyScene;
 import org.mt4j.util.MTColor;
 
-import de.molokoid.css.parserConnector;
+import de.molokoid.css.CSSParserConnection;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleManager;
-import de.molokoid.data.Selector;
-import de.molokoid.data.SelectorType;
+import de.molokoid.data.CSSSelector;
+import de.molokoid.data.CSSSelectorType;
 
 public class BackgroundImageTest  extends AbstractWindowTestcase {
 	private MTComponent parent;
@@ -28,7 +28,7 @@ public class BackgroundImageTest  extends AbstractWindowTestcase {
 	Logger logger = Logger.getLogger("MT4J Extensions");
 	SimpleLayout l = new SimpleLayout();
 	ConsoleAppender ca = new ConsoleAppender(l);
-	parserConnector pc;
+	CSSParserConnection pc;
 	List<CSSStyle> styles;
 	MTColor w = new MTColor(255,255,255,255);
 	
@@ -45,7 +45,7 @@ public class BackgroundImageTest  extends AbstractWindowTestcase {
 		
 		logger.addAppender(ca);
 		
-		pc = new parserConnector("backgroundimagetest.css", app);
+		pc = new CSSParserConnection("backgroundimagetest.css", app);
 		styles= pc.getCssh().getStyles();
 		cssm = new CSSStyleManager(styles,app);
 	}
@@ -58,7 +58,7 @@ public class BackgroundImageTest  extends AbstractWindowTestcase {
 	public void testParser() {
 		logger.debug(cssm.getStyles().size() + " Styles");
 		CSSStyle sty;
-		Selector s1 = new Selector("id0", SelectorType.ID);
+		CSSSelector s1 = new CSSSelector("id0", CSSSelectorType.ID);
 		sty = cssm.getFirstStyleForSelector(s1);
 		assertTrue(sty.getBackgroundImage().width == 256);
 		

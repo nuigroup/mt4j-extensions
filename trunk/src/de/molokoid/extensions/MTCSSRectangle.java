@@ -24,18 +24,18 @@ import org.mt4j.util.opengl.GLTexture.WRAP_MODE;
 
 import processing.core.PImage;
 
-import de.molokoid.css.MTCSSHelper;
-import de.molokoid.css.parserConnector;
+import de.molokoid.css.CSSHelper;
+import de.molokoid.css.CSSParserConnection;
 import de.molokoid.data.CSSStyle;
 import de.molokoid.data.CSSStyleHierarchy;
 import de.molokoid.data.CSSStyleManager;
 
 
 public class MTCSSRectangle extends MTRectangle implements MTCSSStylable{
-	MTCSSHelper cssh;
+	CSSHelper cssh;
 	public MTCSSRectangle(float x, float y,	float width, float height, MTApplication mta, CSSStyleManager csm) {
 		super(x, y, width, height, mta);
-		cssh = new MTCSSHelper(this, mta, csm);
+		cssh = new CSSHelper(this, mta, csm);
 		
 
 	}
@@ -46,7 +46,7 @@ public class MTCSSRectangle extends MTRectangle implements MTCSSStylable{
 	
 	public MTCSSRectangle(CSSStyle style, float x, float y,	MTApplication mta, CSSStyleManager csm) {
 		super(x, y, style.getWidth(), style.getHeight(), mta);
-		cssh = new MTCSSHelper(this, mta, csm);
+		cssh = new CSSHelper(this, mta, csm);
 		cssh.getPrivateStyleSheets().add(style);
 
 	}

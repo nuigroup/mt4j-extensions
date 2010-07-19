@@ -8,7 +8,7 @@ import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 
-import de.molokoid.css.parserConnector;
+import de.molokoid.css.CSSParserConnection;
 
 public class TestApp extends AbstractScene{
 

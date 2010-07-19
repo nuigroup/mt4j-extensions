@@ -22,26 +22,26 @@ public class CSSFontManager {
 			switch (currentFont2.getStyle()) {
 			case ITALIC:
 			case OBLIQUE:
-				if (currentFont2.getWeight() == fontweight.BOLD) {
+				if (currentFont2.getWeight() == CSSFontWeight.BOLD) {
 					return getFont("dejavu/DejaVuSerif-BoldItalic.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.LIGHT) {
+				if (currentFont2.getWeight() == CSSFontWeight.LIGHT) {
 					return getFont("dejavu/DejaVuSerif-Italic.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.NORMAL) {
+				if (currentFont2.getWeight() == CSSFontWeight.NORMAL) {
 					return getFont("dejavu/DejaVuSerif-Italic.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 			
 				break;
 			case NORMAL:
 			default:
-				if (currentFont2.getWeight() == fontweight.BOLD) {
+				if (currentFont2.getWeight() == CSSFontWeight.BOLD) {
 					return getFont("dejavu/DejaVuSerif-Bold.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.LIGHT) {
+				if (currentFont2.getWeight() == CSSFontWeight.LIGHT) {
 					return getFont("dejavu/DejaVuSerif.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.NORMAL) {
+				if (currentFont2.getWeight() == CSSFontWeight.NORMAL) {
 					return getFont("dejavu/DejaVuSerif.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 				break;
@@ -51,26 +51,26 @@ public class CSSFontManager {
 			switch (currentFont2.getStyle()) {
 			case ITALIC:
 			case OBLIQUE:
-				if (currentFont2.getWeight() == fontweight.BOLD) {
+				if (currentFont2.getWeight() == CSSFontWeight.BOLD) {
 					return getFont("dejavu/DejaVuSansMono-BoldOblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.LIGHT) {
+				if (currentFont2.getWeight() == CSSFontWeight.LIGHT) {
 					return getFont("dejavu/DejaVuSansMono-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.NORMAL) {
+				if (currentFont2.getWeight() == CSSFontWeight.NORMAL) {
 					return getFont("dejavu/DejaVuSansMono-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 			
 				break;
 			case NORMAL:
 			default:
-				if (currentFont2.getWeight() == fontweight.BOLD) {
+				if (currentFont2.getWeight() == CSSFontWeight.BOLD) {
 					return getFont("dejavu/DejaVuSansMono-Bold.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.LIGHT) {
+				if (currentFont2.getWeight() == CSSFontWeight.LIGHT) {
 					return getFont("dejavu/DejaVuSansMono.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.NORMAL) {
+				if (currentFont2.getWeight() == CSSFontWeight.NORMAL) {
 					return getFont("dejavu/DejaVuSansMono.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 				break;
@@ -85,26 +85,26 @@ public class CSSFontManager {
 			switch (currentFont2.getStyle()) {
 			case ITALIC:
 			case OBLIQUE:
-				if (currentFont2.getWeight() == fontweight.BOLD) {
+				if (currentFont2.getWeight() == CSSFontWeight.BOLD) {
 					return getFont("dejavu/DejaVuSans-BoldOblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.LIGHT) {
+				if (currentFont2.getWeight() == CSSFontWeight.LIGHT) {
 					return getFont("dejavu/DejaVuSans-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.NORMAL) {
+				if (currentFont2.getWeight() == CSSFontWeight.NORMAL) {
 					return getFont("dejavu/DejaVuSans-Oblique.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 			
 				break;
 			case NORMAL:
 			default:
-				if (currentFont2.getWeight() == fontweight.BOLD) {
+				if (currentFont2.getWeight() == CSSFontWeight.BOLD) {
 					return getFont("dejavu/DejaVuSans-Bold.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.LIGHT) {
+				if (currentFont2.getWeight() == CSSFontWeight.LIGHT) {
 					return getFont("dejavu/DejaVuSans-ExtraLight.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
-				if (currentFont2.getWeight() == fontweight.NORMAL) {
+				if (currentFont2.getWeight() == CSSFontWeight.NORMAL) {
 					return getFont("dejavu/DejaVuSans.ttf", currentFont2.getFontsize(), currentFont2.getColor());
 				}
 				break;
