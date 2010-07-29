@@ -6,6 +6,7 @@ import java.util.List;
 import org.mt4j.MTApplication;
 import org.mt4j.components.MTComponent;
 import org.mt4j.components.TransformSpace;
+import org.mt4j.components.clipping.Clip;
 import org.mt4j.components.visibleComponents.font.FontManager;
 import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
@@ -38,6 +39,7 @@ public class SquareMenu extends MTRectangle implements CSSStylableComponent {
 	float size;
 	int current = 0;
 	int maxPerLine = 0;
+	float bezel = 10f;
 	
 	public SquareMenu(MTApplication app, Vector3D position, List<MenuItem> menuItems, float size) {
 		super(position.x, position.y,(float)(int)Math.sqrt(menuItems.size() + 1) * size,(float)(int)Math.sqrt(menuItems.size() + 1) * size, app );
@@ -51,7 +53,7 @@ public class SquareMenu extends MTRectangle implements CSSStylableComponent {
 		gestureListener gl = new gestureListener(this);
 		
 		for (MenuItem s: menuItems) {
-			if (s.getType() == MenuItem.TEXT) {
+			if (s != null && s.getType() == MenuItem.TEXT) {
 			MTRectangle container = new MTRectangle(0,0,size,size, app);
 			this.addChild(container);
 			container.removeAllGestureEventListeners(DragProcessor.class);
@@ -71,23 +73,84 @@ public class SquareMenu extends MTRectangle implements CSSStylableComponent {
 
 			
 			}
+				container.setGestureAllowance(DragProcessor.class, true);
+				container.registerInputProcessor(new DragProcessor(app));
+				container.addGestureListener(DragProcessor.class, gl);
+				container.setChildClip(new Clip(container));
+				
+				container.setGestureAllowance(RotateProcessor.class, false);
+				container.setGestureAllowance(ScaleProcessor.class, false);
+				menuContents.add(container);
+			} else if (s != null && s.getType() == MenuItem.PICTURE) {
+				
+				if (s.getMenuImage() != null) {
+					PImage texture = null;
+					if (s.getMenuImage().width != (int)size || s.getMenuImage().height != (int)size) {
+						texture = cropImage(s.getMenuImage(), (int)size, true);						
+					} else {
+						texture = s.getMenuImage();
+					}
+					
+					MTRectangle container = new MTRectangle(0,0,size,size, app);
+					this.addChild(container);
+					container.setTexture(texture);
+					container.removeAllGestureEventListeners(DragProcessor.class);
+					
+					container.setGestureAllowance(TapProcessor.class, true);
+					container.registerInputProcessor(new TapProcessor(app));
+					container.addGestureListener(TapProcessor.class, s.getGestureListener());
+					
+					
+					
+					
+					
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			}
+				
 			
-			container.setGestureAllowance(DragProcessor.class, true);
-			container.registerInputProcessor(new DragProcessor(app));
-			container.addGestureListener(DragProcessor.class, gl);
 			
-			container.setGestureAllowance(RotateProcessor.class, false);
-			container.setGestureAllowance(ScaleProcessor.class, false);
-			menuContents.add(container);
 			
 
 			
 			
-			}
+			
 		}
 		this.setCssForceDisable(true);
 		this.styleChildren(getNecessaryFontSize(menuItems, size));
 		
+	}
+	
+	private PImage cropImage(PImage image, int size, boolean resize) {
+		PImage returnImage = app.createImage(size, size, app.RGB);
+		if (resize) {
+			if (image.width < image.height) {
+				image.resize(size, image.height / (image.width / size));
+			} else {
+				image.resize(image.width / (image.height / size), size);
+			}
+
+		}
+		int x = (image.width / 2) - (size / 2);
+		int y = (image.height / 2) - (size / 2);
+		
+		
+		returnImage.copy(image, x, y, size, size, 0, 0, size, size);
+		
+		
+		
+		
+		return returnImage;
 	}
 	
 	public class gestureListener implements IGestureEventListener {
@@ -173,7 +236,7 @@ public class SquareMenu extends MTRectangle implements CSSStylableComponent {
 		for (List<MTRectangle> lr: layout) {
 			int currentColumn = 0;
 			for (MTRectangle r: lr) {
-				r.setPositionRelativeToParent((new Vector3D(this.getVerticesLocal()[0].x + (size / 2f) + currentColumn++ * size + (maxPerLine - lr.size()) * size/2f, this.getVerticesLocal()[0].x + size/2 + currentRow * size)));
+				r.setPositionRelativeToParent((new Vector3D(this.getVerticesLocal()[0].x + (size / 2f) + (bezel / 2f) + currentColumn++ * (size + bezel) + (maxPerLine - lr.size()) * (size/2f + bezel/2f), this.getVerticesLocal()[0].x + (size/2 + bezel/2f) + currentRow * (size + bezel))));
 			}
 			currentRow++;
 		}
@@ -338,7 +401,7 @@ public class SquareMenu extends MTRectangle implements CSSStylableComponent {
 		
 		
 		float spc = size / (float)maxNumberCharacters; //Space Per Character
-		spc *= 1.1;
+		spc *= 1.05;
 		System.out.println("Max Characters " + maxNumberCharacters + ", Space per Character: " + spc);
 		
 		
