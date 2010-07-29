@@ -27,6 +27,7 @@ import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
+import org.mtdj.menu.util.HexagonMenu;
 
 
 import processing.core.PImage;
@@ -76,17 +77,10 @@ public class TestMenus  extends AbstractScene{
 			menus.add(new MenuItem(i100, gl));
 			menus.add(new MenuItem(i200300, gl));
 			
-			MTSquareMenu sm = new MTSquareMenu(app, new Vector3D(200,200),  menus, 100);
-			this.getCanvas().addChild(sm);
-			
-			MTTextArea ta = new MTTextArea(app);
-			ta.setText("Hallo");
-			this.getCanvas().addChild(ta);
-			ta.setGestureAllowance(TapProcessor.class, true);
-			ta.registerInputProcessor(new TapProcessor(app));
-			ta.addGestureListener(TapProcessor.class, new gestureListener(ta));
-			
-			ta.setNoFill(true);
+			//MTSquareMenu sm = new MTSquareMenu(app, new Vector3D(200,200),  menus, 100);
+			//this.getCanvas().addChild(sm);
+			HexagonMenu hm = new HexagonMenu(app, new Vector3D(200,200),  menus, 100);
+			this.getCanvas().addChild(hm);
 			
 	}
 
