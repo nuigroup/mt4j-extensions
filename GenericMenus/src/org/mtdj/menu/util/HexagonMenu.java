@@ -16,6 +16,7 @@ import org.mt4j.components.visibleComponents.widgets.menus.MTSquareMenu.gestureL
 import org.mt4j.css.style.CSSFont;
 import org.mt4j.css.style.CSSStyle;
 import org.mt4j.css.util.CSSFontManager;
+import org.mt4j.css.util.CSSHelper;
 import org.mt4j.css.util.CSSStylableComponent;
 import org.mt4j.css.util.CSSKeywords.CSSFontWeight;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
@@ -28,6 +29,7 @@ import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProces
 import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
+import org.mt4j.util.opengl.GLTexture;
 
 import processing.core.PImage;
 
@@ -90,18 +92,35 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 				if (s.getMenuImage() != null) {
 					PImage texture = null;
 					MTPolygon container = getHexagon(size);
+					container.setCssForceDisable(true);
 					int height = (int)container.getHeightXY(TransformSpace.LOCAL);
-					
-					if (s.getMenuImage().width != height
+					System.out.println("Height: " + height + " Image Width: " + s.getMenuImage().width + " Image Height: " + s.getMenuImage().height);
+					if (s.getMenuImage().width != size
 							|| s.getMenuImage().height != height) {
-						texture = cropImage(s.getMenuImage(), height, true);
+						texture = cropImage(s.getMenuImage(), (int)size, height, true);
 					} else {
 						texture = s.getMenuImage();
 					}
-
+					System.out.println("Height: " + height + " Texture Width: " + texture.width + " Texture Height: " + texture.height);
+					
+					MTRectangle rect = new MTRectangle(texture,app);
+					this.addChild(rect);
 					
 					this.addChild(container);
+					
+					for (Vertex v:container.getVerticesLocal()) {
+						System.out.println("Before:\nVertex: " + v  + "\nTexture Coordinates: " + v.getTexCoordU() + " " + v.getTexCoordV());
+						v.setTexCoordU(v.getX() / (float)texture.width);
+						if (v.getTexCoordU() > 1) v.setTexCoordU(1);
+						v.setTexCoordV(v.getY() / (float)texture.height);
+						if (v.getTexCoordV() > 1) v.setTexCoordV(1);
+						System.out.println("After:\nVertex: " + v  + "\nTexture Coordinates: " + v.getTexCoordU() + " " + v.getTexCoordV());
+					}
+					
+					
+					container.getGeometryInfo().setTextureCoordsNormalized(true);
 					container.setTexture(texture);
+					
 					container
 							.removeAllGestureEventListeners(DragProcessor.class);
 
@@ -130,37 +149,42 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 	}
 	
 	
-	private PImage cropImage(PImage image, int size, boolean resize) {
-		PImage returnImage = app.createImage(size, size, app.RGB);
+	private PImage cropImage(PImage image, int width, int height, boolean resize) {
+	
+		PImage returnImage = app.createImage(width, height, app.RGB);
 		if (resize || image.width < size || image.height < size) {
-			if (image.width < image.height) {
+			if (((float)image.width / (float)width) < ((float)image.height / (float)height)) {
 				image.resize(
-						size,
-						(int) ((float) image.height / ((float) image.width / (float) size)));
+						width,
+						(int) ((float) image.height / ((float) image.width / (float) width)));
 			} else {
 				image.resize(
-						(int) ((float) image.width / ((float) image.height / (float) size)),
-						size);
+						(int) ((float) image.width / ((float) image.height / (float) height)),
+						height);
 			}
 
 		}
-		int x = (image.width / 2) - (size / 2);
-		int y = (image.height / 2) - (size / 2);
+		
+		System.out.println("Image Size after Resize: " + image.width + "x" + image.height);
+		
+		int x = (image.width / 2) - (width / 2);
+		int y = (image.height / 2) - (height / 2);
 
-		if (x + size > image.width)
-			x = image.width - size;
+		if (x + width > image.width)
+			x = image.width - width;
 		if (x < 0)
 			x = 0;
-		if (x + size > image.width)
-			size = image.width - x;
-		if (y + size > image.height)
-			x = image.height - size;
+		if (x + width > image.width)
+			width = image.width - x;
+		if (y + height > image.height)
+			x = image.height - height;
 		if (y < 0)
 			y = 0;
-		if (y + size > image.height)
-			size = image.height - y;
+		if (y + height > image.height)
+			height = image.height - y;
 
-		returnImage.copy(image, x, y, size, size, 0, 0, size, size);
+		
+		returnImage.copy(image, x, y, width, height, 0, 0, width, height);
 
 		return returnImage;
 	}
@@ -236,7 +260,9 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 			}
 
 		}
-
+		
+		float hypotenuse = (float)((size/2f) / Math.cos(Math.toRadians(30)));
+		float gegenkathete = (float) (Math.sin(Math.toRadians(30)) * hypotenuse);
 		int currentRow = 0;
 		for (List<MTPolygon> lr : layout) {
 			int currentColumn = 0;
@@ -248,8 +274,8 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 						+ currentColumn++
 						* (size + bezel)
 						+ (maxPerLine - lr.size()) * (size / 2f + bezel / 2f),
-						this.getVerticesLocal()[0].y + (size / 2 + bezel / 2f)
-								+ currentRow * (size + bezel))));
+						this.getVerticesLocal()[0].y + (hypotenuse / 2 + bezel / 2f)
+								+ currentRow * (hypotenuse + gegenkathete + bezel))));
 			}
 			currentRow++;
 		}
@@ -479,12 +505,13 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 		Vertex v4 = new Vertex(size, gegenkathete + hypotenuse);
 		Vertex v5 = new Vertex(size/2f, 2 * gegenkathete + hypotenuse);
 		Vertex v6 = new Vertex(0, gegenkathete + hypotenuse);
+		Vertex v7 = new Vertex(0, gegenkathete);
 		
 		
 		System.out.println("Kosinus: " + hypotenuse + " Distance: " + v1.distance2D(v2));
 		System.out.println(v1 + " " + v2 + " " + v3 + " "+ v4 + " " + v5 + " " + v6);
 		
-		MTPolygon hexagon = new MTPolygon(app, new Vertex[] {v1,v2,v3,v4,v5,v6,v1});
+		MTPolygon hexagon = new MTPolygon(app, new Vertex[] {v1,v2,v3,v4,v5,v6,v7});
 		
 		return hexagon;
 	}
