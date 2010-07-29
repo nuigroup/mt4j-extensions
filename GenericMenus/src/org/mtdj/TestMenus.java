@@ -14,6 +14,8 @@ import org.mt4j.components.visibleComponents.shapes.MTPolygon;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTImage;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
+import org.mt4j.components.visibleComponents.widgets.menus.MTSquareMenu;
+import org.mt4j.components.visibleComponents.widgets.menus.MenuItem;
 import org.mt4j.css.parser.CSSParserConnection;
 import org.mt4j.css.style.CSSStyle;
 import org.mt4j.css.util.CSSStyleManager;
@@ -25,8 +27,7 @@ import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
-import org.mtdj.menu.MenuItem;
-import org.mtdj.menu.SquareMenu;
+
 
 import processing.core.PImage;
 
@@ -55,6 +56,11 @@ public class TestMenus  extends AbstractScene{
 			app.getCssStyleManager().loadStyles("menutest.css");
 			logger.addAppender(ca);
 			
+			PImage i64 = app.loadImage("64x64_1.jpg");
+			PImage i100 = app.loadImage("100x100.jpg");
+			PImage i200300 = app.loadImage("200x300.jpg");
+			
+			
 			gestureListener gl = new gestureListener(null);
 			
 			List<MenuItem> menus = new ArrayList<MenuItem>();
@@ -66,8 +72,11 @@ public class TestMenus  extends AbstractScene{
 			menus.add(new MenuItem("Trade", gl));
 			menus.add(new MenuItem("Cancel", gl));
 			menus.add(new MenuItem("Undo", gl));
+			menus.add(new MenuItem(i64, gl));
+			menus.add(new MenuItem(i100, gl));
+			menus.add(new MenuItem(i200300, gl));
 			
-			SquareMenu sm = new SquareMenu(app, new Vector3D(200,200),  menus, 100);
+			MTSquareMenu sm = new MTSquareMenu(app, new Vector3D(200,200),  menus, 100);
 			this.getCanvas().addChild(sm);
 			
 			MTTextArea ta = new MTTextArea(app);
