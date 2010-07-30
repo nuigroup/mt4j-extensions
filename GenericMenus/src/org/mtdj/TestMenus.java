@@ -28,7 +28,6 @@ import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
-import org.mtdj.menu.util.HexagonMenu;
 
 
 import processing.core.PImage;
