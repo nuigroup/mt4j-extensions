@@ -14,6 +14,7 @@ import org.mt4j.components.visibleComponents.shapes.MTPolygon;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTImage;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
+import org.mt4j.components.visibleComponents.widgets.menus.MTHexagonMenu;
 import org.mt4j.components.visibleComponents.widgets.menus.MTSquareMenu;
 import org.mt4j.components.visibleComponents.widgets.menus.MenuItem;
 import org.mt4j.css.parser.CSSParserConnection;
@@ -79,7 +80,7 @@ public class TestMenus  extends AbstractScene{
 			
 			//MTSquareMenu sm = new MTSquareMenu(app, new Vector3D(200,200),  menus, 100);
 			//this.getCanvas().addChild(sm);
-			HexagonMenu hm = new HexagonMenu(app, new Vector3D(200,200),  menus, 175);
+			MTHexagonMenu hm = new MTHexagonMenu(app, new Vector3D(200,200),  menus, 175);
 			this.getCanvas().addChild(hm);
 			
 	}

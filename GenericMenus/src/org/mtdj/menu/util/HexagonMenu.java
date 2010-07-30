@@ -12,27 +12,21 @@ import org.mt4j.components.visibleComponents.shapes.MTPolygon;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.menus.MenuItem;
-import org.mt4j.components.visibleComponents.widgets.menus.MTSquareMenu.gestureListener;
 import org.mt4j.css.style.CSSFont;
 import org.mt4j.css.style.CSSStyle;
 import org.mt4j.css.util.CSSFontManager;
-import org.mt4j.css.util.CSSHelper;
 import org.mt4j.css.util.CSSStylableComponent;
 import org.mt4j.css.util.CSSKeywords.CSSFontWeight;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
-import org.mt4j.input.inputProcessors.componentProcessors.rotateProcessor.RotateProcessor;
-import org.mt4j.input.inputProcessors.componentProcessors.scaleProcessor.ScaleProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Tools3D;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
-import org.mt4j.util.opengl.GLTexture;
 
+import processing.core.PConstants;
 import processing.core.PImage;
 
 public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
@@ -52,25 +46,23 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 				.sqrt(menuItems.size() + 1) * size, app);
 		this.app = app;
 		this.size = size;
+		
+		//Set the Rectangle to be invisible
 		this.setCssForceDisable(true);
-
 		this.setNoFill(true);
 		this.setNoStroke(true);
-
-		gestureListener gl = new gestureListener(this);
-
+		
+		//List of the Child Polygons and their IGestureEventListeners
+		List<PolygonListeners> pl = new ArrayList<PolygonListeners>();
+		
 		for (MenuItem s : menuItems) {
 			
 			if (s != null && s.getType() == MenuItem.TEXT) {
+				//Create Hexagon with Text Included
 				MTPolygon container = getHexagon(size);
 				this.addChild(container);
-				container.removeAllGestureEventListeners(DragProcessor.class);
 
-				container.setGestureAllowance(TapProcessor.class, true);
-				container.registerInputProcessor(new TapProcessor(app));
-				container.addGestureListener(TapProcessor.class,
-						s.getGestureListener());
-
+				//Add MTTextArea Children to take single lines of the Menu Text
 				for (String t : s.getMenuText().split("\n")) {
 					MTTextArea menuItem = new MTTextArea(app);
 					menuItem.setText(t);
@@ -81,76 +73,67 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 					container.addChild(menuItem);
 
 				}
-				container.setGestureAllowance(DragProcessor.class, true);
-				container.registerInputProcessor(new DragProcessor(app));
-				container.addGestureListener(DragProcessor.class, gl);
 				container.setChildClip(new Clip(container));
-
-				container.setGestureAllowance(RotateProcessor.class, false);
-				container.setGestureAllowance(ScaleProcessor.class, false);
+				container.setPickable(false);
+				pl.add(new PolygonListeners(container, s.getGestureListener()));
 				menuContents.add(container);
 			} else if (s != null && s.getType() == MenuItem.PICTURE) {
-
+				
 				if (s.getMenuImage() != null) {
+					//Create Polygon for holding an Image
 					PImage texture = null;
 					MTPolygon container = getHexagon(size);
 					container.setCssForceDisable(true);
 					int height = (int)container.getHeightXY(TransformSpace.LOCAL);
-					System.out.println("Height: " + height + " Image Width: " + s.getMenuImage().width + " Image Height: " + s.getMenuImage().height);
+
+					
+					//If Image doesn't fit, make it fit!
 					if (s.getMenuImage().width != size
 							|| s.getMenuImage().height != height) {
 						texture = cropImage(s.getMenuImage(), (int)size, height, true);
 					} else {
 						texture = s.getMenuImage();
 					}
-					System.out.println("Height: " + height + " Texture Width: " + texture.width + " Texture Height: " + texture.height);
-					
+		
 					this.addChild(container);
 					
+					//Normalize Texture Coordinates
 					for (Vertex v:container.getVerticesLocal()) {
-						System.out.println("Before:\nVertex: " + v  + "\nTexture Coordinates: " + v.getTexCoordU() + " " + v.getTexCoordV());
 						v.setTexCoordU(v.getX() / (float)texture.width);
 						if (v.getTexCoordU() > 1) v.setTexCoordU(1);
 						v.setTexCoordV(v.getY() / (float)texture.height);
 						if (v.getTexCoordV() > 1) v.setTexCoordV(1);
-						System.out.println("After:\nVertex: " + v  + "\nTexture Coordinates: " + v.getTexCoordU() + " " + v.getTexCoordV());
 					}
 					
-					
+					//Set the Texture
 					container.getGeometryInfo().setTextureCoordsNormalized(true);
 					container.setTexture(texture);
-					
-					container
-							.removeAllGestureEventListeners(DragProcessor.class);
-
-					container.setGestureAllowance(TapProcessor.class, true);
-					container.registerInputProcessor(new TapProcessor(app));
-					container.addGestureListener(TapProcessor.class,
-							s.getGestureListener());
-
-					container.setGestureAllowance(DragProcessor.class, true);
-					container.registerInputProcessor(new DragProcessor(app));
-					container.addGestureListener(DragProcessor.class, gl);
-					container.setChildClip(new Clip(container));
-
-					container.setGestureAllowance(RotateProcessor.class, false);
-					container.setGestureAllowance(ScaleProcessor.class, false);
+	
 					menuContents.add(container);
-
+					container.setPickable(false);
+					pl.add(new PolygonListeners(container, s.getGestureListener()));
 				}
 
 			}
 
 		}
+		//Register the TapProcessor
+		this.setGestureAllowance(TapProcessor.class, true);
+		this.registerInputProcessor(new TapProcessor(app));
+		this.addGestureListener(TapProcessor.class, new TapListener(pl));
 		this.setCssForceDisable(true);
+		
+		//Apply Style to Children
 		this.styleChildren(getNecessaryFontSize(menuItems, size));
 		
 	}
 	
 	
 	private PImage cropImage(PImage image, int width, int height, boolean resize) {
-	
-		PImage returnImage = app.createImage(width, height, app.RGB);
+		//Crops an Image to fit to the Hexagon Size
+		PImage returnImage = app.createImage(width, height, PConstants.RGB);
+		
+		//Resize Image to match size, but retain aspect ration
 		if (resize || image.width < size || image.height < size) {
 			if (((float)image.width / (float)width) < ((float)image.height / (float)height)) {
 				image.resize(
@@ -164,11 +147,11 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 
 		}
 		
-		System.out.println("Image Size after Resize: " + image.width + "x" + image.height);
-		
+		//Crop Starting Points
 		int x = (image.width / 2) - (width / 2);
 		int y = (image.height / 2) - (height / 2);
 
+		//Bugfixing: Don't Allow Out-of-Bounds coordinates
 		if (x + width > image.width)
 			x = image.width - width;
 		if (x < 0)
@@ -182,48 +165,29 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 		if (y + height > image.height)
 			height = image.height - y;
 
-		
+		//Crop Image
 		returnImage.copy(image, x, y, width, height, 0, 0, width, height);
 
 		return returnImage;
-	}
-
-	public class gestureListener implements IGestureEventListener {
-		MTPolygon r;
-		boolean react;
-
-		public gestureListener(MTPolygon r) {
-			super();
-			this.r = r;
-			System.out.println("Initialized gestureListener");
-		}
-
-		@Override
-		public boolean processGestureEvent(MTGestureEvent ge) {
-			// TODO: Remove Dirty Hack
-			if (ge instanceof DragEvent && react) {
-				DragEvent de = (DragEvent) ge;
-				r.translate(de.getTranslationVect());
-			}
-			react = !react;
-			return true;
-		}
 	}
 
 	private void styleChildren(int fontsize) {
 		organizeHexagons();
 		CSSStyle vss = this.getCssHelper().getVirtualStyleSheet();
 		CSSFont cf = this.getCssHelper().getVirtualStyleSheet().getCssfont();
+		//Style Font: Bold + fitting fontsize
 		cf.setFontsize(fontsize);
 		cf.setWeight(CSSFontWeight.BOLD);
+		
+		//Load Font
 		CSSFontManager cfm = new CSSFontManager(app);
 		IFont font = cfm.selectFont(cf);
-		int i = 0;
-		// System.out.println("Fill Color: " + vss.getBackgroundColor());
+
 		for (MTPolygon c : menuContents) {
 
 			MTPolygon rect = c;
-
+			
+			//Set Stroke/Border
 			rect.setStrokeColor(vss.getBorderColor());
 			rect.setStrokeWeight(vss.getBorderWidth());
 			
@@ -262,9 +226,14 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 
 		}
 		
+		//Min/Max Values of the Children
+		float minx = 16000, maxx = -16000, miny = 16000, maxy = -16000;
+		
 		float hypotenuse = (float)((size/2f) / Math.cos(Math.toRadians(30)));
 		float gegenkathete = (float) (Math.sin(Math.toRadians(30)) * hypotenuse);
 		int currentRow = 0;
+		
+		//Position the Polygons in the grid
 		for (List<MTPolygon> lr : layout) {
 			int currentColumn = 0;
 			for (MTPolygon r : lr) {
@@ -277,13 +246,24 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 						+ (maxPerLine - lr.size()) * (size / 2f + bezel / 2f),
 						this.getVerticesLocal()[0].y + (hypotenuse / 2 + bezel / 2f)
 								+ currentRow * (hypotenuse + gegenkathete + bezel))));
+				
+				//Determine Min/Max-Positions
+				for (Vertex v: r.getVerticesGlobal()) {
+					if (v.x < minx) minx = v.x;
+					if (v.x > maxx) maxx = v.x;
+					if (v.y < miny) miny = v.y;
+					if (v.y > maxy) maxy = v.y;
+				}
 			}
 			currentRow++;
 		}
-
+		
+		//Set Vertices to include all children
+		this.setVertices(new Vertex[] {new Vertex(minx,miny), new Vertex(maxx,miny), new Vertex(maxx,maxy), new Vertex(minx,maxy),new Vertex(minx,miny)});
 	}
 	
 	private List<MTPolygon> next(int next) {
+		//Return the next n MTPolygons from the list of children
 		List<MTPolygon> returnValues = new ArrayList<MTPolygon>();
 		for (int i = 0; i < next; i++) {
 			returnValues.add(menuContents.get(current++));
@@ -293,6 +273,7 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 	}
 
 	private float calcTotalHeight(MTComponent[] components) {
+		//Calculate the total height of several MTTextAreas
 		float height = 0;
 		for (MTComponent c : components) {
 			if (c instanceof MTTextArea)
@@ -303,6 +284,7 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 	}
 	
 	private int getNecessaryFontSize(List<MenuItem> strings, float size) {
+		//Calculate the Necessary font size for a SansSerif Bold font
 		int maxNumberCharacters = 0;
 
 		for (MenuItem s : strings) {
@@ -460,6 +442,8 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 	}
 	
 	public class TapListener implements IGestureEventListener {
+		//Tap Listener to reach through TapListeners to children
+		
 		List<PolygonListeners> children;
 		public TapListener(List<PolygonListeners> children) {
 			this.children = children;
@@ -469,14 +453,18 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 		@Override
 		public boolean processGestureEvent(MTGestureEvent ge) {
 			if (ge instanceof TapEvent) {
+				
 				TapEvent te = (TapEvent)ge;
 				if (te.getTapID() == TapEvent.BUTTON_CLICKED) {
-					
+					Vector3D w = Tools3D.project(app, app.getCurrentScene().getSceneCam(), te.getLocationOnScreen());
 					for (PolygonListeners pl: children) {
-						
-						if (pl.component.getIntersectionGlobal(Tools3D.getCameraPickRay(app, pl.component, te.getLocationOnScreen().getX(), te.getLocationOnScreen().getY())) != null) {
+						pl.component.setPickable(true);
+						if (pl.component.getIntersectionGlobal(Tools3D.getCameraPickRay(app, pl.component, w.getX(), w.getY())) != null) {
 							pl.listener.processGestureEvent(ge);
+						} else {
+					
 						}
+						pl.component.setPickable(false);
 					}
 				}
 			}
@@ -487,6 +475,9 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 		
 		
 	}
+	
+
+	
 	
 	public class PolygonListeners {
 		public MTPolygon component;
