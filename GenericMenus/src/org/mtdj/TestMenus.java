@@ -62,24 +62,24 @@ public class TestMenus  extends AbstractScene{
 			PImage i200300 = app.loadImage("200x300.jpg");
 			
 			
-			gestureListener gl = new gestureListener(null);
+			gestureListener gl = new gestureListener("Generic");
 			
 			List<MenuItem> menus = new ArrayList<MenuItem>();
-			menus.add(new MenuItem("Start", gl));
-			menus.add(new MenuItem("Open", gl));
-			menus.add(new MenuItem("Close", gl));
-			menus.add(new MenuItem("Exit", gl));
-			menus.add(new MenuItem("Rough", gl));
-			menus.add(new MenuItem("Trade", gl));
-			menus.add(new MenuItem("Cancel", gl));
-			menus.add(new MenuItem("Undo", gl));
-			menus.add(new MenuItem(i64, gl));
-			menus.add(new MenuItem(i100, gl));
-			menus.add(new MenuItem(i200300, gl));
+			menus.add(new MenuItem("Start", new gestureListener("Start")));
+			menus.add(new MenuItem("Open", new gestureListener("Open")));
+			menus.add(new MenuItem("Close", new gestureListener("Close")));
+			menus.add(new MenuItem("Exit", new gestureListener("Exit")));
+			menus.add(new MenuItem("Rough", new gestureListener("Rough")));
+			menus.add(new MenuItem("Trade", new gestureListener("Trade")));
+			menus.add(new MenuItem("Cancel", new gestureListener("Cancel")));
+			menus.add(new MenuItem("Undo", new gestureListener("Undo")));
+			menus.add(new MenuItem(i64, new gestureListener("Parkschild")));
+			menus.add(new MenuItem(i100, new gestureListener("Tudors")));
+			menus.add(new MenuItem(i200300, new gestureListener("Kite Surfer")));
 			
 			//MTSquareMenu sm = new MTSquareMenu(app, new Vector3D(200,200),  menus, 100);
 			//this.getCanvas().addChild(sm);
-			HexagonMenu hm = new HexagonMenu(app, new Vector3D(200,200),  menus, 100);
+			HexagonMenu hm = new HexagonMenu(app, new Vector3D(200,200),  menus, 175);
 			this.getCanvas().addChild(hm);
 			
 	}
@@ -97,21 +97,20 @@ public class TestMenus  extends AbstractScene{
 	}
 
 	public class gestureListener implements IGestureEventListener {
-		MTTextArea ta;
-		public gestureListener(MTTextArea ta) {
+		String string;
+		public gestureListener(String string) {
 			super();
-			this.ta = ta;
-			System.out.println("Initialized gestureListener");
+			this.string = string;
 		}
 		
 		
 		@Override
 		public boolean processGestureEvent(MTGestureEvent ge) {
-			if (ta != null) ta.setNoFill(!ta.isNoFill());
+
 			if (ge instanceof TapEvent) {
 				TapEvent te = (TapEvent) ge;
 				if (te.getTapID() == TapEvent.BUTTON_CLICKED) {
-					System.out.println("Click");
+					System.out.println(string);
 				}
 			}
 			return true;

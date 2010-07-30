@@ -25,8 +25,10 @@ import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragEven
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.rotateProcessor.RotateProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.scaleProcessor.ScaleProcessor;
+import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
 import org.mt4j.util.MTColor;
+import org.mt4j.util.math.Tools3D;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
 import org.mt4j.util.opengl.GLTexture;
@@ -102,9 +104,6 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 						texture = s.getMenuImage();
 					}
 					System.out.println("Height: " + height + " Texture Width: " + texture.width + " Texture Height: " + texture.height);
-					
-					MTRectangle rect = new MTRectangle(texture,app);
-					this.addChild(rect);
 					
 					this.addChild(container);
 					
@@ -225,18 +224,17 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 
 			MTPolygon rect = c;
 
-			//c.setWidthLocal(size);
-			//c.setHeightLocal(size);
-
 			rect.setStrokeColor(vss.getBorderColor());
-			// System.out.println("Border Color: " + vss.getBorderColor());
+			rect.setStrokeWeight(vss.getBorderWidth());
+			
+			
+			
+			//Set Font and Position for the child MTTextAreas
 			if (((MTPolygon) c).getTexture() == null) {
 				rect.setFillColor(vss.getBackgroundColor());
 				for (MTComponent d : c.getChildren()) {
 					if (d instanceof MTTextArea) {
 						MTTextArea ta = (MTTextArea) d;
-						// System.out.println("Setting Font for Part " +
-						// ta.getText());
 						ta.setFont(font);
 					}
 				}
@@ -256,7 +254,10 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 
 				}
 			} else {
-				rect.setFillColor(MTColor.WHITE);
+				//Set Fill Color for Pictures
+				MTColor fillColor = MTColor.WHITE;
+				//fillColor.setAlpha(vss.getOpacity());
+				rect.setFillColor(fillColor);
 			}
 
 		}
@@ -324,69 +325,13 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 		}
 
 		float spc = size / (float) maxNumberCharacters; // Space Per Character
-
-		System.out.println("Max Characters " + maxNumberCharacters
-				+ ", Space per Character: " + spc);
-
-		// 16 = 2x Padding
-
-		if (spc < 4) {
-			return 6;
-		} else if (spc < 4.5384617) {
-			return 7;
-		} else if (spc < 4.8653846) {
-			return 8;
-		} else if (spc < 5.769231) {
-			return 9;
-		} else if (spc < 6.3461537) {
-			return 10;
-		} else if (spc < 6.5) {
-			return 11;
-		} else if (spc < 7.25) {
-			return 12;
-		} else if (spc < 7.7884617) {
-			return 13;
-		} else if (spc < 8.269231) {
-			return 14;
-		} else if (spc < 8.769231) {
-			return 15;
-		} else if (spc < 9.384615) {
-			return 16;
-		} else if (spc < 9.692307) {
-			return 17;
-		} else if (spc < 10.692307) {
-			return 18;
-		} else if (spc < 11.442307) {
-			return 19;
-		} else if (spc < 11.711538) {
-			return 20;
-		} else if (spc < 12.307693) {
-			return 21;
-		} else if (spc < 13.019231) {
-			return 22;
-		} else if (spc < 13.5) {
-			return 23;
-		} else if (spc < 14.269231) {
-			return 24;
-		} else if (spc < 14.942307) {
-			return 25;
-		} else if (spc < 15.384615) {
-			return 26;
-		} else if (spc < 16.038462) {
-			return 27;
-		} else if (spc < 16.615385) {
-			return 28;
-		} else if (spc < 17.192308) {
-			return 29;
-		} else if (spc < 17.75) {
-			return 30;
-		} else {
-			return 30;
-		}
+		int returnValue = (int)(-0.5 + 1.725 * spc); //Determined using Linear Regression
+		return returnValue;
 
 	}
 	
 	private void organizeHexagons() {
+		//Distribute the items on the cell rows		
 		layout.clear();
 		layout.add(new ArrayList<MTPolygon>());
 		layout.add(new ArrayList<MTPolygon>());
@@ -495,6 +440,7 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 	}
 	
 	private MTPolygon getHexagon(float size) {
+		//Create a new Polygon
 		float hypotenuse = (float)((size/2f) / Math.cos(Math.toRadians(30)));
 		float ankathete = (float)(Math.cos(Math.toRadians(30)) * hypotenuse);
 		float gegenkathete = (float) (Math.sin(Math.toRadians(30)) * hypotenuse);
@@ -508,13 +454,51 @@ public class HexagonMenu extends MTRectangle implements CSSStylableComponent {
 		Vertex v7 = new Vertex(0, gegenkathete);
 		
 		
-		System.out.println("Kosinus: " + hypotenuse + " Distance: " + v1.distance2D(v2));
-		System.out.println(v1 + " " + v2 + " " + v3 + " "+ v4 + " " + v5 + " " + v6);
-		
 		MTPolygon hexagon = new MTPolygon(app, new Vertex[] {v1,v2,v3,v4,v5,v6,v7});
 		
 		return hexagon;
 	}
+	
+	public class TapListener implements IGestureEventListener {
+		List<PolygonListeners> children;
+		public TapListener(List<PolygonListeners> children) {
+			this.children = children;
+		}
+		
+		
+		@Override
+		public boolean processGestureEvent(MTGestureEvent ge) {
+			if (ge instanceof TapEvent) {
+				TapEvent te = (TapEvent)ge;
+				if (te.getTapID() == TapEvent.BUTTON_CLICKED) {
+					
+					for (PolygonListeners pl: children) {
+						
+						if (pl.component.getIntersectionGlobal(Tools3D.getCameraPickRay(app, pl.component, te.getLocationOnScreen().getX(), te.getLocationOnScreen().getY())) != null) {
+							pl.listener.processGestureEvent(ge);
+						}
+					}
+				}
+			}
+			return false;
+		}
+		
+		
+		
+		
+	}
+	
+	public class PolygonListeners {
+		public MTPolygon component;
+		public IGestureEventListener listener;
+		
+		public PolygonListeners(MTPolygon component, IGestureEventListener listener) {
+			this.component = component;
+			this.listener = listener;
+		}
+		
+	}
+	
 	
 }
 
