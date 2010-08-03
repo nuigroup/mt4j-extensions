@@ -28,6 +28,10 @@ import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
+import org.mtdj.menu.util.MTCheckbox;
+import org.mtdj.menu.util.MTOptionBox;
+import org.mtdj.menu.util.MTTextInput;
+import org.mtdj.menu.util.OptionGroup;
 
 
 import processing.core.PImage;
@@ -81,6 +85,22 @@ public class TestMenus  extends AbstractScene{
 			//this.getCanvas().addChild(sm);
 			MTHexagonMenu hm = new MTHexagonMenu(app, new Vector3D(200,200),  menus, 175);
 			this.getCanvas().addChild(hm);
+			
+			this.getCanvas().addChild(new MTCheckbox(40, app));
+			OptionGroup group = new OptionGroup();
+			MTOptionBox box1 = new MTOptionBox(40,app, group);
+			MTOptionBox box2 = new MTOptionBox(40,app, group);
+			this.getCanvas().addChild(box1);
+			this.getCanvas().addChild(box2);
+			box1.setPositionGlobal(new Vector3D(200,200));
+			box2.setPositionGlobal(new Vector3D(200,250));
+			
+			MTTextArea ta = new MTTextArea(app);
+			ta.setText("Teststring");
+			this.getCanvas().addChild(ta);
+			MTTextInput ti = new MTTextInput(ta, 20, app);
+			this.getCanvas().addChild(ti);
+			
 			
 	}
 
