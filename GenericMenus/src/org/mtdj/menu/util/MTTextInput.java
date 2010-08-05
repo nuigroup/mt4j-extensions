@@ -1,10 +1,16 @@
 package org.mtdj.menu.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.mt4j.MTApplication;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.font.FontManager;
 import org.mt4j.components.visibleComponents.font.IFont;
 import org.mt4j.components.visibleComponents.shapes.MTPolygon;
+import org.mt4j.components.visibleComponents.widgets.MTList;
+import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.keyboard.MTKeyboard;
 import org.mt4j.css.style.CSSFont;
@@ -20,6 +26,7 @@ import org.mt4j.util.math.Vertex;
 import org.mtdj.menu.util.MTForm.BooleanTapListener;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 
 public class MTTextInput extends MTForm{
 	String accept = "Accept";
@@ -30,12 +37,27 @@ public class MTTextInput extends MTForm{
 	MTTextArea discardButton;
 	MTKeyboard keyboard;
 	MTTextArea ta;
+	String lastText = "";
+	MTApplication app;
+	int fontsize;
+	
+	
+	
+	boolean suggestionsEnabled = false;
+	List<String> availableValues = new ArrayList<String>();
+	MTList list;
+	HashMap<String, MTTextArea> textCache = new HashMap<String,MTTextArea>();
+	List<MTTextArea> currentList;
+	
+
+	
 	
 	public MTTextInput(MTTextArea ta, int fontsize,
 			MTApplication app) {
 		super(0, 0, fontsize * 20, fontsize * 10, app, MTForm.BOOLEAN);
 		this.ta = ta;
-		
+		this.app = app;
+		this.fontsize = fontsize;
 		
 		
 		if (this.isCSSStyled() && this.getCssHelper().getVirtualStyleSheet().isModifiedCssfont()) {
@@ -96,25 +118,36 @@ public class MTTextInput extends MTForm{
 		this.addChild(acceptButton);
 		this.addChild(discardButton);
 		
-		inputField.setPositionRelativeToParent(calcPos(inputField, 5,5));
-		acceptButton.setPositionRelativeToParent(calcPos(acceptButton,5, 5+ inputField.getHeightXY(TransformSpace.LOCAL) + 5));
-		discardButton.setPositionRelativeToParent(calcPos(discardButton, 5 + acceptButton.getWidthXY(TransformSpace.LOCAL) + 5 ,5 + inputField.getHeightXY(TransformSpace.LOCAL) + 5));
-		
-		
+		inputField.setPositionRelativeToParent(calcPos(inputField, 10,10));
+		acceptButton.setPositionRelativeToParent(calcPos(acceptButton,10, 10+ inputField.getHeightXY(TransformSpace.LOCAL) + 10));
+		discardButton.setPositionRelativeToParent(calcPos(discardButton, 10 + acceptButton.getWidthXY(TransformSpace.LOCAL) + 10 ,10 + inputField.getHeightXY(TransformSpace.LOCAL) + 10));
+			
+		lastText = inputField.getText();
 		
 		adjustSize();
-		keyboard.setPositionRelativeToParent(calcPos(keyboard, 0, 15 + inputField.getHeightXY(TransformSpace.LOCAL) + acceptButton.getHeightXY(TransformSpace.LOCAL)));
+		keyboard.setPositionRelativeToParent(calcPos(keyboard, 0, 30 + inputField.getHeightXY(TransformSpace.LOCAL) + acceptButton.getHeightXY(TransformSpace.LOCAL)));
 	}
 	
 	private void adjustSize() {
 		Vertex[] v = this.getVerticesGlobal();
-		this.setWidthLocal(Math.max(10 + this.inputField.getWidthXY(TransformSpace.LOCAL), 15 + this.acceptButton.getWidthXY(TransformSpace.LOCAL) + this.discardButton.getWidthXY(TransformSpace.LOCAL)));
-		this.setHeightLocal(15 + this.inputField.getHeightXY(TransformSpace.LOCAL) + Math.max(acceptButton.getHeightXY(TransformSpace.LOCAL), discardButton.getHeightXY(TransformSpace.LOCAL)));
+		this.setWidthLocal(Math.max(20 + this.inputField.getWidthXY(TransformSpace.LOCAL), 30 + this.acceptButton.getWidthXY(TransformSpace.LOCAL) + this.discardButton.getWidthXY(TransformSpace.LOCAL)));
+		this.setHeightLocal(30 + this.inputField.getHeightXY(TransformSpace.LOCAL) + Math.max(acceptButton.getHeightXY(TransformSpace.LOCAL), discardButton.getHeightXY(TransformSpace.LOCAL)));
 		
 		
 	}
-
 	
+	int o = 0;
+	
+	@Override
+	public void drawComponent(PGraphics g) {
+		super.drawComponent(g);
+		if (o++ > 60) {
+			o = 0;
+			adjustSize();
+		}
+		
+		
+	}
 	
 	private Vector3D calcPos(MTPolygon ta, float xo, float yo) {
 
@@ -177,5 +210,53 @@ public class MTTextInput extends MTForm{
 		}
 		
 	}
+	
+	public List<String> getRelevantStrings() {
+		List<String> newList = new ArrayList<String>();
+		if (!availableValues.isEmpty()) {
+		String currentText = inputField.getText();
+			for (String s: availableValues) {
+				if (s.toUpperCase().contains(currentText.toUpperCase())) {
+					newList.add(s);
+				}
+			}
+		}
+		return newList;
+	}
+	
+	public List<MTTextArea> getFirstTextAreas() {
+		List<MTTextArea> tas = new ArrayList<MTTextArea>();
+		int i = 0;
+		for (String s: getRelevantStrings()) {
+			if (i++ < 5) {
+				if (textCache.containsKey(s)) {
+					tas.add(textCache.get(s));
+				} else {
+					MTTextArea ta;
+					if (this.isCSSStyled() && this.getCssHelper().getVirtualStyleSheet().isModifiedCssfont()) {
+						
+						CSSFont fullSize = this.getCssHelper().getVirtualStyleSheet().getCssfont().clone(fontsize);
+						CSSFontManager cfm = new CSSFontManager(app);
+						IFont fullFont = cfm.selectFont(fullSize);
+						ta = new MTTextArea(app, fullFont);
+						
+								
+					} else {
+						ta = new MTTextArea(app, FontManager.getInstance().createFont(app, "SansSerif.Bold", fontsize, MTColor.WHITE, MTColor.WHITE));
+					}
+					
+					ta.setText(s);
+					textCache.put(s, ta);
+					tas.add(ta);
+					
+				}
 
+			} else {
+				break;
+			}
+
+		}
+
+		return tas;
+	}
 }

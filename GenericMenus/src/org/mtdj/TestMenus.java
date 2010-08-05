@@ -1,6 +1,7 @@
 package org.mtdj;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.ConsoleAppender;
@@ -30,6 +31,7 @@ import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
 import org.mtdj.menu.util.MTCheckbox;
 import org.mtdj.menu.util.MTOptionBox;
+import org.mtdj.menu.util.MTSuggestionTextArea;
 import org.mtdj.menu.util.MTTextInput;
 import org.mtdj.menu.util.OptionGroup;
 
@@ -50,6 +52,7 @@ public class TestMenus  extends AbstractScene{
 	CSSParserConnection pc;
 	List<CSSStyle> styles;
 	MTColor w = new MTColor(255,255,255,255);
+	
 	
 	public TestMenus(MTApplication mtApplication, String name) {
 		super(mtApplication, name);
@@ -84,23 +87,27 @@ public class TestMenus  extends AbstractScene{
 			//MTSquareMenu sm = new MTSquareMenu(app, new Vector3D(200,200),  menus, 100);
 			//this.getCanvas().addChild(sm);
 			MTHexagonMenu hm = new MTHexagonMenu(app, new Vector3D(200,200),  menus, 175);
-			this.getCanvas().addChild(hm);
+			//this.getCanvas().addChild(hm);
 			
-			this.getCanvas().addChild(new MTCheckbox(40, app));
+			//this.getCanvas().addChild(new MTCheckbox(40, app));
 			OptionGroup group = new OptionGroup();
 			MTOptionBox box1 = new MTOptionBox(40,app, group);
 			MTOptionBox box2 = new MTOptionBox(40,app, group);
-			this.getCanvas().addChild(box1);
-			this.getCanvas().addChild(box2);
+			//this.getCanvas().addChild(box1);
+			//this.getCanvas().addChild(box2);
 			box1.setPositionGlobal(new Vector3D(200,200));
 			box2.setPositionGlobal(new Vector3D(200,250));
 			
 			MTTextArea ta = new MTTextArea(app);
 			ta.setText("Teststring");
-			this.getCanvas().addChild(ta);
+			//this.getCanvas().addChild(ta);
+			String[] su = new String[] {"Nested ", "Class", "Summary", "MTListCell", "visibleComponents" };
+			List<String> suggestions = Arrays.asList(su);
 			MTTextInput ti = new MTTextInput(ta, 20, app);
-			this.getCanvas().addChild(ti);
+			//this.getCanvas().addChild(ti);
 			
+			MTSuggestionTextArea sta = new MTSuggestionTextArea(app, 200, suggestions);
+			this.getCanvas().addChild(sta);
 			
 	}
 
