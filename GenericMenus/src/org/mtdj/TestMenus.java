@@ -32,6 +32,7 @@ import org.mt4jx.components.generic.OptionGroup;
 import org.mt4jx.components.menus.MTHexagonMenu;
 import org.mt4jx.components.menus.MTSquareMenu;
 import org.mt4jx.components.menus.MenuItem;
+import org.mtdj.menu.util.MTHUD;
 import org.mtdj.menu.util.MTTextInput;
 
 
@@ -84,10 +85,13 @@ public class TestMenus  extends AbstractScene{
 			menus.add(new MenuItem(i100, new gestureListener("Tudors")));
 			menus.add(new MenuItem(i200300, new gestureListener("Kite Surfer")));
 			
-			MTSquareMenu sm = new MTSquareMenu(app, new Vector3D(200,200),  menus, 100);
-			this.getCanvas().addChild(sm);
-			MTHexagonMenu hm = new MTHexagonMenu(app, new Vector3D(200,200),  menus, 175);
-			this.getCanvas().addChild(hm);
+			//MTSquareMenu sm = new MTSquareMenu(app, new Vector3D(200,200),  menus, 100);
+			//this.getCanvas().addChild(sm);
+			//MTHexagonMenu hm = new MTHexagonMenu(app, new Vector3D(200,200),  menus, 175);
+			//this.getCanvas().addChild(hm);
+			
+			MTHUD hud = new MTHUD(app,menus, 196, 8, MTHUD.BOTTOM );
+			this.getCanvas().addChild(hud);
 			
 			//this.getCanvas().addChild(new MTCheckbox(40, app));
 			OptionGroup group = new OptionGroup();
@@ -109,13 +113,13 @@ public class TestMenus  extends AbstractScene{
 			MTSuggestionTextArea sta = new MTSuggestionTextArea(app, 200, suggestions);
 			this.getCanvas().addChild(sta);
 			
-			menus.remove(0);
+			//menus.remove(0);
 			
-			hm.createMenuItems();
-			sm.createMenuItems();
+			//hm.createMenuItems();
+			//sm.createMenuItems();
 			
-			sm.setSize(111f);
-			hm.setSize(250f);
+			//sm.setSize(111f);
+			//hm.setSize(250f);
 			
 			MTSuggestionTextArea sta2 = new MTSuggestionTextArea(app, 400);
 			this.getCanvas().addChild(sta2);
