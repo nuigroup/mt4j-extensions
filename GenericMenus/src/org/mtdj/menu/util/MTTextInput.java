@@ -23,7 +23,7 @@ import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProces
 import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
-import org.mtdj.menu.util.MTForm.BooleanTapListener;
+import org.mt4jx.components.generic.MTForm;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;

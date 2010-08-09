@@ -15,9 +15,6 @@ import org.mt4j.components.visibleComponents.shapes.MTPolygon;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTImage;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
-import org.mt4j.components.visibleComponents.widgets.menus.MTHexagonMenu;
-import org.mt4j.components.visibleComponents.widgets.menus.MTSquareMenu;
-import org.mt4j.components.visibleComponents.widgets.menus.MenuItem;
 import org.mt4j.css.parser.CSSParserConnection;
 import org.mt4j.css.style.CSSStyle;
 import org.mt4j.css.util.CSSStyleManager;
@@ -29,11 +26,14 @@ import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
-import org.mtdj.menu.util.MTCheckbox;
-import org.mtdj.menu.util.MTOptionBox;
-import org.mtdj.menu.util.MTSuggestionTextArea;
+import org.mt4jx.components.generic.MTOptionBox;
+import org.mt4jx.components.generic.MTSuggestionTextArea;
+import org.mt4jx.components.generic.OptionGroup;
+import org.mt4jx.components.menus.MTHexagonMenu;
+import org.mt4jx.components.menus.MTSquareMenu;
+import org.mt4jx.components.menus.MenuItem;
 import org.mtdj.menu.util.MTTextInput;
-import org.mtdj.menu.util.OptionGroup;
+
 
 
 import processing.core.PImage;
@@ -84,10 +84,10 @@ public class TestMenus  extends AbstractScene{
 			menus.add(new MenuItem(i100, new gestureListener("Tudors")));
 			menus.add(new MenuItem(i200300, new gestureListener("Kite Surfer")));
 			
-			//MTSquareMenu sm = new MTSquareMenu(app, new Vector3D(200,200),  menus, 100);
-			//this.getCanvas().addChild(sm);
+			MTSquareMenu sm = new MTSquareMenu(app, new Vector3D(200,200),  menus, 100);
+			this.getCanvas().addChild(sm);
 			MTHexagonMenu hm = new MTHexagonMenu(app, new Vector3D(200,200),  menus, 175);
-			//this.getCanvas().addChild(hm);
+			this.getCanvas().addChild(hm);
 			
 			//this.getCanvas().addChild(new MTCheckbox(40, app));
 			OptionGroup group = new OptionGroup();
@@ -109,6 +109,16 @@ public class TestMenus  extends AbstractScene{
 			MTSuggestionTextArea sta = new MTSuggestionTextArea(app, 200, suggestions);
 			this.getCanvas().addChild(sta);
 			
+			menus.remove(0);
+			
+			hm.createMenuItems();
+			sm.createMenuItems();
+			
+			sm.setSize(111f);
+			hm.setSize(250f);
+			
+			MTSuggestionTextArea sta2 = new MTSuggestionTextArea(app, 400);
+			this.getCanvas().addChild(sta2);
 	}
 
 	@Override
